@@ -4,8 +4,8 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-
   font-weight: normal;
+  background-color: rgb(205, 195, 214);
 }
 
 a,
@@ -25,11 +25,13 @@ a,
   body {
     display: flex;
     place-items: center;
+    background-color: rgb(205, 195, 214);
   }
 
   #app {
-    display: grid;
+    /* display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    padding: 0 2rem; */
+    background-color: rgb(205, 195, 214);
   }
 }

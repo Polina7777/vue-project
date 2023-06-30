@@ -7,14 +7,18 @@
     },
   data() {
     return {
-      info: null
+      info: null,
+      id:null,
     };
   },
   methods: {
     getCards() {
-       fetch("https://jsonplaceholder.typicode.com/albums/1/photos")
+       fetch("https://rickandmortyapi.com/api/character")
       .then(response => response.json())
-      .then(data => (this.info = data));
+    .then(data =>(this.info = data.results));
+    },
+    generateId(){
+      
     }
   },
 
@@ -22,13 +26,14 @@
 
 </script>
 
+
 <template>
-  <div class="card_list">
-  <ul>
+  <div class="card_list__wrapper">
+  <ul class="card_list">
   <li class="card"  v-for="(item, index) in info">
 <RouterLink :to="{name : 'card' ,params : {id: item.id}}" >
-    <h1 class="title">{{item.title}}</h1>
-    <img :src="item.url" class="image"/>
+    <h1 class="title">{{item.name}}</h1>
+    <img :src="item.image" class="image"/>
 </RouterLink>
   </li>
 </ul>
@@ -38,34 +43,46 @@
 
 
 
-<style>
+<style scoped>
+  .card_list__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .card_list {
     display: flex;
     flex-direction:row;
     flex-wrap:wrap;
     align-items: center;
-
+    background-color: rgb(205, 195, 214);
+    display: flex;
+flex-direction: row;
+flex-wrap: wrap;
   }
   .image{
-    height:40px;
-    width:40px;
-    border-radius:20px;
+ width: 150px;
+ height: 150px;
+ border-radius: 50%;
+ padding: 10px;
+ align-self: center;
   }
     .card {
     display: flex;
     align-items: center;
     flex-direction:column;
-    width:300px;
+    justify-content:center;
+    align-content: center;
+    width:400px;
     padding:20px;
-    border:3px solid yellow;
+    border:3px solid rgb(127, 127, 164);
+    background-color: rgb(103, 85, 119);
     border-radius:10px;
     margin:10px;
+    color:rgba(0, 0, 255, 0.129);
   }
   .title{
-    color:blue;
-    font-size:15px
+    font-size:20px;
+    padding: 10px;
   }
-  .discription{
-    color:blue;
-  }
+ 
 </style>
