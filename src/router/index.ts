@@ -10,22 +10,18 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/cards',
-      name: 'cards',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/CardsView.vue')
+      path: '/characters',
+      name: 'characters',
+      component: () => import('../views/CharactersView.vue')
     },
-    // {
-    //   path: '/card',
-    //   name: 'card',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/CardView.vue')
-    // },
-    { path: '/cards/:id', name: 'card' ,component: () => import('../views/CardView.vue')},
+    {
+      path: '/locations',
+      name: 'locations',
+      component: () => import('../views/LocationsView.vue')
+    },
+    
+    { path: '/characters/:id', name: 'character' ,component: () => import('../views/CharacterView.vue')},
+    { path: '/locations/:id', name: 'location' ,component: () => import('../views/LocationView.vue')},
   ]
 })
 

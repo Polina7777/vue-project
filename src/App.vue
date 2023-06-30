@@ -7,7 +7,8 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/cards">Cards</RouterLink>
+        <RouterLink to="/characters">Characters</RouterLink>
+        <RouterLink to="/locations">Locations</RouterLink>
       </nav>
     </div>
   </header>
@@ -18,7 +19,9 @@ import { RouterLink, RouterView } from 'vue-router'
 <style>
 header {
   line-height: 1.5;
-  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 80px;
 }
 
 .logo {
@@ -28,14 +31,15 @@ header {
 
 nav {
   width: 100%;
-  font-size: 80px;
+  font-size: 40px;
   text-align: center;
   justify-content: space-between;
   margin-top: 2rem;
+  color:rgb(237, 237, 246);
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color:rgb(111, 68, 145);
 }
 
 nav a.router-link-exact-active:hover {
@@ -44,7 +48,7 @@ nav a.router-link-exact-active:hover {
 
 nav a {
   display: inline-block;
-  padding: 0 1rem;
+  padding: 10px;
 }
 
 nav a:first-of-type {
@@ -52,25 +56,10 @@ nav a:first-of-type {
 }
 
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-
-  header .wrapper {
-    display: flex;
-    /* place-items: flex-start; */
-    flex-wrap: wrap;
-  }
 
   nav {
     text-align: center;
-    margin-left: -2rem;
     font-size: 2rem;
-    padding: 2rem 0;
-    margin-top: 2rem;
   }
 }
 </style>

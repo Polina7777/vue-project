@@ -3,11 +3,10 @@ export default {
     async mounted() {
       this.getCard(this.$route.params.id)
     },
-  props: ['cardId'],
 data() {
   return {
     id: this.cardId,
-    info: null
+    info: {name:String,status:String,species:String,gender:String}
   };
 },
 methods:{
@@ -19,7 +18,6 @@ methods:{
 },
 
 }
-
 </script>
 
 <template>
@@ -27,16 +25,16 @@ methods:{
 <div class="card">
     <h1 class="title"> {{info?.name}}</h1>
     <img :src="info?.image" class="image"/>
-   <p class="status"> {{ info?.status }}  </p>
-   <p class="species"> {{ info?.species }}  </p>
-   <p class="gender"> {{ info?.gender }}  </p>
+   <p class="status"> Status: {{ info?.status }}  </p>
+   <p class="species">Species: {{ info?.species }}  </p>
+   <p class="gender"> Gender: {{ info?.gender }}  </p>
+   
     </div>
   </div>
 </template>
 
 
 <style scoped>
-
   .image{
  width:200px;
  height: 200px;
@@ -45,20 +43,18 @@ methods:{
  align-self: center;
   }
   .card_wrapper {
-    display: flex;
-    justify-content: center;
   padding: 40px;
+
   }
  .card {
     display: flex;
     align-items: center;
     flex-direction:column;
-    justify-content:center;
-    align-content: center;
+    align-items: center;
    min-width:500px;
     padding:20px;
-    border:3px solid rgb(127, 127, 164);
-    background-color: rgb(103, 85, 119);
+    border:3px solid rgb(199, 199, 232);
+    background-color: rgb(156, 140, 170);
     border-radius:10px;
     margin:10px;
     color:rgb(224, 224, 243);
