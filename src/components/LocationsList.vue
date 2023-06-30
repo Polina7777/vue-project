@@ -1,6 +1,5 @@
 
 <script lang="ts">
-import type { PropType } from 'vue';
 
 
   export default {

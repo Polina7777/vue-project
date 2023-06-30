@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import CharactersList from "../components/CharactersList.vue"
-
 </script>
 
 
 <template>
-    <CharactersList/>
+<CharactersList/>
 </template>
 
 <style>

@@ -25,9 +25,9 @@ methods:{
 <template>
   <div class="card_wrapper">
 <div class="card">
-    <h1 class="title"> {{info?.name}}</h1>
-    <p class="type"> Type: {{ info?.type }}</p>
-    <p class="dimension"> Dimension: {{ info?.dimension }}</p>
+    <h1 :title=info.name class="title"> {{info?.name}}</h1>
+    <p  :type=info.type class="type"> Type: {{ info?.type }}</p>
+    <p  :dimension=info.dimension class="dimension"> Dimension: {{ info?.dimension }}</p>
     </div>
   </div>
 </template>

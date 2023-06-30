@@ -31,7 +31,7 @@
   <ul class="card_list">
   <li class="card"  v-for="(item) in info">
 <RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
-    <h1 class="title">{{item.name}}</h1>
+    <h1 :title = item.name class="title">{{item.name}}</h1>
     <img :src="item.image" class="image"/>
 </RouterLink>
   </li>

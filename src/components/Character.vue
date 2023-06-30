@@ -6,7 +6,7 @@ export default {
 data() {
   return {
     id: this.cardId,
-    info: {name:String,status:String,species:String,gender:String}
+    info: {name:String,status:String,species:String,gender:String,image:String}
   };
 },
 methods:{
@@ -23,11 +23,11 @@ methods:{
 <template>
   <div class="card_wrapper">
 <div class="card">
-    <h1 class="title"> {{info?.name}}</h1>
-    <img :src="info?.image" class="image"/>
-   <p class="status"> Status: {{ info?.status }}  </p>
-   <p class="species">Species: {{ info?.species }}  </p>
-   <p class="gender"> Gender: {{ info?.gender }}  </p>
+    <h1 :title=info.name class="title"> {{info?.name}}</h1>
+    <img :src="info.image" class="image"/>
+   <p :status=info.status  class="status"> Status: {{ info.status }}  </p>
+   <p :species=info.species class="species">Species: {{ info.species }}  </p>
+   <p  :gender="info.gender" class="gender"> Gender: {{ info.gender }}  </p>
    
     </div>
   </div>
