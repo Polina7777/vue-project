@@ -13,15 +13,33 @@ async created() {
       .then(data => (this.card = data));
   },
 
-};
 
+};
 </script>
 
 <template>
+{{router.params.id}}
 <div class="card">
  <p>{{card.id}}</p>
     <h1 class="title"> {{card.title}}</h1>
     <img :src="card.url" class="image"/>
     </div>
 </template>
+export default {
+   async mounted() {
+      await  this.getCards()
+    },
+  data() {
+    return {
+      info: null
+    };
+  },
+  methods: {
+    getCards() {
+       fetch("https://jsonplaceholder.typicode.com/albums/1/photos")
+      .then(response => response.json())
+      .then(data => (this.info = data));
+    }
+  },
 
+};

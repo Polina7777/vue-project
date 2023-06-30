@@ -1,41 +1,32 @@
 
-<script>
+<script lang="ts">
 
-export default {
-  name: "get-request",
+  export default {
+   async mounted() {
+      this.getCards()
+    },
   data() {
     return {
       info: null
     };
   },
-async created() {
-    // Simple GET request using fetch
-   await fetch("https://jsonplaceholder.typicode.com/albums/1/photos")
+  methods: {
+    getCards() {
+       fetch("https://jsonplaceholder.typicode.com/albums/1/photos")
       .then(response => response.json())
       .then(data => (this.info = data));
-  },
-
-  computed: {
-    id() {
-      // We will see what `params` is shortly
-      return this.$route.params.id
-    },
+    }
   },
 
 };
 
 </script>
 
-
-
 <template>
   <div class="card_list">
-
   <ul>
   <li class="card"  v-for="(item, index) in info">
- {{item.id}}
 <RouterLink :to="{name : 'card' ,params : {id: item.id}}" >
-  <p>{{item.id}}</p>
     <h1 class="title">{{item.title}}</h1>
     <img :src="item.url" class="image"/>
 </RouterLink>

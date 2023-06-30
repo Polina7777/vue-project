@@ -1,21 +1,11 @@
 <script setup lang="ts">
-import route from 'vue-router'
-
-import { defineAsyncComponent } from 'vue'
-
-const CardComponent = defineAsyncComponent(() =>
-  import("../components/Card.vue")
-)
+import BigCard from '../components/Bigcard.vue'
 </script>
 
 
+
   <template>
-    <h1>The user is {{ $route.params.name }}</h1>
-    <h1>This is a card page</h1>
-      <span>
-          Looking for Product: {{ this.$route.params.id }}
-      </span>
-      <CardComponent/>
+  <BigCard :cardId=this.$route.params.id />
     </template>
 
 <style>
