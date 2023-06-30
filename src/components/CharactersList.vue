@@ -7,7 +7,7 @@
     },
   data() {
     return {
-      info: {name:String}
+      info: null
     };
   },
   methods: {
