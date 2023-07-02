@@ -1,5 +1,7 @@
 
 <script lang="ts">
+import { ref } from 'vue';
+
 
 
   export default {
@@ -8,9 +10,20 @@
     },
   data() {
     return {
-      info: null
+      info: [],
+      searchQuery: ref(""),
     };
   },
+  computed: {
+    filteredData() {
+    return this.info
+      .filter(
+        (item) => 
+       { 
+      return  item.name.toLowerCase().includes(this.searchQuery.toLowerCase())}
+      );
+  },
+},
   methods: {
     getLocations() {
        fetch("https://rickandmortyapi.com/api/location")
@@ -26,8 +39,12 @@
 
 <template>
   <div class="locations_list__wrapper">
+    <div class="input_wrapper">
+    <h2>Text Input</h2>
+  <input v-model="searchQuery">
+</div>
   <ul class="locations_list">
-  <li class="locations"  v-for="(item) in info">
+  <li class="locations"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'location' ,params : {id: item.id}}" >
     <h1 class="title">{{item.name}}</h1>
 </RouterLink>
@@ -42,6 +59,7 @@
 <style scoped>
   .locations_list__wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;

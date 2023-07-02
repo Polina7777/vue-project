@@ -1,5 +1,6 @@
 
 <script lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
 
   export default {
    async mounted() {
@@ -7,29 +8,39 @@
     },
   data() {
     return {
-      info: null
+      info: [],
+     searchQuery: ref(""),
     };
   },
+  computed: {
+    filteredData() {
+    return this.info
+      .filter(
+        (item) => 
+       { 
+      return  item.name.toLowerCase().includes(this.searchQuery.toLowerCase())}
+      );
+  },
+},
   methods: {
     getCards() {
        fetch("https://rickandmortyapi.com/api/character")
       .then(response => response.json())
     .then(data =>(this.info = data.results));
-    },
-    generateId(){
-      
     }
   },
-
-};
-
+  }
 </script>
 
 
 <template>
   <div class="card_list__wrapper">
+    <div class="input_wrapper">
+    <h2>Text Input</h2>
+  <input v-model="searchQuery">
+</div>
   <ul class="card_list">
-  <li class="card"  v-for="(item) in info">
+  <li class="card"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
     <h1 :title = item.name class="title">{{item.name}}</h1>
     <img :src="item.image" class="image"/>
@@ -42,9 +53,11 @@
 
 
 
+
 <style scoped>
   .card_list__wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;

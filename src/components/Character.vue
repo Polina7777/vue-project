@@ -1,27 +1,44 @@
 <script lang="ts">
+  import Modal from './Modal.vue';
+
+import { ref } from 'vue'
 export default {
     async mounted() {
-      this.getCard(this.$route.params.id)
+        this.getCard(this.$route.params.id);
     },
-data() {
-  return {
-    id: this.cardId,
-    info: {name:String,status:String,species:String,gender:String,image:String}
-  };
-},
-methods:{
-    getCard(id: string | string[]) {
-    fetch('https://rickandmortyapi.com/api/character/'+ id)
-      .then(response => response.json())
-      .then(data => (this.info = data));
-    }
-},
+    data() {
+        return {
+            id: this.cardId,
+            info: { name: String, status: String, species: String, gender: String, image: String,episode:Array },
+            showModal: ref(false),
+            episode:[]
+  
+        };
+    },
+    methods: {
+        getCard(id: string | string[]) {
+            fetch("https://rickandmortyapi.com/api/character/" + id)
+                .then(response => response.json())
+                .then(data => {
+                  this.episode = data.episode;
+                  (this.info = data)});
+        }
 
+    },
+    components: { Modal }
 }
 </script>
 
 <template>
   <div class="card_wrapper">
+    <button id="show-modal" @click="showModal = true">Show Modal</button>
+    <Teleport to="body">
+    <Modal :show="showModal" @close="showModal = false" :episode="episode">
+      <template #header>
+        <h3>Episodes</h3>
+      </template>
+    </Modal>
+  </Teleport>
 <div class="card">
     <h1 :title=info.name class="title"> {{info?.name}}</h1>
     <img :src="info.image" class="image"/>

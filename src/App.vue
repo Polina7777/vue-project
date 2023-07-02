@@ -21,7 +21,7 @@ header {
   line-height: 1.5;
   display: flex;
   flex-direction: column;
-  height: 80px;
+  height: 150px;
 }
 
 .logo {
