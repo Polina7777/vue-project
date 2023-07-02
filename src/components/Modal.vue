@@ -3,7 +3,7 @@ const props = defineProps({
   show: Boolean,
   episode:Array
 })
-console.log(props)
+
 </script>
 
 <template>
@@ -69,7 +69,14 @@ color:rgba(0, 0, 255, 0.129);
     justify-content: center;
     text-align: center;
 }
-
+.modal-default-button{
+    padding:7px 10px;
+    border:3px solid rgb(199, 199, 232);
+    background-color: rgb(135, 121, 148);
+    border-radius:10px;
+    color:rgb(224, 224, 243);
+    font-size: 20px;
+  }
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;

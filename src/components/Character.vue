@@ -31,21 +31,21 @@ export default {
 
 <template>
   <div class="card_wrapper">
-    <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <Teleport to="body">
-    <Modal :show="showModal" @close="showModal = false" :episode="episode">
-      <template #header>
-        <h3>Episodes</h3>
-      </template>
-    </Modal>
-  </Teleport>
+
 <div class="card">
-    <h1 :title=info.name class="title"> {{info?.name}}</h1>
+    <h1 :title=info.name class="title"> {{info.name}}</h1>
     <img :src="info.image" class="image"/>
    <p :status=info.status  class="status"> Status: {{ info.status }}  </p>
    <p :species=info.species class="species">Species: {{ info.species }}  </p>
    <p  :gender="info.gender" class="gender"> Gender: {{ info.gender }}  </p>
-   
+   <button id="show-modal" @click="showModal = true">Show episodes with {{ info.name }} </button>
+    <Teleport to="body">
+    <Modal :show="showModal" @close="showModal = false" :episode="episode">
+      <template #header>
+        <h3 class="title_modal">Episodes with {{ info.name }}:</h3>
+      </template>
+    </Modal>
+  </Teleport>
     </div>
   </div>
 </template>
@@ -80,9 +80,22 @@ export default {
     font-size:40px;
     padding: 10px;
   }
+  .title_modal{
+    color:rgb(229, 223, 234);;
+    font-size: 25px;
+    align-items: flex-end;
+  }
   .status, .species, .gender{
     font-size:20px;
     padding: 10px;
+  }
+  #show-modal{
+    padding:20px;
+    border:3px solid rgb(199, 199, 232);
+    background-color: rgb(135, 121, 148);
+    border-radius:10px;
+    color:rgb(224, 224, 243);
+    font-size: 20px;
   }
  
 </style>

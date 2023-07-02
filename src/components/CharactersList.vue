@@ -1,17 +1,40 @@
 
 <script lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
+import Paginator from "./Paginator.vue"
 
   export default {
+    
    async mounted() {
       this.getCards()
     },
+    
   data() {
     return {
       info: [],
      searchQuery: ref(""),
+      pageCount: ref(1),
     };
   },
+  // watch: {
+  //   '$arrow:right': {
+  //     handler() {
+  //       this.onClickRightHandler();
+  //     },
+  //     immediate: true
+  //   } ,
+  //   '$arrow:left': {
+  //     handler() {
+  //       this.onClickLeftHandler();
+  //     },
+  //     immediate: true
+  //   } 
+  // },
+  watch: {
+   pageCount: async function newPage() {
+    this.getCards()
+   }
+},
   computed: {
     filteredData() {
     return this.info
@@ -24,9 +47,30 @@ import { computed, onMounted, reactive, ref } from "vue";
 },
   methods: {
     getCards() {
-       fetch("https://rickandmortyapi.com/api/character")
+       fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount)
       .then(response => response.json())
     .then(data =>(this.info = data.results));
+    },
+    onClickLeftHandler(){
+      console.log(this.pageCount)
+      if(this.pageCount === 0){
+        console.log(this.pageCount)
+        return 0
+      }else{
+        console.log(this.pageCount)
+        return  this.pageCount--
+      }
+    },
+    onClickRightHandler(){
+     if(this.pageCount === 10){
+      console.log(this.pageCount)
+      return 10
+     }else{
+      console.log(this.pageCount)
+      return this.pageCount++
+     }
+  
+  
     }
   },
   }
@@ -39,6 +83,8 @@ import { computed, onMounted, reactive, ref } from "vue";
     <h2>Text Input</h2>
   <input v-model="searchQuery">
 </div>
+<div  class="pagination_wrapper">
+<button class="arrow" @click="onClickLeftHandler"> '&lt;'</button>
   <ul class="card_list">
   <li class="card"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
@@ -47,8 +93,10 @@ import { computed, onMounted, reactive, ref } from "vue";
 </RouterLink>
   </li>
 </ul>
-
+<button class="arrow" @click="onClickRightHandler"> '>'</button>
+</div>
   </div>
+ 
 </template>
 
 
@@ -76,6 +124,9 @@ import { computed, onMounted, reactive, ref } from "vue";
  padding: 10px;
  align-self: center;
   }
+  .arrow{
+    font-size: 20px;
+  }
     .card {
     display: flex;
     align-items: center;
@@ -93,6 +144,11 @@ import { computed, onMounted, reactive, ref } from "vue";
   .title{
     font-size:20px;
     padding: 10px;
+  }
+  .pagination_wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
  
 </style>
