@@ -1,9 +1,6 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-
-
-
   export default {
    async mounted() {
       this.getLocations()
@@ -12,8 +9,14 @@ import { ref } from 'vue';
     return {
       info: [],
       searchQuery: ref(""),
+      pageCount: ref(1),
     };
   },
+  watch: {
+   pageCount: async function newPage() {
+    this.getLocations()
+   }
+},
   computed: {
     filteredData() {
     return this.info
@@ -26,12 +29,23 @@ import { ref } from 'vue';
 },
   methods: {
     getLocations() {
-       fetch("https://rickandmortyapi.com/api/location")
+       fetch('https://rickandmortyapi.com/api/location/?page='+this.pageCount)
       .then(response => response.json())
     .then(data =>(this.info = data.results));
+    },
+    onClickLeftHandler(){
+      if(this.pageCount === 0){
+        return 1
+      }
+        return  this.pageCount--
+    },
+    onClickRightHandler(){
+     if(this.pageCount === 8){
+      return 1
+     }
+      return this.pageCount++
     }
   },
-
 };
 
 </script>
@@ -40,9 +54,10 @@ import { ref } from 'vue';
 <template>
   <div class="locations_list__wrapper">
     <div class="input_wrapper">
-    <h2>Text Input</h2>
-  <input v-model="searchQuery">
+  <input  v-model="searchQuery">
 </div>
+<div  class="pagination_wrapper">
+<button class="arrow" @click="onClickLeftHandler"> '&lt;'</button>
   <ul class="locations_list">
   <li class="locations"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'location' ,params : {id: item.id}}" >
@@ -50,7 +65,8 @@ import { ref } from 'vue';
 </RouterLink>
   </li>
 </ul>
-
+<button class="arrow" @click="onClickRightHandler"> '>'</button>
+</div>
   </div>
 </template>
 
@@ -70,6 +86,7 @@ import { ref } from 'vue';
     flex-wrap:wrap;
     justify-content: center;
     background-color: rgb(205, 195, 214);
+    width: 100%;
   }
   .image{
  width: 150px;
@@ -77,6 +94,23 @@ import { ref } from 'vue';
  border-radius: 50%;
  padding: 10px;
  align-self: center;
+  }
+  input{
+    width: 400px;
+    padding: 10px;
+    border:3px solid rgb(199, 199, 232);
+    background-color: rgb(230, 225, 234);
+    border-radius:10px;
+    font-size: 15px;
+    color:rgb(156, 140, 170);
+    margin: 15px;
+    outline:none;
+  }
+ 
+  .pagination_wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
     .locations{
     display: flex;

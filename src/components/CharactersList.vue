@@ -1,8 +1,7 @@
 
 <script lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
-import Paginator from "./Paginator.vue"
-
+import { ref } from "vue";
+import FiltersModal from './FiltersModal.vue'
   export default {
     
    async mounted() {
@@ -14,22 +13,9 @@ import Paginator from "./Paginator.vue"
       info: [],
      searchQuery: ref(""),
       pageCount: ref(1),
+      showFiltersModal: ref(false),
     };
   },
-  // watch: {
-  //   '$arrow:right': {
-  //     handler() {
-  //       this.onClickRightHandler();
-  //     },
-  //     immediate: true
-  //   } ,
-  //   '$arrow:left': {
-  //     handler() {
-  //       this.onClickLeftHandler();
-  //     },
-  //     immediate: true
-  //   } 
-  // },
   watch: {
    pageCount: async function newPage() {
     this.getCards()
@@ -52,36 +38,36 @@ import Paginator from "./Paginator.vue"
     .then(data =>(this.info = data.results));
     },
     onClickLeftHandler(){
-      console.log(this.pageCount)
       if(this.pageCount === 0){
-        console.log(this.pageCount)
-        return 0
-      }else{
-        console.log(this.pageCount)
-        return  this.pageCount--
+        return 1
       }
+        return  this.pageCount--
     },
     onClickRightHandler(){
-     if(this.pageCount === 10){
-      console.log(this.pageCount)
-      return 10
-     }else{
-      console.log(this.pageCount)
-      return this.pageCount++
+     if(this.pageCount === 11){
+      return 1
      }
-  
-  
+      return this.pageCount++
     }
   },
+  components: { FiltersModal }
   }
 </script>
 
 
 <template>
   <div class="card_list__wrapper">
+    <!-- <div>
+    <Teleport to="body">
+    <FiltersModal :showFilters="showFiltersModal" @close="showFiltersModal = false">
+      <template #header>
+        <h3 class="title_modal"> Filters:</h3>
+      </template>
+    </FiltersModal>
+  </Teleport>
+</div> -->
     <div class="input_wrapper">
-    <h2>Text Input</h2>
-  <input v-model="searchQuery">
+  <input  v-model="searchQuery">
 </div>
 <div  class="pagination_wrapper">
 <button class="arrow" @click="onClickLeftHandler"> '&lt;'</button>
@@ -93,6 +79,7 @@ import Paginator from "./Paginator.vue"
 </RouterLink>
   </li>
 </ul>
+
 <button class="arrow" @click="onClickRightHandler"> '>'</button>
 </div>
   </div>
@@ -116,6 +103,7 @@ import Paginator from "./Paginator.vue"
     flex-wrap:wrap;
     justify-content: center;
     background-color: rgb(205, 195, 214);
+    width: 100%;
   }
   .image{
  width: 150px;
@@ -124,8 +112,21 @@ import Paginator from "./Paginator.vue"
  padding: 10px;
  align-self: center;
   }
+
+  input{
+    width: 400px;
+    padding: 10px;
+    border:3px solid rgb(199, 199, 232);
+    background-color: rgb(230, 225, 234);
+    border-radius:10px;
+    font-size: 15px;
+    color:rgb(113, 101, 123);
+    margin: 15px;
+    outline:none;
+  }
   .arrow{
     font-size: 20px;
+    height: ;
   }
     .card {
     display: flex;
