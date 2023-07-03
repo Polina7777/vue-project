@@ -14,12 +14,22 @@ import FiltersModal from './FiltersModal.vue'
      searchQuery: ref(""),
       pageCount: ref(1),
       showFiltersModal: ref(false),
+      filterName:ref(''),
+      filterStatus:ref(''),
+      filterGender:ref(''),
+      filters: ref()
     };
   },
   watch: {
    pageCount: async function newPage() {
     this.getCards()
-   }
+   },
+
+   filters: async function newPage() {
+    console.log(this.filters,'filters')
+    this.getCardsWithFilters()
+   },
+
 },
   computed: {
     filteredData() {
@@ -48,7 +58,16 @@ import FiltersModal from './FiltersModal.vue'
       return 1
      }
       return this.pageCount++
-    }
+    },
+    submitFilters (data: any) {
+      console.log('child component said login', data)
+      return this.filters = data
+    },
+    getCardsWithFilters() {
+       fetch('https://rickandmortyapi.com/api/character/?page=1'+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
+      .then(response => response.json())
+    .then(data =>(this.info = data.results));
+    },
   },
   components: { FiltersModal }
   }
@@ -57,15 +76,16 @@ import FiltersModal from './FiltersModal.vue'
 
 <template>
   <div class="card_list__wrapper">
-    <!-- <div>
+    <div>
+      <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
     <Teleport to="body">
-    <FiltersModal :showFilters="showFiltersModal" @close="showFiltersModal = false">
+    <FiltersModal :showFilters="showFiltersModal" @close="showFiltersModal = false" :submitFilters='submitFilters' >
       <template #header>
         <h3 class="title_modal"> Filters:</h3>
       </template>
     </FiltersModal>
   </Teleport>
-</div> -->
+</div>
     <div class="input_wrapper">
   <input  v-model="searchQuery">
 </div>
@@ -82,8 +102,7 @@ import FiltersModal from './FiltersModal.vue'
 
 <button class="arrow" @click="onClickRightHandler"> '>'</button>
 </div>
-  </div>
- 
+ </div>
 </template>
 
 
@@ -106,8 +125,8 @@ import FiltersModal from './FiltersModal.vue'
     width: 100%;
   }
   .image{
- width: 150px;
- height: 150px;
+ width: 127px;
+ height: 127px;
  border-radius: 50%;
  padding: 10px;
  align-self: center;
@@ -126,7 +145,6 @@ import FiltersModal from './FiltersModal.vue'
   }
   .arrow{
     font-size: 20px;
-    height: ;
   }
     .card {
     display: flex;
@@ -134,17 +152,29 @@ import FiltersModal from './FiltersModal.vue'
     flex-direction:column;
     justify-content:center;
     align-content: center;
-    width:400px;
-    padding:20px;
+    width:300px;
+    padding:10px;
     border:3px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
     border-radius:10px;
     margin:10px;
     color:rgba(0, 0, 255, 0.129);
   }
+  #show-modal{
+    padding:20px;
+    border:3px solid rgb(199, 199, 232);
+    background-color: rgb(135, 121, 148);
+    border-radius:10px;
+    color:rgb(224, 224, 243);
+    font-size: 20px;
+  }
   .title{
     font-size:20px;
     padding: 10px;
+  }
+  .title_modal{
+    color:rgb(240, 240, 245);
+    font-size:21px;
   }
   .pagination_wrapper{
     display: flex;

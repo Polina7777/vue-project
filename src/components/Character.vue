@@ -68,7 +68,7 @@ export default {
     align-items: center;
     flex-direction:column;
     align-items: center;
-   min-width:500px;
+   min-width:400px;
     padding:20px;
     border:3px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
