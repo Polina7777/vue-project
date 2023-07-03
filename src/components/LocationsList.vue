@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { ref } from 'vue';
   export default {
@@ -34,18 +33,19 @@ import { ref } from 'vue';
     .then(data =>(this.info = data.results));
     },
     onClickLeftHandler(){
-      if(this.pageCount === 0){
+      if(this.pageCount <=1 ){
         return 1
       }
         return  this.pageCount--
     },
     onClickRightHandler(){
-     if(this.pageCount === 8){
+     if(this.pageCount === 7){
       return 1
      }
       return this.pageCount++
     }
   },
+  
 };
 
 </script>
@@ -56,8 +56,9 @@ import { ref } from 'vue';
     <div class="input_wrapper">
   <input  v-model="searchQuery">
 </div>
+<p class="count">Page {{ pageCount }}</p>
 <div  class="pagination_wrapper">
-<button class="arrow" @click="onClickLeftHandler"> '&lt;'</button>
+<button v-if="pageCount>1" class="arrow" @click="onClickLeftHandler"> &lt; </button>
   <ul class="locations_list">
   <li class="locations"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'location' ,params : {id: item.id}}" >
@@ -65,7 +66,7 @@ import { ref } from 'vue';
 </RouterLink>
   </li>
 </ul>
-<button class="arrow" @click="onClickRightHandler"> '>'</button>
+<button v-if="pageCount !==7" class="arrow" @click="onClickRightHandler"> > </button>
 </div>
   </div>
 </template>
@@ -78,7 +79,7 @@ import { ref } from 'vue';
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px;
+    padding: 10px 20px;
   }
   .locations_list {
     display: flex;
@@ -98,7 +99,7 @@ import { ref } from 'vue';
   input{
     width: 400px;
     padding: 10px;
-    border:3px solid rgb(199, 199, 232);
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(230, 225, 234);
     border-radius:10px;
     font-size: 15px;
@@ -106,11 +107,19 @@ import { ref } from 'vue';
     margin: 15px;
     outline:none;
   }
- 
   .pagination_wrapper{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    width:100%;
+  }
+  .arrow{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    color:rgb(157, 145, 167);
+    background-color: rgb(230, 225, 234); 
   }
     .locations{
     display: flex;
@@ -118,17 +127,20 @@ import { ref } from 'vue';
     flex-direction:column;
     justify-content:center;
     align-content: center;
-    width:400px;
+    width:300px;
+    height: 121px;
     padding:20px;
-    border:3px solid rgb(199, 199, 232);
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
     border-radius:10px;
     margin:10px;
     color:rgba(0, 0, 255, 0.129);
   }
-  .title{
+  .title, .count{
     font-size:20px;
     padding: 10px;
+    color:rgba(232, 232, 238, 0.898);
+    font-weight: 600;
   }
  
 </style>

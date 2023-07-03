@@ -26,13 +26,13 @@ import FiltersModal from './FiltersModal.vue'
    },
 
    filters: async function newPage() {
-    console.log(this.filters,'filters')
     this.getCardsWithFilters()
    },
 
 },
   computed: {
     filteredData() {
+      console.log(this.searchQuery)
     return this.info
       .filter(
         (item) => 
@@ -48,7 +48,7 @@ import FiltersModal from './FiltersModal.vue'
     .then(data =>(this.info = data.results));
     },
     onClickLeftHandler(){
-      if(this.pageCount === 0){
+      if(this.pageCount <=1){
         return 1
       }
         return  this.pageCount--
@@ -60,7 +60,7 @@ import FiltersModal from './FiltersModal.vue'
       return this.pageCount++
     },
     submitFilters (data: any) {
-      console.log('child component said login', data)
+      this.showFiltersModal=false;
       return this.filters = data
     },
     getCardsWithFilters() {
@@ -77,7 +77,6 @@ import FiltersModal from './FiltersModal.vue'
 <template>
   <div class="card_list__wrapper">
     <div>
-      <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
     <Teleport to="body">
     <FiltersModal :showFilters="showFiltersModal" @close="showFiltersModal = false" :submitFilters='submitFilters' >
       <template #header>
@@ -89,8 +88,13 @@ import FiltersModal from './FiltersModal.vue'
     <div class="input_wrapper">
   <input  v-model="searchQuery">
 </div>
+<div>
+<p class="count">Page {{ pageCount }}</p>
+<button id="show-modal" @click="showFiltersModal = true"> Filters</button>
+</div>
 <div  class="pagination_wrapper">
-<button class="arrow" @click="onClickLeftHandler"> '&lt;'</button>
+
+<button v-if="(pageCount>1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt; </button>
   <ul class="card_list">
   <li class="card"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
@@ -100,7 +104,7 @@ import FiltersModal from './FiltersModal.vue'
   </li>
 </ul>
 
-<button class="arrow" @click="onClickRightHandler"> '>'</button>
+<button v-if="(pageCount !== 11 && !searchQuery.length)" class="arrow" @click="onClickRightHandler"> > </button>
 </div>
  </div>
 </template>
@@ -114,7 +118,8 @@ import FiltersModal from './FiltersModal.vue'
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px;
+    padding: 10px 20px;
+    width: 100%;
   }
   .card_list {
     display: flex;
@@ -125,17 +130,16 @@ import FiltersModal from './FiltersModal.vue'
     width: 100%;
   }
   .image{
- width: 127px;
- height: 127px;
+ width: 110px;
+ height: 110px;
  border-radius: 50%;
- padding: 10px;
  align-self: center;
   }
 
   input{
     width: 400px;
     padding: 10px;
-    border:3px solid rgb(199, 199, 232);
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(230, 225, 234);
     border-radius:10px;
     font-size: 15px;
@@ -144,33 +148,44 @@ import FiltersModal from './FiltersModal.vue'
     outline:none;
   }
   .arrow{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
     font-size: 20px;
+    color:rgb(157, 145, 167);
+    background-color: rgb(230, 225, 234); 
   }
     .card {
     display: flex;
     align-items: center;
     flex-direction:column;
-    justify-content:center;
-    align-content: center;
-    width:300px;
+    justify-content: center;
+    width:280px;
+    height: 210px;
     padding:10px;
-    border:3px solid rgb(199, 199, 232);
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
     border-radius:10px;
     margin:10px;
     color:rgba(0, 0, 255, 0.129);
   }
   #show-modal{
-    padding:20px;
-    border:3px solid rgb(199, 199, 232);
+    padding:5px 10px;
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(135, 121, 148);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    font-size: 20px;
+    font-size: 17px;
   }
   .title{
     font-size:20px;
+    /* padding: 10px; */
+  }
+.count{
+    font-size:20px;
     padding: 10px;
+    color:rgba(232, 232, 238, 0.898);
+    font-weight: 600;
   }
   .title_modal{
     color:rgb(240, 240, 245);
@@ -180,6 +195,7 @@ import FiltersModal from './FiltersModal.vue'
     display: flex;
     flex-direction: row;
     justify-content: center;
+    width:100%;
   }
  
 </style>

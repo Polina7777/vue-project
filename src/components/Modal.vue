@@ -56,7 +56,7 @@ const props = defineProps({
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  border:3px solid rgb(199, 199, 232);
+  border:2px solid rgb(199, 199, 232);
 background-color: rgb(156, 140, 170);
 border-radius:10px;
 color:rgba(0, 0, 255, 0.129);
@@ -69,7 +69,7 @@ color:rgba(0, 0, 255, 0.129);
 }
 .modal-default-button{
     padding:7px 10px;
-    border:3px solid rgb(199, 199, 232);
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(135, 121, 148);
     border-radius:10px;
     color:rgb(224, 224, 243);

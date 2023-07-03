@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-import FilterForm from './FilterForm.vue';
+import AuthForm from './AuthForm.vue';
 
 const props = defineProps({
-  showFilters: Boolean,
-  submitFilters:Function,
+ showAuthModal: Boolean,
+  submitAuth:Function,
 })
 
 </script>
 
 <template>
-  <Transition name="filterMsodal">
-    <div v-if="showFilters" class="modal-mask">
+  <Transition name="modal">
+    <div v-if="showAuthModal" class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
             <button
@@ -20,10 +19,9 @@ const props = defineProps({
             >Close</button>
           <slot name="header">default header</slot>
         </div>
-
         <div class="modal-body">
             <slot name="body">
-              <FilterForm :submitFilters='submitFilters'/>
+        <AuthForm :submitAuth='submitAuth'/>
    </slot>
         </div>
       </div>
@@ -34,7 +32,7 @@ const props = defineProps({
 <style scoped>
 .modal-mask {
   position: fixed;
-  z-index: 9999;
+  z-index: 9998;
   top: 0;
   left: 0;
   width: 100%;
@@ -45,22 +43,27 @@ const props = defineProps({
 }
 
 .modal-container {
-  width: 440px;
-  height: 420px;
-  min-height: 420px;
+  width: 40%;
+  min-height: 300px;
+  min-width: 300px;
+  height:350px;
   margin: auto;
-  padding: 10px 10px;
+  padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   border:2px solid rgb(199, 199, 232);
-  background-color: rgb(114, 100, 126);
+background-color: rgb(156, 140, 170);
 border-radius:10px;
 color:rgba(0, 0, 255, 0.129);
-
 }
-
+.episodes_list{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
 .modal-default-button{
     padding:5px 8px;
     border:2px solid rgb(199, 199, 232);
@@ -75,12 +78,21 @@ color:rgba(0, 0, 255, 0.129);
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 .modal-default-button {
   float: right;
 }
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
 
 .modal-enter-from {
   opacity: 0;
@@ -95,11 +107,10 @@ color:rgba(0, 0, 255, 0.129);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
-
-@media (max-width: 550px) {
-  .modal-container {
-    height: 230px;
-    width: 270px;
-  }
+.episode, .title {
+list-style-type: none;
+text-decoration: none;
+font-size: 18px;
+padding: 10px;
 }
 </style>

@@ -4,7 +4,6 @@
   /* max-width: 1280px; */
   width:100%;
   margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
   background-color: rgb(205, 195, 214);
   display: flex;
@@ -23,6 +22,12 @@ a,
   color:rgb(238, 237, 249);
 
   transition: 0.4s;
+  display: flex;
+/* justify-content: center; */
+flex-direction: column;
+justify-content: center;
+/* align-content: center; */
+align-items: center;
 }
 
 @media (hover: hover) {
@@ -38,7 +43,6 @@ a,
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 2rem;
     background-color: rgb(205, 195, 214);
   }
 }

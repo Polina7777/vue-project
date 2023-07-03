@@ -52,7 +52,7 @@ methods:{
     align-items:center;
    min-width:500px;
     padding:20px;
-    border:3px solid rgb(199, 199, 232);
+    border:2px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
     border-radius:10px;
     margin:10px;
