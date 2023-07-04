@@ -2,21 +2,26 @@
 import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
+import router from './router';
 export default {
   data() {
     return {
     showAuthModal: ref(false),
-    user: ref(""),
+    user: ref(null),
+    isAuth:ref(false)
     };
   },
   methods: {
     submitAuth(data: any) {
       console.log('child component said login', data)
       this.showAuthModal=false;
+      this.isAuth = true
       return this.user = data
     },
     signOut() {
-      return this.user = ''
+      this.$router.push('/')
+      this.isAuth = false
+      return this.user = null;
     },
   },
   components: { AuthModal }
@@ -40,12 +45,17 @@ export default {
   </header>
   <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="user" to="/characters" :auth=user>Characters</RouterLink>
-        <RouterLink v-if="user" to="/locations">Locations</RouterLink>
+        <RouterLink v-if="user"   to="/characters">Characters</RouterLink>
+        <!-- <RouterLink v-if="user"  :to="{ name: 'characters', params : { user: this.user.name }}">Characters</RouterLink> -->
+        <!-- <RouterLink v-if="user" :to="{ name: 'locations', params: { user: this.user.name}}">Locations</RouterLink> -->
+        <RouterLink v-if="user"  to="/locations" >Locations</RouterLink>
       </nav>
   <RouterView />
+  <RouterView name="users" />
 </template>
-
+<!-- // to="/locations" -->
+<!-- to="/characters" -->
+<!-- :to="{name : 'character' ,params : {id: item.id}}" -->
 <style>
 header {
   line-height: 1.5;

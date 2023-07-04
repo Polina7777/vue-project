@@ -2,14 +2,16 @@
 <script lang="ts">
 import { ref } from "vue";
 import FiltersModal from './FiltersModal.vue'
+import { useRoute } from 'vue-router'
+// const route = useRoute()
   export default {
-    
    async mounted() {
       this.getCards()
     },
     
   data() {
     return {
+ 
       info: [],
      searchQuery: ref(""),
       pageCount: ref(1),
@@ -17,22 +19,24 @@ import FiltersModal from './FiltersModal.vue'
       filterName:ref(''),
       filterStatus:ref(''),
       filterGender:ref(''),
-      filters: ref()
+      filters: ref(),
+      // user:route.params.user
+      // auth:this.$route.params.user
     };
+  
   },
   watch: {
    pageCount: async function newPage() {
     this.getCards()
    },
 
-   filters: async function newPage() {
+   filters: async function filterList() {
     this.getCardsWithFilters()
    },
 
 },
   computed: {
     filteredData() {
-      console.log(this.searchQuery)
     return this.info
       .filter(
         (item) => 
@@ -75,7 +79,9 @@ import FiltersModal from './FiltersModal.vue'
 
 
 <template>
-  <div class="card_list__wrapper">
+      <!-- {{$route.params.user }} -->
+      <!-- {{$props.user}} -->
+  <div  class="card_list__wrapper">
     <div>
     <Teleport to="body">
     <FiltersModal :showFilters="showFiltersModal" @close="showFiltersModal = false" :submitFilters='submitFilters' >

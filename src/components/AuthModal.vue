@@ -44,9 +44,9 @@ const props = defineProps({
 
 .modal-container {
   width: 40%;
-  min-height: 300px;
+  min-height: 400px;
   min-width: 300px;
-  height:350px;
+  height:400px;
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -79,6 +79,9 @@ color:rgba(0, 0, 255, 0.129);
 
 .modal-body {
   margin: 10px 0;
+  display: flex;
+flex-direction: column;
+justify-content: center;
 }
 
 .modal-default-button {
