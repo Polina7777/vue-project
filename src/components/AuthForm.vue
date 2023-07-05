@@ -86,7 +86,8 @@ validations() {
     padding-bottom: 30px;
 }
 h2{
-  font-size: 15px;
+  /* font-size: 15px; */
+  font-size: 1rem;
 }
 .auth_input, .name {
   display: flex;
@@ -109,7 +110,8 @@ h2{
 }
 .name_input{
   width:100%;
-  font-size: 15px;
+  /* font-size: 15px; */
+  font-size: 1rem;
 }
 .submit_button{
     padding:5px 8px;
@@ -117,11 +119,13 @@ h2{
     background-color: rgb(114, 100, 126);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    font-size: 17px;
+    /* font-size: 17px; */
+    font-size: 1rem;
     align-items: center;
 }
 .error{
-  font-size: 10px;
+  /* font-size: 10px; */
+  font-size: 1rem;
   color:red
 }
 

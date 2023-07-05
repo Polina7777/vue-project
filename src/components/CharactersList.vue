@@ -165,7 +165,8 @@ align-items: center;
     background-color: rgb(114, 100, 126);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    font-size: 17px;
+    /* font-size: 17px; */
+    font-size: 1rem;
   }
   .card_list {
     display: flex;
@@ -188,7 +189,8 @@ align-items: center;
     border:2px solid rgb(199, 199, 232);
     background-color: rgb(230, 225, 234);
     border-radius:10px;
-    font-size: 15px;
+    /* font-size: 15px; */
+    font-size: 1rem;
     color:rgb(113, 101, 123);
     margin: 15px;
     outline:none;
@@ -197,7 +199,8 @@ align-items: center;
     height: 50px;
     width: 50px;
     border-radius: 50%;
-    font-size: 20px;
+    /* font-size: 20px; */
+    font-size: 1rem;
     color:rgb(157, 145, 167);
     background-color: rgb(230, 225, 234); 
   }
@@ -221,21 +224,25 @@ align-items: center;
     background-color: rgb(135, 121, 148);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    font-size: 17px;
+    /* font-size: 17px; */
+    font-size: 1rem;
   }
   .title{
-    font-size:20px;
+    /* font-size:20px; */
+    font-size: 1.2rem;
     /* padding: 10px; */
   }
 .count{
-    font-size:20px;
+    /* font-size:20px; */
+    font-size: 1rem;
     padding: 10px;
     color:rgba(232, 232, 238, 0.898);
     font-weight: 600;
   }
   .title_modal{
     color:rgb(240, 240, 245);
-    font-size:21px;
+    /* font-size:21px; */
+    font-size: 1rem;
   }
   .pagination_wrapper{
     display: flex;
@@ -243,5 +250,11 @@ align-items: center;
     justify-content: center;
     width:100%;
   }
- 
+  @media (max-width: 450px) {
+
+.arrow{
+  height: 30px;
+    width: 30px;
+}
+}
 </style>

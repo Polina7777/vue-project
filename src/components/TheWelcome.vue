@@ -9,7 +9,8 @@
 <style>
 .description {
   padding: 40px;
-  font-size: 30px;
+  /* font-size: 30px; */
+  font-size: 2rem;
   color:rgb(233, 233, 248);
 }
   .welcome_wrapper {
@@ -19,5 +20,28 @@
    text-align: center;
    height: 100%;
   }
+  @media (max-width: 1024px) {
 
+    .description{
+  font-size: 1.7rem;
+}
+@media (max-width: 650px) {
+
+.description{
+font-size: 1.4rem;
+}
+}
+@media (max-width: 470px) {
+
+.description{
+font-size: 1.2rem;
+}
+}
+@media (max-width: 360px) {
+
+.description{
+font-size: 1rem;
+}
+}
+}
 </style>

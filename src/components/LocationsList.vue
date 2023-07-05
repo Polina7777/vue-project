@@ -108,12 +108,13 @@ import { ref } from 'vue';
  align-self: center;
   }
   input{
-    width: 400px;
+    /* width: 400px; */
     padding: 10px;
     border:2px solid rgb(199, 199, 232);
     background-color: rgb(230, 225, 234);
     border-radius:10px;
-    font-size: 15px;
+    /* font-size: 15px; */
+    font-size: 1rem;
     color:rgb(156, 140, 170);
     margin: 15px;
     outline:none;
@@ -128,7 +129,8 @@ import { ref } from 'vue';
     height: 50px;
     width: 50px;
     border-radius: 50%;
-    font-size: 20px;
+    /* font-size: 20px; */
+    font-size: 1rem;
     color:rgb(157, 145, 167);
     background-color: rgb(230, 225, 234); 
   }
@@ -148,7 +150,8 @@ import { ref } from 'vue';
     color:rgba(0, 0, 255, 0.129);
   }
   .title, .count{
-    font-size:20px;
+    /* font-size:20px; */
+    font-size: 1rem;
     padding: 10px;
     color:rgba(232, 232, 238, 0.898);
     font-weight: 600;

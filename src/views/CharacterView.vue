@@ -3,6 +3,7 @@ import Character from '../components/Character.vue'
 </script>
 
   <template>
-  <Character :cardId=$route.params.id />
+  <Character />
+  <!-- :cardId=$route.params.id   -->
   </template>
 

@@ -69,7 +69,8 @@ export default {
     color:rgb(229, 229, 242);
 }
 h2{
-  font-size: 15px;
+  /* font-size: 15px; */
+  font-size: 1rem;
 }
 .status_input, .gender_input, .name {
   display: flex;
@@ -91,7 +92,8 @@ h2{
     background-color: rgb(114, 100, 126);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    font-size: 17px;
+    /* font-size: 17px; */
+    font-size: 1rem;
     margin-top: 15px;
 }
 .radio_wrapper{
@@ -103,7 +105,8 @@ h2{
 }
 .name_input{
   width:100%;
-  font-size: 15px;
+  /* font-size: 15px; */
+  font-size: 1rem;
 }
 @media (max-width: 550px) {
   .radio_wrapper{

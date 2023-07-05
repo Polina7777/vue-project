@@ -70,7 +70,8 @@ color:rgba(0, 0, 255, 0.129);
     background-color: rgb(114, 100, 126);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    font-size: 17px;
+    /* font-size: 17px; */
+    font-size: 1rem;
   }
 .modal-header h3 {
   margin-top: 0;
@@ -113,7 +114,8 @@ justify-content: center;
 .episode, .title {
 list-style-type: none;
 text-decoration: none;
-font-size: 18px;
+/* font-size: 18px; */
+font-size: 1rem;
 padding: 10px;
 }
 </style>

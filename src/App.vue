@@ -69,7 +69,7 @@ header {
 
 nav {
   width: 100%;
-  font-size: 40px;
+  font-size: 1.5rem;
   text-align: center;
   justify-content: space-between;
   color:rgb(237, 237, 246);
@@ -98,7 +98,8 @@ nav a:first-of-type {
   background-color: rgb(114, 100, 126);
 border-radius:10px;
 color:rgba(230, 230, 246, 0.972);
-font-size: 21px;
+/* font-size: 21px; */
+font-size: 1rem;
 margin: 10px;
 }
 @media (min-width: 1024px) {

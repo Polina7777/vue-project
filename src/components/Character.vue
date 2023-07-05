@@ -3,12 +3,15 @@
 
 import { ref } from 'vue'
 export default {
-    async mounted() {
-        this.getCard(this.$route.params.id);
-    },
+    // async mounted() {
+    //     this.getCard(this.$route.params.id);
+    // },
+    created() {
+  this.getCard(this.$route.params.id)
+  },
     data() {
         return {
-            id: this.cardId,
+          // id: this.cardId,
             info: { name: String, status: String, species: String, gender: String, image: String,episode:Array },
             showModal: ref(false),
             episode:[]
@@ -22,7 +25,10 @@ export default {
                 .then(data => {
                   this.episode = data.episode;
                   (this.info = data)});
-        }
+        },
+       goBack(){
+        this.$router.push('/characters')
+       }
 
     },
     components: { Modal }
@@ -30,6 +36,7 @@ export default {
 </script>
 
 <template>
+  <button class="back_button" @click="goBack">Go Back</button>
   <div class="card_wrapper">
 
 <div class="card">
@@ -59,6 +66,16 @@ export default {
  padding: 10px;
  align-self: center;
   }
+  .back_button{
+    padding:5px 10px;
+    border:2px solid rgb(199, 199, 232);
+    background-color: rgb(135, 121, 148);
+    border-radius:10px;
+    color:rgb(224, 224, 243);
+    /* font-size: 17px; */
+    font-size: 1rem;
+align-self: center;
+  }
   .card_wrapper {
   padding: 40px;
 
@@ -68,7 +85,7 @@ export default {
     align-items: center;
     flex-direction:column;
     align-items: center;
-   min-width:400px;
+   /* min-width:400px; */
     padding:20px;
     border:2px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
@@ -77,16 +94,19 @@ export default {
     color:rgb(224, 224, 243);
   }
   .title{
-    font-size:40px;
+    /* font-size:40px; */
+    font-size: 1.5rem;
     padding: 10px;
   }
   .title_modal{
     color:rgb(229, 223, 234);;
-    font-size: 25px;
+    /* font-size: 25px; */
+    font-size: 1.2rem;
     align-items: flex-end;
   }
   .status, .species, .gender{
-    font-size:20px;
+    /* font-size:20px; */
+    font-size: 1rem;
     padding: 10px;
   }
   #show-modal{
@@ -95,7 +115,8 @@ export default {
     background-color: rgb(135, 121, 148);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    font-size: 20px;
+    /* font-size: 20px; */
+    font-size: 1rem;
   }
  
 </style>
