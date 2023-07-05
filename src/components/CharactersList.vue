@@ -1,16 +1,19 @@
 
 <script lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import FiltersModal from './FiltersModal.vue'
 import Error from "./Error.vue";
-  export default {
-   async mounted() {
-      this.getCards()
-    },
-    // updated(){
 
-    // },
-   
+  export default {
+  //  async mounted() {
+  //      this.getCards()
+  //      console.log('mounted')
+  //   },
+
+created() {
+  this.getCards()
+  },
+
   data() {
     return {
       info: [],
@@ -21,18 +24,28 @@ import Error from "./Error.vue";
       filterName:ref(''),
       filterStatus:ref(''),
       filterGender:ref(''),
-      filters: ref(),
+      filters: ref({
+        name:'',
+        status:'',
+        gender:''
+      }),
       error:ref()
     };
   
   },
   watch: {
    pageCount: async function newPage() {
-    this.getCards()
+    // if(this.filters){
+    //  this.getCardsWithFilters()
+    // }
+     this.getCards()
    },
    filters: async function filterList() {
-    this.getCardsWithFilters()
+    this.pageCount = 1;
+    // this.getCardsWithFilters()
+    this.getCards()
    },
+
 },
   computed: {
     filteredData() {
@@ -47,10 +60,7 @@ import Error from "./Error.vue";
   methods: {
     async getCards() {
     this.error = false;
-    //    fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount)
-    //   .then(response => response.json())
-    // .then(data =>(this.info = data.results));
-  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount)
+  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
   if(response.ok){
     const data = await response.json();
     this.info = data.results
@@ -75,18 +85,18 @@ import Error from "./Error.vue";
       this.showFiltersModal=false;
       return this.filters = data
     },
-    async getCardsWithFilters() {
-   const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
-  if(response.ok){
-    const data = await response.json();
-    this.allPagesCount = data.info.pages
-    this.info = data.results
-  }else{
-    const data = await response.json();
-    console.log(data.error)
-       this.error = data.error;
-  }
-    },
+  //   async getCardsWithFilters() {
+  //  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
+  // if(response.ok){
+  //   const data = await response.json();
+  //   this.allPagesCount = data.info.pages
+  //   this.info = data.results
+  // }else{
+  //   const data = await response.json();
+  //   console.log(data.error)
+  //      this.error = data.error;
+  // }
+  //   },
   },
   components: { FiltersModal,Error }
   }
@@ -121,7 +131,7 @@ import Error from "./Error.vue";
   </li>
 </ul>
 
-<button v-if="(pageCount !== 11 && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button>
+<button v-if="(pageCount !== allPagesCount && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button>
 </div>
  </div>
  <div v-if="error" class="error_wrapper">
@@ -144,9 +154,10 @@ import Error from "./Error.vue";
 flex-direction: column;
 align-items: center;
   }
-  .page_info__wrappper{
+  .page_info__wrapper{
     display: flex;
 flex-direction: column;
+align-items: center;
   }
   .error_button{
     padding:10px 18px;
