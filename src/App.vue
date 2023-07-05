@@ -2,28 +2,73 @@
 import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
+import RegisterModal from './components/RegisterModal.vue';
+import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 export default {
+
   data() {
     return {
     showAuthModal: ref(false),
     user: ref(null),
-    isAuth:ref(false)
+    showRegModal: ref(false),
+    isLoggedIn:ref(false)
     };
   },
+//  create() {
+//     onAuthStateChanged(getAuth(),(user) => {
+//     if (user) {
+//     this.isLoggedIn = true // if we have a user
+//     } else {
+//       this.isLoggedIn = false // if we do not
+//     } 
+//   },
+//   )},
+  beforeMount() {
+    onAuthStateChanged(getAuth(),(user) => {
+    if (user) {
+    this.isLoggedIn = true // if we have a user
+    } else {
+      this.isLoggedIn = false // if we do not
+    } 
+  },
+)},
+//   async mounted() {
+//     onAuthStateChanged(getAuth(),(user) => {
+//     if (user) {
+//     this.isLoggedIn = true // if we have a user
+//     } else {
+//       this.isLoggedIn = false // if we do not
+//     }
+// })
+//     },
   methods: {
     submitAuth(data: any) {
-      console.log('child component said login', data)
       this.showAuthModal=false;
-      this.isAuth = true
+      return this.user = data
+    },
+    submitReg(data: any) {
+      this.showRegModal=false;
       return this.user = data
     },
     signOut() {
       this.$router.push('/')
-      this.isAuth = false
+      signOut(getAuth())
       return this.user = null;
     },
+//     userStateChange(){
+//       onAuthStateChanged(getAuth(),function(user) {
+//     if (user) {
+//       const isLoggedIn = true // if we have a user
+//       return isLoggedIn
+//     } else {
+//       const isLoggedIn = false // if we do not
+//       return isLoggedIn
+//     }
+// })
+//      }
+  
   },
-  components: { AuthModal }
+  components: { AuthModal, RegisterModal }
 }
 </script>
 
@@ -31,8 +76,9 @@ export default {
   <header>
     <div class="wrapper">
       <!-- <div> -->
-      <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!user"> Sign in </button>
-      <button class="auth"  id="show-modal" @click="signOut" v-if="user"> Sign out </button>
+      <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn"> Sign in </button>
+      <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
+      <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
     <Teleport to="body">
     <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false" :submitAuth='submitAuth' >
       <template #header>
@@ -40,21 +86,25 @@ export default {
       </template>
     </AuthModal>
   </Teleport>
+  <Teleport to="body">
+    <RegisterModal :showRegModal="showRegModal" @close="showRegModal = false" :submitReg='submitReg'>
+   
+      <template #header>
+        <h3 class="title_modal"> Sign Up</h3>
+      </template>
+    </RegisterModal>
+  </Teleport>
     </div>
   </header>
   <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="user"   to="/characters">Characters</RouterLink>
-        <!-- <RouterLink v-if="user"  :to="{ name: 'characters', params : { user: this.user.name }}">Characters</RouterLink> -->
-        <!-- <RouterLink v-if="user" :to="{ name: 'locations', params: { user: this.user.name}}">Locations</RouterLink> -->
-        <RouterLink v-if="user"  to="/locations" >Locations</RouterLink>
+        <RouterLink v-if="isLoggedIn"  to="/characters">Characters</RouterLink>
+        <RouterLink v-if="isLoggedIn"  to="/locations" >Locations</RouterLink>
       </nav>
   <RouterView />
   <RouterView name="users" />
 </template>
-<!-- // to="/locations" -->
-<!-- to="/characters" -->
-<!-- :to="{name : 'character' ,params : {id: item.id}}" -->
+
 <style>
 header {
   line-height: 1.5;

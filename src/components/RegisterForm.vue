@@ -1,11 +1,12 @@
-<script lang="ts" >
+<script lang='ts'>
+import { ref } from 'vue'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router' // import router
 import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { ref } from 'vue'
+
 export default {
-  props: ['submitAuth'],
+  props: ['submitReg'],
   data () {
     return {
     v$: useValidate(),
@@ -15,53 +16,47 @@ export default {
      password:'',
      errMsg: ref(),
      rules:{
+      name:{required,minLength:minLength(3)},
+      surname:{required,minLength:minLength(3)},
       email: { required,email},
       password:{required,numeric,minLength:minLength(6)}
     },
+
     }
   },
   methods: {
   async submit() {
     const isFormCorrect = await this.v$.$validate()
     if (isFormCorrect) {
-      this.signIn()
-      this.$router.push('/')
-       return this.submitAuth({
-        // name: this.name,
-        // surname: this.surname,
+     this.register()
+     this.$router.push('/')
+       return this.submitReg({
+        name: this.name,
+        surname: this.surname,
         email: this.email,
         password: this.password })
     }else {
         alert('Form failed validation')
      }
     },
-    signIn(){ 
-    signInWithEmailAndPassword(getAuth(),this.email,this.password)
-  .then((data) => {
-    console.log('Successfully logged in!');
-    this.$router.push('/')
-  })
-  .catch(error => {
-    switch (error.code) {
-      case 'auth/invalid-email':
-          this.errMsg.value = 'Invalid email'
-          break
-      case 'auth/user-not-found':
-          this.errMsg.value = 'No account with that email was found'
-          break
-      case 'auth/wrong-password':
-         this.errMsg.value = 'Incorrect password'
-          break  
-      default:
-          this.errMsg.value = 'Email or password was incorrect'
-          break
-    }
-  });
+    register(){
+    createUserWithEmailAndPassword(getAuth(),this.email,this.password) // need .value because ref()
+    .then((data) => {
+      console.log('Successfully registered!');
+      this.$router.push('/')
+    })
+    .catch(error => {
+      console.log(error.code)
+      alert(error.message);
+    });
 }
+
 
 },
 validations() {
     return {
+      name:{required,minLength:minLength(3),maxLength:maxLength(15),$autoDirty: true ,$lazy: true },
+      surname:{required,minLength:minLength(3),maxLength:maxLength(15),$autoDirty: true,$lazy: true  },
       email: { required,email,$autoDirty: true,$lazy: true},
       password:{required,numeric,minLength:minLength(6),$autoDirty: true,$lazy: true }
   }
@@ -69,8 +64,17 @@ validations() {
 }
 </script>
 
+
 <template>
     <div class="auth_inputs__wrapper">
+  <input class="auth_input" placeholder="Name" v-model="name"> 
+  <span class='error' v-if="v$.name.$error">
+        {{ v$.name.$errors[0].$message }}
+      </span>
+  <input class="auth_input" placeholder="Surname" v-model="surname"> 
+  <span class='error' v-if="v$.surname.$error">
+        {{ v$.surname.$errors[0].$message }}
+      </span>
   <input class="auth_input" type="email" placeholder="Email" v-model="email"> 
   <span class='error' v-if="v$.email.$error">
         {{ v$.email.$errors[0].$message }}
@@ -82,6 +86,7 @@ validations() {
 </div>
 <button class='submit_button' @click=submit>Submit</button>
 </template>
+
 <style scoped>
 .auth_inputs__wrapper {
     display: flex;

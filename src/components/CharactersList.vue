@@ -5,11 +5,6 @@ import FiltersModal from './FiltersModal.vue'
 import Error from "./Error.vue";
 
   export default {
-  //  async mounted() {
-  //      this.getCards()
-  //      console.log('mounted')
-  //   },
-
 created() {
   this.getCards()
   },
@@ -35,14 +30,10 @@ created() {
   },
   watch: {
    pageCount: async function newPage() {
-    // if(this.filters){
-    //  this.getCardsWithFilters()
-    // }
      this.getCards()
    },
    filters: async function filterList() {
     this.pageCount = 1;
-    // this.getCardsWithFilters()
     this.getCards()
    },
 
@@ -184,14 +175,12 @@ align-items: center;
   }
 
   input{
-    width: 400px;
     padding: 10px;
     border:2px solid rgb(199, 199, 232);
     background-color: rgb(230, 225, 234);
     border-radius:10px;
-    /* font-size: 15px; */
     font-size: 1rem;
-    color:rgb(113, 101, 123);
+    color:rgb(156, 140, 170);
     margin: 15px;
     outline:none;
   }
@@ -251,7 +240,6 @@ align-items: center;
     width:100%;
   }
   @media (max-width: 450px) {
-
 .arrow{
   height: 30px;
     width: 30px;

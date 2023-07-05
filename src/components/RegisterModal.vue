@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import AuthForm from './AuthForm.vue';
+import RegisterForm from './RegisterForm.vue';
 
 const props = defineProps({
- showAuthModal: Boolean,
-  submitAuth:Function,
+ showRegModal: Boolean,
+ submitReg:Function,
 })
 
 </script>
 
 <template>
   <Transition name="modal">
-    <div v-if="showAuthModal" class="modal-mask">
+    <div v-if="showRegModal" class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
             <button
@@ -21,7 +21,8 @@ const props = defineProps({
         </div>
         <div class="modal-body">
             <slot name="body">
-        <AuthForm :submitAuth='submitAuth'/>
+        <RegisterForm :submitReg='submitReg' />
+
    </slot>
         </div>
       </div>
@@ -44,7 +45,9 @@ const props = defineProps({
 
 .modal-container {
   width: 40%;
+  min-height: 400px;
   min-width: 300px;
+  height:400px;
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
