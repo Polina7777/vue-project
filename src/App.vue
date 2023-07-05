@@ -55,17 +55,6 @@ export default {
       signOut(getAuth())
       return this.user = null;
     },
-//     userStateChange(){
-//       onAuthStateChanged(getAuth(),function(user) {
-//     if (user) {
-//       const isLoggedIn = true // if we have a user
-//       return isLoggedIn
-//     } else {
-//       const isLoggedIn = false // if we do not
-//       return isLoggedIn
-//     }
-// })
-//      }
   
   },
   components: { AuthModal, RegisterModal }

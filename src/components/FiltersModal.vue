@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
 import FilterForm from './FilterForm.vue';
 
 const props = defineProps({

@@ -5,9 +5,7 @@ const props = defineProps({
  showAuthModal: Boolean,
   submitAuth:Function,
 })
-
 </script>
-
 <template>
   <Transition name="modal">
     <div v-if="showAuthModal" class="modal-mask">

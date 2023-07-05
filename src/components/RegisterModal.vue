@@ -1,11 +1,9 @@
 <script lang="ts" setup>
 import RegisterForm from './RegisterForm.vue';
-
 const props = defineProps({
  showRegModal: Boolean,
  submitReg:Function,
 })
-
 </script>
 
 <template>

@@ -10,9 +10,7 @@ const authListener = onAuthStateChanged(getAuth(),function(user) {
         router.push('/')
     }
 });
-
 onBeforeUnmount(() => {
-
     authListener()
 })
 </script>
