@@ -9,6 +9,8 @@ import { ref } from 'vue';
       info: [],
       searchQuery: ref(""),
       pageCount: ref(1),
+      allPagesCount:ref(),
+      error:ref(false)
     };
   },
   watch: {
@@ -27,10 +29,19 @@ import { ref } from 'vue';
   },
 },
   methods: {
-    getLocations() {
-       fetch('https://rickandmortyapi.com/api/location/?page='+this.pageCount)
-      .then(response => response.json())
-    .then(data =>(this.info = data.results));
+    async getLocations() {
+    //    fetch('https://rickandmortyapi.com/api/location/?page='+this.pageCount)
+    //   .then(response => response.json())
+    // .then(data =>(this.info = data.results));
+    this.error = false;
+  const response = await fetch('https://rickandmortyapi.com/api/location/?page='+this.pageCount)
+  if(response.ok){
+    const data = await response.json();
+    this.info = data.results
+    return  this.allPagesCount = data.info.pages
+  } else{
+       this.error = true;
+  }
     },
     onClickLeftHandler(){
       if(this.pageCount <=1 ){
@@ -39,7 +50,7 @@ import { ref } from 'vue';
         return  this.pageCount--
     },
     onClickRightHandler(){
-     if(this.pageCount === 7){
+     if(this.pageCount === this.allPagesCount){
       return 1
      }
       return this.pageCount++
@@ -56,7 +67,7 @@ import { ref } from 'vue';
     <div class="input_wrapper">
   <input  v-model="searchQuery">
 </div>
-<p class="count">Page {{ pageCount }}</p>
+<p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p>
 <div  class="pagination_wrapper">
 <button v-if="pageCount>1" class="arrow" @click="onClickLeftHandler"> &lt; </button>
   <ul class="locations_list">

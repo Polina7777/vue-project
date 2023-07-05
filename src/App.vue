@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
-import router from './router';
 export default {
   data() {
     return {

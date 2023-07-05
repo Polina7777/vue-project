@@ -38,13 +38,4 @@ const router = createRouter({
     { path: '/locations/:id', name: 'location' ,component: () => import('../views/LocationView.vue')},
   ]
 })
-// router.beforeEach((to,from,next)=>{
-//   if(to.matched.some(record => record.meta.isAuth)){
-//       let user = JSON.parse(localStorage.getItem('user'))
-//       if(!user){
-//           next('/')
-//       }
-//   }
-//   next()
-// })
 export default router

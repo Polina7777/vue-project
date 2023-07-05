@@ -2,26 +2,27 @@
 <script lang="ts">
 import { ref } from "vue";
 import FiltersModal from './FiltersModal.vue'
-import { useRoute } from 'vue-router'
-// const route = useRoute()
+import Error from "./Error.vue";
   export default {
    async mounted() {
       this.getCards()
     },
-    
+    // updated(){
+
+    // },
+   
   data() {
     return {
- 
       info: [],
      searchQuery: ref(""),
       pageCount: ref(1),
+      allPagesCount:ref(),
       showFiltersModal: ref(false),
       filterName:ref(''),
       filterStatus:ref(''),
       filterGender:ref(''),
       filters: ref(),
-      // user:route.params.user
-      // auth:this.$route.params.user
+      error:ref()
     };
   
   },
@@ -29,11 +30,9 @@ import { useRoute } from 'vue-router'
    pageCount: async function newPage() {
     this.getCards()
    },
-
    filters: async function filterList() {
     this.getCardsWithFilters()
    },
-
 },
   computed: {
     filteredData() {
@@ -46,10 +45,19 @@ import { useRoute } from 'vue-router'
   },
 },
   methods: {
-    getCards() {
-       fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount)
-      .then(response => response.json())
-    .then(data =>(this.info = data.results));
+    async getCards() {
+    this.error = false;
+    //    fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount)
+    //   .then(response => response.json())
+    // .then(data =>(this.info = data.results));
+  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount)
+  if(response.ok){
+    const data = await response.json();
+    this.info = data.results
+    return  this.allPagesCount = data.info.pages
+  } else{
+       this.error = true;
+  }
     },
     onClickLeftHandler(){
       if(this.pageCount <=1){
@@ -58,7 +66,7 @@ import { useRoute } from 'vue-router'
         return  this.pageCount--
     },
     onClickRightHandler(){
-     if(this.pageCount === 11){
+     if(this.pageCount === this.allPagesCount){
       return 1
      }
       return this.pageCount++
@@ -67,21 +75,25 @@ import { useRoute } from 'vue-router'
       this.showFiltersModal=false;
       return this.filters = data
     },
-    getCardsWithFilters() {
-       fetch('https://rickandmortyapi.com/api/character/?page=1'+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
-      .then(response => response.json())
-    .then(data =>(this.info = data.results));
+    async getCardsWithFilters() {
+   const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
+  if(response.ok){
+    const data = await response.json();
+    this.allPagesCount = data.info.pages
+    this.info = data.results
+  }else{
+    const data = await response.json();
+    console.log(data.error)
+       this.error = data.error;
+  }
     },
   },
-  components: { FiltersModal }
+  components: { FiltersModal,Error }
   }
 </script>
 
-
 <template>
-      <!-- {{$route.params.user }} -->
-      <!-- {{$props.user}} -->
-  <div  class="card_list__wrapper">
+  <div v-if="!error" class="card_list__wrapper">
     <div>
     <Teleport to="body">
     <FiltersModal :showFilters="showFiltersModal" @close="showFiltersModal = false" :submitFilters='submitFilters' >
@@ -94,12 +106,11 @@ import { useRoute } from 'vue-router'
     <div class="input_wrapper">
   <input  v-model="searchQuery">
 </div>
-<div>
-<p class="count">Page {{ pageCount }}</p>
+<div class="page_info__wrapper" >
+<p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
 <div  class="pagination_wrapper">
-
 <button v-if="(pageCount>1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt; </button>
   <ul class="card_list">
   <li class="card"  v-for="(item) in filteredData">
@@ -110,13 +121,14 @@ import { useRoute } from 'vue-router'
   </li>
 </ul>
 
-<button v-if="(pageCount !== 11 && !searchQuery.length)" class="arrow" @click="onClickRightHandler"> > </button>
+<button v-if="(pageCount !== 11 && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button>
 </div>
  </div>
+ <div v-if="error" class="error_wrapper">
+<Error :errorText='error'/>
+<button class="error_button" @click="getCards">Try again</button>
+</div>
 </template>
-
-
-
 
 <style scoped>
   .card_list__wrapper {
@@ -126,6 +138,23 @@ import { useRoute } from 'vue-router'
     align-items: center;
     padding: 10px 20px;
     width: 100%;
+  }
+  .error_wrapper{
+    display: flex;
+flex-direction: column;
+align-items: center;
+  }
+  .page_info__wrappper{
+    display: flex;
+flex-direction: column;
+  }
+  .error_button{
+    padding:10px 18px;
+    border:2px solid rgb(199, 199, 232);
+    background-color: rgb(114, 100, 126);
+    border-radius:10px;
+    color:rgb(240, 240, 245);
+    font-size: 17px;
   }
   .card_list {
     display: flex;
