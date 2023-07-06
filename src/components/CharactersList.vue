@@ -3,6 +3,9 @@
 import { ref, watch } from "vue";
 import FiltersModal from './FiltersModal.vue'
 import Error from "./Error.vue";
+import {recipesApi} from "../api-requests/recipes-api.ts"
+import {categoryApi} from '../api-requests/category-api.ts'
+import {filtersApi} from '../api-requests/filters-api.ts'
 
   export default {
 created() {
@@ -13,6 +16,8 @@ created() {
     return {
       info: [],
      searchQuery: ref(""),
+     categories:ref(),
+     smallInfo:ref(),
       pageCount: ref(1),
       allPagesCount:ref(),
       showFiltersModal: ref(false),
@@ -24,7 +29,9 @@ created() {
         status:'',
         gender:''
       }),
-      error:ref()
+      error:ref(),
+      tag:ref(),
+      currentTag:ref()
     };
   
   },
@@ -44,21 +51,30 @@ created() {
       .filter(
         (item) => 
        { 
-      return  item.name.toLowerCase().includes(this.searchQuery.toLowerCase())}
+      return  item.attributes.title.toLowerCase().includes(this.searchQuery.toLowerCase())}
       );
   },
 },
   methods: {
     async getCards() {
     this.error = false;
-  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
-  if(response.ok){
-    const data = await response.json();
-    this.info = data.results
-    return  this.allPagesCount = data.info.pages
-  } else{
-       this.error = true;
-  }
+    this.getCategories()
+  // const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
+ this.info = await recipesApi.getAllRecipesWithIngredientCollection()
+
+  // if(response.ok){
+    // const data = await response.json();
+
+    // this.info = data.data
+    
+    // return  this.allPagesCount = data.info.pages
+  // } else{
+  //      this.error = true;
+  // }
+
+    },
+    async getCategories(){
+  this.categories = await categoryApi.getCategoriesOfRecipes()
     },
     onClickLeftHandler(){
       if(this.pageCount <=1){
@@ -76,6 +92,27 @@ created() {
       this.showFiltersModal=false;
       return this.filters = data
     },
+    async filterByTag (tag: string){
+    // setFavFilter(false);
+    // setError(false);
+    // setLoading(true);
+    try {
+      const filteredList = await filtersApi.filtersByTags(tag);
+      this.info = filteredList
+      // setCardList(filteredList);
+    } catch (err) {
+      // setError(true);
+      console.log(err);
+    } finally {
+      // setLoading(false);
+    }
+  },
+ handleTagClick (item) {
+    // setError(false);
+    // setFavFilter(false);
+    this.currentTag = item
+    this.filterByTag(item.id)
+  },
   //   async getCardsWithFilters() {
   //  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
   // if(response.ok){
@@ -89,6 +126,7 @@ created() {
   // }
   //   },
   },
+
   components: { FiltersModal,Error }
   }
 </script>
@@ -108,21 +146,37 @@ created() {
   <input  v-model="searchQuery">
 </div>
 <div class="page_info__wrapper" >
-<p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p>
+<!-- <p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p> -->
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
+<div>
+  <ul class="tag_list">
+  <li class="tag"  v-for="(item) in categories">
+    <button class="tag_button" @click="handleTagClick(item)">
+    <h1 :title = item.attributes.name class="title">{{item.attributes.name}}</h1>
+    <img :src="item.attributes.image_url" class="tag_image"/>
+  </button>
+  </li>
+
+</ul>
+</div>
 <div  class="pagination_wrapper">
-<button v-if="(pageCount>1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt; </button>
+<!-- <button v-if="(pageCount>1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt; </button> -->
   <ul class="card_list">
   <li class="card"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
-    <h1 :title = item.name class="title">{{item.name}}</h1>
-    <img :src="item.image" class="image"/>
+    <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
+    <img :src="item.attributes.image_url" class="image"/>
+    <h3 :description = item.attributes.description class="description">{{item.attributes.description}}</h3>
+    <div class="small_info">
+    <p :kcal = item.attributes.small_extra_info.data.attributes.kcal class="kcal">{{item.attributes.small_extra_info.data.attributes.kcal}} </p>
+    <p :grams = item.attributes.small_extra_info.data.attributes.grams class="kcal">{{item.attributes.small_extra_info.data.attributes.grams}} </p>
+  </div>
 </RouterLink>
   </li>
 </ul>
 
-<button v-if="(pageCount !== allPagesCount && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button>
+<!-- <button v-if="(pageCount !== allPagesCount && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button> -->
 </div>
  </div>
  <div v-if="error" class="error_wrapper">
@@ -173,7 +227,24 @@ align-items: center;
  border-radius: 50%;
  align-self: center;
   }
-
+  .tag_image{
+ width: 30px;
+ height: 30px;
+ border-radius: 50%;
+ align-self: center;
+  }
+  .tag{
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .tag_list {
+   display: flex;
+   flex-direction: row;
+   list-style: none;
+  }
+.small_info{
+display: flex;
+}
   input{
     padding: 10px;
     border:2px solid rgb(199, 199, 232);
@@ -199,7 +270,7 @@ align-items: center;
     flex-direction:column;
     justify-content: center;
     width:280px;
-    height: 210px;
+    height: 330px;
     padding:10px;
     border:2px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
@@ -220,6 +291,9 @@ align-items: center;
     /* font-size:20px; */
     font-size: 1.2rem;
     /* padding: 10px; */
+  }
+  .description{
+    font-size: 0.7rem;
   }
 .count{
     /* font-size:20px; */

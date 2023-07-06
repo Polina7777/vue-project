@@ -1,9 +1,17 @@
-<script lang="ts" setup>
+<script lang="ts" setup >
+import { ref } from 'vue';
+import { userApi } from '../api-requests/user-api.ts'
+import { favoritesApi } from '../api-requests/favorites-api'
 const props = defineProps({
   show: Boolean,
-  episode:Array
+  process:Array,
+  ingredients:Array,
 })
+//  export default{
+//   props:['show','process','ingredients','recipe'],
 
+ 
+//  }
 </script>
 
 <template>
@@ -15,13 +23,22 @@ const props = defineProps({
               class="modal-default-button"
               @click="$emit('close')"
             >Close</button>
-          <slot name="header">default header</slot>
+          <slot name="header">
+
+    
+            <ul class="ingredients_list">
+  <li class="ingredient"  v-for="(item) in ingredients">
+   <img class="ingredient_image" :src="item.attributes.image_url" />
+  </li>
+   </ul>
+          </slot>
         </div>
         <div class="modal-body">
             <slot name="body">
           <ul class="episodes_list">
-  <li class="episode"  v-for="(item) in episode">
-    <a class="title">{{item}}</a>
+  <li class="episode"  v-for="(item) in process">
+    <a class="name">{{item.attributes.name}}</a>
+    <a class="description">{{item.attributes.description}}</a>
   </li>
    </ul>
    </slot>
@@ -45,7 +62,7 @@ const props = defineProps({
 }
 
 .modal-container {
-  width: 40%;
+  width: 70%;
   min-height: 300px;
   min-width: 300px;
   height: 80%;
@@ -117,5 +134,15 @@ text-decoration: none;
 /* font-size: 18px; */
 font-size: 1rem;
 padding: 10px;
+}
+.ingredients_list{
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+}
+.ingredient_image{
+  width: 30px;
+  height: 30px;
+ justify-content: "center",
 }
 </style>
