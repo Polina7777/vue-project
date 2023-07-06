@@ -7,16 +7,19 @@ import { favoritesApi } from '../api-requests/favorites-api'
 import Modal from './Modal.vue';
 
 import { ref } from 'vue'
+import { threadId } from 'worker_threads';
 export default {
-    // async mounted() {
-    //     this.getCard(this.$route.params.id);
-    // },
+
     created() {
   this.getCard(this.$route.params.id)
+  // this.getUser()
+  // this.checkIsFavorite(this.info)
+  // this.getUsersFavoritesList()
   },
     data() {
         return {
           // id: this.cardId,
+          recipe:ref(),
             info: null,
             showModal: ref(false),
             process:ref(),
@@ -26,44 +29,89 @@ export default {
       check:ref(false),
       userData:ref(),
       favoritesList:ref(),
+      extraInfo:ref()
   
         };
     },
+    watch: {
+   userData: async function getFav() {
+     this.getUsersFavoritesList()
+   },
+   favoritesList:async function checkFav(){
+    this.checkIsFavorite(this.info)
+   }
+},
+    // mounted() {
+    //     this.checkIsFavorite()
+    // },
     methods: {
       async  getCard(id: string) {
-            // fetch("https://rickandmortyapi.com/api/character/" + id)
-            //     .then(response => response.json())
-            //     .then(data => {
-            //       this.episode = data.episode;
-            //       (this.info = data)});
-            this.info = await recipesApi.getRecipeByIdWithIngredientCollection(id)
-            if(this.info){
-           this.getProcess(this.info.attributes.processing.data.id)
-           this.getIngredients(this.info.attributes.ingredient_collection.data.id)
-        }
+        try {
+      const recipeData = await recipesApi.getRecipeByIdWithIngredientCollection(id);
+      const process = await processApi.getProcessByIdWithSteps(
+        recipeData.attributes.processing.data.id
+      );
+      const ingredientsData =
+        await ingredientsApi.getIngredientCollectionByIdWithIngredients(
+          recipeData.attributes.ingredient_collection.data.id
+        );
+      const extraInfoArray = [
+        recipeData.attributes.extra_info.data.attributes.min,
+        recipeData.attributes.extra_info.data.attributes.grams,
+        recipeData.attributes.extra_info.data.attributes.kcal,
+        recipeData.attributes.extra_info.data.attributes.serve,
+      ];
+      const user = await userApi.getUsersById("1");
+      
+  
+      this.ingredients = ingredientsData.attributes.ingredients.data
+      this.extraInfo = extraInfoArray
+      this.info = recipeData
+      this.process = process.attributes.process_steps.data
+      this.userData = user
+      // setExtraInfo(extraInfoArray);
+      // setRecipe(recipe);
+      // setProcess(process.attributes.process_steps.data);
+      // setUserData(user);
+      // this.checkIsFavorite(recipeData)
+    } catch (err) {
+      console.log(err);
+    }
+        //     this.info = await recipesApi.getRecipeByIdWithIngredientCollection(id)
+        //     console.log(this.info,'infooo')
+        //     if(this.info){
+        //    this.getProcess(this.info.attributes.processing.data.id)
+        //    this.getIngredients(this.info.attributes.ingredient_collection.data.id)
+        //    this.checkIsFavorite()
+        // }
       },
-        async getProcess(id:string){
-          this.process = await processApi.getProcessByIdWithSteps(id)
-        },
-        async getIngredients(id:string){
-          this.ingredients = await ingredientsApi.getIngredientCollectionByIdWithIngredients(id);
-        },
+        // async getProcess(id:string){
+        //   this.process = await processApi.getProcessByIdWithSteps(id)
+        // },
+        // async getIngredients(id:string){
+        //   this.ingredients = await ingredientsApi.getIngredientCollectionByIdWithIngredients(id);
+        // },
        goBack(){
         this.$router.push('/characters')
        },
 
-    async getUser(){
-      this.userData = await userApi.getUsersById("1");
-    },
-    checkIsFavorite(recipe){
-    const check = this.favoritesList?.find((item) => recipe.id === item.id);
+    // async getUser(){
+    //   this.userData = await userApi.getUsersById("1");
+    //   this.getUsersFavoritesList()
+    // },
+      checkIsFavorite(recipe){
+      // console.log(recipe,'recipe')
+      // console.log(this.favoritesList,'favList')
+      const check = this.favoritesList?.find((item) => recipe.id === item.id);
       this.checkComplite=true
-    // setCheckComplite(true);
-    check ? this.likeClicked=true : this.likeClicked=false;
-    return check;
+      
+      check ? this.likeClicked=true : this.likeClicked=false;
+      // console.log(check,'chhek')
+      // console.log(this.likeClicked,'llllll')
+      return check;
   },
   likeClick(){
-    
+    console.log(this.info)
     if (!this.info) return;
     const checkResult = this.checkIsFavorite(this.info);
     if (checkResult) {
@@ -73,11 +121,13 @@ export default {
     }
   },
   async getUsersFavoritesList() {
+    console.log(this.userData,this.info,'user,info')
     if (this.userData && this.info) {
       try {
         const favorites = await favoritesApi.getFavorites(
           this.userData?.favorite.id
         );
+        console.log(favorites,'favorites')
         const check = favorites?.find((item) => this.info?.id === item.id);
         check ? this.likeClicked=true : this.likeClicked=false;
         this.favoritesList = favorites;
@@ -123,12 +173,11 @@ export default {
 <template>
   <button class="back_button" @click="goBack">Go Back</button>
   <div class="card_wrapper">
-<button @click="likeClick">
+<div v-if="info" class="card">
+  <button class="button_like" @click="likeClick">
     <img class="like" v-if="!likeClicked" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
     <img class="like" v-if="likeClicked" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
   </button>
-            
-<div v-if="info" class="card">
   <h1 :title = info.attributes.title class="title">{{info.attributes.title}}</h1>
     <img :src="info.attributes.image_url" class="image"/>
 
@@ -138,12 +187,6 @@ export default {
     <p :min = info.attributes.extra_info.data.attributes.min class="kcal">{{info.attributes.extra_info.data.attributes.min}} </p>
     <p :serve = info.attributes.extra_info.data.attributes.serve class="kcal">{{info.attributes.extra_info.data.attributes.serve}} </p>
     </div>
-    <!-- <h1 :title=info.name class="title"> {{info.name}}</h1> -->
-    <!-- <img :src="info.image" class="image"/>
-   <p :status=info.status  class="status"> Status: {{ info.status }}  </p>
-   <p :species=info.species class="species">Species: {{ info.species }}  </p>
-   <p  :gender="info.gender" class="gender"> Gender: {{ info.gender }}  </p>
-   -->
    <button id="show-modal" @click="showModal = true">Show process  </button>
     <Teleport to="body">
     <Modal :show="showModal" @close="showModal = false" :process="process" :ingredients="ingredients" >
@@ -165,6 +208,17 @@ export default {
  padding: 10px;
  align-self: center;
   }
+  .extra_info{
+    padding: 15px 15px;
+    border:2px solid rgb(199, 199, 232);
+    background-color: rgb(135, 121, 148);
+    border-radius:15px;
+    color:rgb(224, 224, 243);
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+    margin-bottom: 10px;
+  }
   .back_button{
     padding:5px 10px;
     border:2px solid rgb(199, 199, 232);
@@ -179,16 +233,20 @@ align-self: center;
   padding: 40px;
 
   }
+  .button_like{
+    align-self: end;
+    background-color: transparent;
+    border: transparent;
+  }
   .like{
-    width: 20px;
-    height:20px
+    width: 40px;
+    height:40px
   }
  .card {
     display: flex;
     align-items: center;
     flex-direction:column;
     align-items: center;
-   /* min-width:400px; */
     padding:20px;
     border:2px solid rgb(199, 199, 232);
     background-color: rgb(156, 140, 170);
@@ -197,13 +255,11 @@ align-self: center;
     color:rgb(224, 224, 243);
   }
   .title{
-    /* font-size:40px; */
     font-size: 1.5rem;
     padding: 10px;
   }
   .title_modal{
     color:rgb(229, 223, 234);;
-    /* font-size: 25px; */
     font-size: 1.2rem;
     align-items: flex-end;
   }
@@ -220,6 +276,9 @@ align-self: center;
     color:rgb(224, 224, 243);
     /* font-size: 20px; */
     font-size: 1rem;
+  }
+  .description{
+    padding: 10px;
   }
  
 </style>

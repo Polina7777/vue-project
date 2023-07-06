@@ -23,7 +23,7 @@ export const getAllIngredientCollectionsWithIngredients = async()=>{
 export const getIngredientCollectionByIdWithIngredients = async(id:string)=>{
     const response = await fetch(`${url_ngrok}api/ingredient-collections/${id}?populate=*`,{method:'GET'});
     const data = await response.json();
-    const collection = data.data.attributes.ingredients.data
+    const collection = data.data
     return collection;
 }
 export const getIngredientCollectionById = async(id:string)=>{

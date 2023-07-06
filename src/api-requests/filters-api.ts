@@ -1,6 +1,6 @@
 import { url_ngrok } from ".";
 
-export const filtersByTags = async (id: string) => {
+ const filtersByTags = async (id: string) => {
   const response = await fetch(
     `${url_ngrok}api/foods?populate=*&filters[categories][id][$eqi]=${id}`,
     { method: "GET" }
@@ -10,7 +10,7 @@ export const filtersByTags = async (id: string) => {
   return filteredData;
 };
 
-export const filtersByFiltersForm = async (filters: {
+ const filtersByFiltersForm = async (filters: {
   kcal: string;
   serve: string;
   grams: string;

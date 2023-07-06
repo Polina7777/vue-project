@@ -3,9 +3,13 @@
 import { ref, watch } from "vue";
 import FiltersModal from './FiltersModal.vue'
 import Error from "./Error.vue";
-import {recipesApi} from "../api-requests/recipes-api.ts"
-import {categoryApi} from '../api-requests/category-api.ts'
-import {filtersApi} from '../api-requests/filters-api.ts'
+import { categoryApi } from '../api-requests/category-api.ts'
+import { filtersApi } from '../api-requests/filters-api.ts'
+import { url_ngrok } from "@/api-requests";
+import { favoritesApi } from "@/api-requests/favorites-api";
+import { userApi } from "@/api-requests/user-api";
+import { recipesApi } from "@/api-requests/recipes-api";
+import { threadId } from "worker_threads";
 
   export default {
 created() {
@@ -24,14 +28,17 @@ created() {
       filterName:ref(''),
       filterStatus:ref(''),
       filterGender:ref(''),
-      filters: ref({
-        name:'',
-        status:'',
-        gender:''
-      }),
+      // filters: ref({
+      //   name:'',
+      //   status:'',
+      //   gender:''
+      // }),
+      filters: ref(),
       error:ref(),
       tag:ref(),
-      currentTag:ref()
+      currentTag:ref(),
+      loading:ref(),
+      favFilter:ref()
     };
   
   },
@@ -43,6 +50,18 @@ created() {
     this.pageCount = 1;
     this.getCards()
    },
+   currentTag: async function filterTag(){
+    console.log(this.currentTag,'current')
+
+      this.filterByTag(this.currentTag?.id);
+    
+   },
+  //  favFilter:async function filterFav(){
+  //   if(this.favFilter){  
+  //     this.filterByFavorites()
+  //   }
+  
+   
 
 },
   computed: {
@@ -57,25 +76,79 @@ created() {
 },
   methods: {
     async getCards() {
-    this.error = false;
-    this.getCategories()
-  // const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
- this.info = await recipesApi.getAllRecipesWithIngredientCollection()
-
-  // if(response.ok){
-    // const data = await response.json();
-
-    // this.info = data.data
-    
-    // return  this.allPagesCount = data.info.pages
-  // } else{
-  //      this.error = true;
-  // }
-
+      this.error = false;
+      this.loading = true;
+    this.favFilter=false;
+    this.getCategories();
+    try {
+      this.info = await recipesApi.getAllRecipesWithIngredientCollection()
+    } catch (err) {
+      this.error = true;
+      console.log(err);
+    } finally {
+      this.loading = false;
+    }
     },
     async getCategories(){
-  this.categories = await categoryApi.getCategoriesOfRecipes()
+      this.loading = true;
+    this.error = false;
+    try {
+      this.categories = await categoryApi.getCategoriesOfRecipes()
+    } catch (err) {
+      this.error = true;
+      console.log(err);
+    } finally {
+      this.loading = false;
+    }
     },
+    async filterByFavorites(){
+      this.loading = true;
+      this.favFilter=true;
+      this.error = false;
+    try {
+      const user = await userApi.getUsersById("1");
+      const filteredList = await favoritesApi.getFavorites(user.favorite.id);
+      console.log(filteredList,'liiist')
+      const idArr = filteredList.map((item: any) => item.id);
+      const resultArray = [];
+      for (const item of idArr) {
+        const response = await fetch(
+          `${url_ngrok}api/foods/${item}?populate=*`
+        );
+        const result = await response.json();
+        resultArray.push(result.data);
+      }
+      this.info = resultArray
+      // setCardList(resultArray);
+    } catch (error) {
+      this.error = true;
+      console.log(error);
+    } finally {
+      this.loading = false;
+    }
+  },
+  async  getFilteredCardListByFiltersModal(){
+    this.loading = true;
+    this.error = false;
+    try {
+      const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters);
+      this.filters = null
+      // setFilters([]);
+      if (filteredCardList.length) {
+        this.info = filteredCardList
+        // setCardList(filteredCardList);
+      } else {
+        this.error = true;
+      }
+      this.loading = false;
+    } catch (err) {
+      this.error = true;
+      console.log(err);
+    } finally {
+      this.loading = false;
+    }
+  },
+
     onClickLeftHandler(){
       if(this.pageCount <=1){
         return 1
@@ -93,38 +166,27 @@ created() {
       return this.filters = data
     },
     async filterByTag (tag: string){
-    // setFavFilter(false);
-    // setError(false);
-    // setLoading(true);
+      this.error = false
+      this.error = false
+      this.favFilter=false;
+      this.loading = true;
     try {
       const filteredList = await filtersApi.filtersByTags(tag);
       this.info = filteredList
-      // setCardList(filteredList);
     } catch (err) {
-      // setError(true);
+      this.error = true
       console.log(err);
     } finally {
-      // setLoading(false);
+      this.loading = false;
     }
   },
  handleTagClick (item) {
-    // setError(false);
-    // setFavFilter(false);
+    this.error = false
+    this.favFilter=false;
     this.currentTag = item
-    this.filterByTag(item.id)
+    // this.filterByTag(item.id)
   },
-  //   async getCardsWithFilters() {
-  //  const response = await fetch('https://rickandmortyapi.com/api/character/?page='+this.pageCount+'&name='+this.filters.name+'&status='+this.filters.status+'&gender='+this.filters.gender)
-  // if(response.ok){
-  //   const data = await response.json();
-  //   this.allPagesCount = data.info.pages
-  //   this.info = data.results
-  // }else{
-  //   const data = await response.json();
-  //   console.log(data.error)
-  //      this.error = data.error;
-  // }
-  //   },
+
   },
 
   components: { FiltersModal,Error }
@@ -150,10 +212,15 @@ created() {
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
 <div>
+
   <ul class="tag_list">
+    <button class="tag_button" @click="filterByFavorites">
+    <h1 title="Favorites" class="tag_title">Favorites</h1>
+    <img src='https://www.svgrepo.com/show/422454/heart-love-romantic.svg' class="tag_image"/>
+  </button>
   <li class="tag"  v-for="(item) in categories">
     <button class="tag_button" @click="handleTagClick(item)">
-    <h1 :title = item.attributes.name class="title">{{item.attributes.name}}</h1>
+    <h1 :title = item.attributes.name class="tag_title">{{item.attributes.name}}</h1>
     <img :src="item.attributes.image_url" class="tag_image"/>
   </button>
   </li>
@@ -167,11 +234,12 @@ created() {
 <RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
     <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
     <img :src="item.attributes.image_url" class="image"/>
-    <h3 :description = item.attributes.description class="description">{{item.attributes.description}}</h3>
     <div class="small_info">
     <p :kcal = item.attributes.small_extra_info.data.attributes.kcal class="kcal">{{item.attributes.small_extra_info.data.attributes.kcal}} </p>
     <p :grams = item.attributes.small_extra_info.data.attributes.grams class="kcal">{{item.attributes.small_extra_info.data.attributes.grams}} </p>
   </div>
+    <h3 :description = item.attributes.description class="description">{{item.attributes.description}}</h3>
+  
 </RouterLink>
   </li>
 </ul>
@@ -233,17 +301,41 @@ align-items: center;
  border-radius: 50%;
  align-self: center;
   }
-  .tag{
+  .tag {
     display: flex;
     flex-direction: row-reverse;
+  }
+  .tag_title{
+    font-size: 1rem;
   }
   .tag_list {
    display: flex;
    flex-direction: row;
+   flex-wrap: wrap;
    list-style: none;
+   align-items: center;
+   justify-content: center;
+   gap:7px;
+   padding: 20px;
+  }
+  .tag_button{
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 5px 9px;
+    min-width: 120px;
+    border-radius: 10px;
+    border:1px solid rgb(207, 234, 102);
+    background-color: rgb(94, 83, 103);
+    color:rgb(207, 234, 102);
+    justify-content: center;
+    align-items: center;
+    gap:7px;
+
   }
 .small_info{
 display: flex;
+gap:11px;
+margin: 10px;
 }
   input{
     padding: 10px;
@@ -293,7 +385,8 @@ display: flex;
     /* padding: 10px; */
   }
   .description{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    padding: 15px;
   }
 .count{
     /* font-size:20px; */
