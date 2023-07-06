@@ -4,6 +4,8 @@ import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { ref } from 'vue'
+import { userApi } from '@/api-requests/user-api'
+
 export default {
   props: ['submitAuth'],
   data () {
@@ -18,13 +20,16 @@ export default {
       email: { required,email},
       password:{required,numeric,minLength:minLength(6)}
     },
+    error:ref()
     }
   },
   methods: {
   async submit() {
     const isFormCorrect = await this.v$.$validate()
     if (isFormCorrect) {
-      this.signIn()
+  //  this.reg()
+      // this.signIn()
+      this.login()
       this.$router.push('/')
        return this.submitAuth({
         // name: this.name,
@@ -35,30 +40,73 @@ export default {
         alert('Form failed validation')
      }
     },
-    signIn(){ 
-    signInWithEmailAndPassword(getAuth(),this.email,this.password)
-  .then((data) => {
-    console.log('Successfully logged in!');
-    this.$router.push('/')
-  })
-  .catch(error => {
-    switch (error.code) {
-      case 'auth/invalid-email':
-          this.errMsg.value = 'Invalid email'
-          break
-      case 'auth/user-not-found':
-          this.errMsg.value = 'No account with that email was found'
-          break
-      case 'auth/wrong-password':
-         this.errMsg.value = 'Incorrect password'
-          break  
-      default:
-          this.errMsg.value = 'Email or password was incorrect'
-          break
-    }
-  });
-}
-
+    // async reg(){
+    //   try {
+    //  const registerData = await userApi.RegisterUser(this.name,this.surname,this.email,this.password)
+    //  console.log(registerData)
+    //  return registerData
+    //   }
+    // catch (err) {
+    //   console.log(err);
+    // }
+    
+//     signIn(){ 
+//     signInWithEmailAndPassword(getAuth(),this.email,this.password)
+//   .then((data) => {
+//     console.log('Successfully logged in!');
+//     this.$router.push('/')
+//   })
+//   .catch(error => {
+//     switch (error.code) {
+//       case 'auth/invalid-email':
+//           this.errMsg.value = 'Invalid email'
+//           break
+//       case 'auth/user-not-found':
+//           this.errMsg.value = 'No account with that email was found'
+//           break
+//       case 'auth/wrong-password':
+//          this.errMsg.value = 'Incorrect password'
+//           break  
+//       default:
+//           this.errMsg.value = 'Email or password was incorrect'
+//           break
+//     }
+//   });
+// }
+async login() {
+  // e.preventDefault() 
+  console.log('log')               
+  try {
+  const res = await userApi.loginUser(this.email,this.password)
+  console.log(res)
+   const { jwt, user } = res.data
+    window.localStorage.setItem('jwt', jwt)
+     window.localStorage.setItem('userData', JSON.stringify(user))
+    const res2 = userApi.userBearer(jwt,user)
+    console.log(res)
+      window.localStorage.setItem('bookmarks', JSON.stringify(res2?.data?.bookmarks || []))
+      this.$router.push('/')
+       } catch(error) {
+      this.error = true
+       this.password = ''
+         }
+       },
+//        async register(e) {
+//                         try {
+//                             e.preventDefault()
+//                                 await this.axios.post(`http://localhost:1337/api/auth/local/register`, {
+//                                 name: this.name,
+//                                 password: this.password,
+//                                 email: this.email,
+//                                 username: this.username
+//                             })
+//                             this.$router.push('login')
+//                         } catch(e) {
+//                             this.error = true
+//                             this.email = ''
+//                         } 
+//                     }
+// }
 },
 validations() {
     return {

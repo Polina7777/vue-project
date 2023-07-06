@@ -4,6 +4,5 @@ import Character from '../components/Character.vue'
 
   <template>
   <Character />
-  <!-- :cardId=$route.params.id   -->
   </template>
 

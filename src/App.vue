@@ -87,7 +87,7 @@ export default {
   </header>
   <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="isLoggedIn"  to="/characters">Characters</RouterLink>
+        <RouterLink v-if="isLoggedIn"  to="/recipes">Recipes</RouterLink>
         <RouterLink v-if="isLoggedIn"  to="/locations" >Locations</RouterLink>
       </nav>
   <RouterView />
@@ -137,7 +137,6 @@ nav a:first-of-type {
   background-color: rgb(114, 100, 126);
 border-radius:10px;
 color:rgba(230, 230, 246, 0.972);
-/* font-size: 21px; */
 font-size: 1rem;
 margin: 10px;
 }

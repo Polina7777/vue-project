@@ -3,18 +3,19 @@ export default {
   props: ['submitFilters'],
   data () {
     return {
-     name: '',
-      status: '',
-      gender:''
+      kcal: "",
+     serve: "",
+      grams: "",
     }
   },
 
   methods: {
     submit () {
     return this.submitFilters({
-        name: this.name,
-        status: this.status,
-       gender: this.gender,
+      kcal: this.kcal,
+      serve: this.serve,
+      grams: this.grams,
+  
       })
     }
   }
@@ -24,9 +25,18 @@ export default {
 <template>
     <div class="filters_wrapper">
    <div class="name_input">
-  <input class="name" placeholder="Name" v-model="name"> 
+    <h2>Kcal:</h2>
+  <input class="name" placeholder="kcal" v-model="kcal"> 
 </div>
-<div class="status_input">
+<div class="name_input">
+  <h2>Serve:</h2>
+  <input class="name" placeholder="serve" v-model="serve"> 
+</div>
+<div class="name_input">
+  <h2>Grams:</h2>
+  <input class="name" placeholder="grams" v-model="grams"> 
+</div>
+<!-- <div class="status_input">
   <h2>Status</h2>
   <div class="radio_wrapper">
   <input type="radio" id="alive" value="alive" v-model="status">
@@ -38,8 +48,8 @@ export default {
   <input type="radio" id="unknow" value="unknow" v-model="status">
   <label for="unknow">Unknow</label>
 </div>
-</div>
-<div class="gender_input">
+</div> -->
+<!-- <div class="gender_input">
   <h2>Gender</h2>
   <div class="radio_wrapper">
   <input type="radio" id="female" value="female" v-model="gender">
@@ -53,7 +63,7 @@ export default {
   <input type="radio" id="unknow" value="unknow" v-model="gender">
   <label for="unknow">Unknow</label>
 </div>
-</div>
+</div> -->
 <button class="submit_button" @click=submit>Submit</button>
 </div>
 </template>

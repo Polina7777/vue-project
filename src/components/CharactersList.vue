@@ -10,6 +10,7 @@ import { favoritesApi } from "@/api-requests/favorites-api";
 import { userApi } from "@/api-requests/user-api";
 import { recipesApi } from "@/api-requests/recipes-api";
 import { threadId } from "worker_threads";
+import { runInThisContext } from "vm";
 
   export default {
 created() {
@@ -28,12 +29,12 @@ created() {
       filterName:ref(''),
       filterStatus:ref(''),
       filterGender:ref(''),
-      // filters: ref({
-      //   name:'',
-      //   status:'',
-      //   gender:''
-      // }),
-      filters: ref(),
+      filters: ref({
+       kcal: "",
+       serve: "",
+       grams: "",
+      }),
+      // filters: ref(),
       error:ref(),
       tag:ref(),
       currentTag:ref(),
@@ -52,20 +53,13 @@ created() {
    },
    currentTag: async function filterTag(){
     console.log(this.currentTag,'current')
-
       this.filterByTag(this.currentTag?.id);
     
    },
-  //  favFilter:async function filterFav(){
-  //   if(this.favFilter){  
-  //     this.filterByFavorites()
-  //   }
-  
-   
-
 },
   computed: {
     filteredData() {
+      console.log(this.info,'nknknnnknk')
     return this.info
       .filter(
         (item) => 
@@ -118,7 +112,7 @@ created() {
         const result = await response.json();
         resultArray.push(result.data);
       }
-      this.info = resultArray
+      this.info = resultArray;
       // setCardList(resultArray);
     } catch (error) {
       this.error = true;
@@ -130,12 +124,17 @@ created() {
   async  getFilteredCardListByFiltersModal(){
     this.loading = true;
     this.error = false;
+    console.log(this.filters,'this.filters')
     try {
       const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters);
-      this.filters = null
-      // setFilters([]);
+      this.filters = {
+        kcal: "",
+       serve: "",
+       grams: "",
+      }
       if (filteredCardList.length) {
-        this.info = filteredCardList
+       console.log(filteredCardList,'thiiiiiiis')
+       this.info = filteredCardList
         // setCardList(filteredCardList);
       } else {
         this.error = true;
@@ -163,7 +162,10 @@ created() {
     },
     submitFilters (data: any) {
       this.showFiltersModal=false;
-      return this.filters = data
+      console.log(data,'data')
+      this.filters = data
+      this.getFilteredCardListByFiltersModal()
+    
     },
     async filterByTag (tag: string){
       this.error = false
@@ -171,8 +173,8 @@ created() {
       this.favFilter=false;
       this.loading = true;
     try {
-      const filteredList = await filtersApi.filtersByTags(tag);
-      this.info = filteredList
+     this.info = await filtersApi.filtersByTags(tag);
+      // this.info = filteredList
     } catch (err) {
       this.error = true
       console.log(err);
@@ -231,7 +233,7 @@ created() {
 <!-- <button v-if="(pageCount>1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt; </button> -->
   <ul class="card_list">
   <li class="card"  v-for="(item) in filteredData">
-<RouterLink :to="{name : 'character' ,params : {id: item.id}}" >
+<RouterLink :to="{name : 'recipe' ,params : {id: item.id}}" >
     <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
     <img :src="item.attributes.image_url" class="image"/>
     <div class="small_info">

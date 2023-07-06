@@ -2,12 +2,13 @@
   import { recipesApi } from '@/api-requests/recipes-api';
   import { processApi } from '@/api-requests/process-api';
   import {ingredientsApi} from '../api-requests/ingredients-api';
-  import { userApi } from '../api-requests/user-api.ts'
+  import { userApi } from '@/api-requests/user-api';
 import { favoritesApi } from '../api-requests/favorites-api'
 import Modal from './Modal.vue';
 
 import { ref } from 'vue'
-import { threadId } from 'worker_threads';
+
+
 export default {
 
     created() {
@@ -77,37 +78,15 @@ export default {
     } catch (err) {
       console.log(err);
     }
-        //     this.info = await recipesApi.getRecipeByIdWithIngredientCollection(id)
-        //     console.log(this.info,'infooo')
-        //     if(this.info){
-        //    this.getProcess(this.info.attributes.processing.data.id)
-        //    this.getIngredients(this.info.attributes.ingredient_collection.data.id)
-        //    this.checkIsFavorite()
-        // }
       },
-        // async getProcess(id:string){
-        //   this.process = await processApi.getProcessByIdWithSteps(id)
-        // },
-        // async getIngredients(id:string){
-        //   this.ingredients = await ingredientsApi.getIngredientCollectionByIdWithIngredients(id);
-        // },
+       
        goBack(){
-        this.$router.push('/characters')
+        this.$router.push('/recipes')
        },
-
-    // async getUser(){
-    //   this.userData = await userApi.getUsersById("1");
-    //   this.getUsersFavoritesList()
-    // },
       checkIsFavorite(recipe){
-      // console.log(recipe,'recipe')
-      // console.log(this.favoritesList,'favList')
       const check = this.favoritesList?.find((item) => recipe.id === item.id);
       this.checkComplite=true
-      
       check ? this.likeClicked=true : this.likeClicked=false;
-      // console.log(check,'chhek')
-      // console.log(this.likeClicked,'llllll')
       return check;
   },
   likeClick(){

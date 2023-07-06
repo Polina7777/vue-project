@@ -16,6 +16,9 @@ main{
   justify-content: center;
   align-items: center;
 }
+ul{
+  padding: 0;
+}
 a,
 .green {
   text-decoration: none;

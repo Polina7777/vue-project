@@ -1,17 +1,9 @@
 <script lang="ts" setup >
-import { ref } from 'vue';
-import { userApi } from '../api-requests/user-api.ts'
-import { favoritesApi } from '../api-requests/favorites-api'
 const props = defineProps({
   show: Boolean,
   process:Array,
   ingredients:Array,
 })
-//  export default{
-//   props:['show','process','ingredients','recipe'],
-
- 
-//  }
 </script>
 
 <template>
@@ -24,19 +16,17 @@ const props = defineProps({
               @click="$emit('close')"
             >Close</button>
           <slot name="header">
-
-    
+          </slot>
+        </div>
+        <div class="modal-body">
+            <slot name="body">
             <ul class="ingredients_list">
   <li class="ingredient"  v-for="(item) in ingredients">
    <img class="ingredient_image" :src="item.attributes.image_url" />
   </li>
    </ul>
-          </slot>
-        </div>
-        <div class="modal-body">
-            <slot name="body">
-          <ul class="episodes_list">
-  <li class="episode"  v-for="(item) in process">
+          <ul class="step_list">
+  <li class="step"  v-for="(item) in process">
     <a class="name">{{item.attributes.name}}</a>
     <a class="description">{{item.attributes.description}}</a>
   </li>
@@ -66,7 +56,7 @@ const props = defineProps({
   min-height: 300px;
   min-width: 300px;
   height: 80%;
-  overflow: scroll;
+  /* overflow: scroll; */
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -78,7 +68,7 @@ background-color: rgb(156, 140, 170);
 border-radius:10px;
 color:rgba(0, 0, 255, 0.129);
 }
-.episodes_list{
+.step_list{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -90,7 +80,6 @@ color:rgba(0, 0, 255, 0.129);
     background-color: rgb(135, 121, 148);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    /* font-size: 20px; */
     font-size: 1rem;
   }
 .modal-header h3 {
@@ -99,22 +88,12 @@ color:rgba(0, 0, 255, 0.129);
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: 50px 0;
 }
 
 .modal-default-button {
   float: right;
 }
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 .modal-enter-from {
   opacity: 0;
 }
@@ -128,21 +107,37 @@ color:rgba(0, 0, 255, 0.129);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
-.episode, .title {
+.description {
 list-style-type: none;
 text-decoration: none;
-/* font-size: 18px; */
 font-size: 1rem;
+padding: 10px;
+}
+.step{
+  list-style-type: none;
+text-decoration: none;
+font-size: 1.2rem;
+font-weight: 600;
 padding: 10px;
 }
 .ingredients_list{
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap:10px;
   list-style: none;
 }
 .ingredient_image{
   width: 30px;
   height: 30px;
- justify-content: "center",
+ justify-content: "center";
+
+}
+.ingredient{
+  padding:7px 10px;
+    border:2px solid rgb(199, 199, 232);
+    background-color: rgb(135, 121, 148);
+    border-radius:50%;
 }
 </style>

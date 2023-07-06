@@ -4,6 +4,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router' // import router
 import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
+import { userApi } from '@/api-requests/user-api'
 
 export default {
   props: ['submitReg'],
@@ -39,16 +40,28 @@ export default {
         alert('Form failed validation')
      }
     },
-    register(){
-    createUserWithEmailAndPassword(getAuth(),this.email,this.password) // need .value because ref()
-    .then((data) => {
-      console.log('Successfully registered!');
-      this.$router.push('/')
-    })
-    .catch(error => {
-      console.log(error.code)
-      alert(error.message);
-    });
+  //   register(){
+  //   createUserWithEmailAndPassword(getAuth(),this.email,this.password) // need .value because ref()
+  //   .then((data) => {
+  //     console.log('Successfully registered!');
+  //     this.$router.push('/')
+  //   })
+  //   .catch(error => {
+  //     console.log(error.code)
+  //     alert(error.message);
+  //   });
+  // },
+     async register(){
+      try {
+     const registerData = await userApi.RegisterUser(this.name,this.surname,this.email,this.password)
+     console.log(registerData)
+     console.log('Successfully registered!');
+     return registerData
+      }
+    catch (err) {
+      console.log(err);
+    }
+    
 }
 
 

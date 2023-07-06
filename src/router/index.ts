@@ -14,8 +14,8 @@ const router = createRouter({
       }
     },
     {
-      path: '/characters',
-      name: 'characters',
+      path: '/recipes',
+      name: 'recipes',
       component: () => import('../views/CharactersView.vue'),
       props: true,
       meta:{
@@ -34,7 +34,7 @@ const router = createRouter({
       }
     },
     
-    { path: '/characters/:id', name: 'character' ,component: () => import('../views/CharacterView.vue')},
+    { path: '/recipes/:id', name: 'recipe' ,component: () => import('../views/CharacterView.vue')},
     { path: '/locations/:id', name: 'location' ,component: () => import('../views/LocationView.vue')},
   ]
 })
