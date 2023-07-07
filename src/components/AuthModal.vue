@@ -3,7 +3,7 @@ import AuthForm from './AuthForm.vue';
 
 const props = defineProps({
  showAuthModal: Boolean,
-  submitAuth:Function,
+  user:Function,
 })
 </script>
 <template>
@@ -19,7 +19,7 @@ const props = defineProps({
         </div>
         <div class="modal-body">
             <slot name="body">
-        <AuthForm :submitAuth='submitAuth'/>
+        <AuthForm :user='user'/>
    </slot>
         </div>
       </div>

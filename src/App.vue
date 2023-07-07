@@ -4,14 +4,15 @@ import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
+
 export default {
 
   data() {
     return {
     showAuthModal: ref(false),
-    user: ref(null),
     showRegModal: ref(false),
-    isLoggedIn:ref(false)
+    isLoggedIn:ref(false),
+    userData:ref()
     };
   },
 //  create() {
@@ -23,15 +24,16 @@ export default {
 //     } 
 //   },
 //   )},
-  beforeMount() {
-    onAuthStateChanged(getAuth(),(user) => {
-    if (user) {
-    this.isLoggedIn = true // if we have a user
-    } else {
-      this.isLoggedIn = false // if we do not
-    } 
-  },
-)},
+  // beforeMount() {
+  //   onAuthStateChanged(getAuth(),(user) => {
+  //   if (user) {
+  //   this.isLoggedIn = true // if we have a user
+  //   } else {
+  //     this.isLoggedIn = false // if we do not
+  //   } 
+  // },
+// )
+// },
 //   async mounted() {
 //     onAuthStateChanged(getAuth(),(user) => {
 //     if (user) {
@@ -41,20 +43,45 @@ export default {
 //     }
 // })
 //     },
+
+beforeMount() {
+this.authListener()
+},
+onMounted(){
+   this.authListener()
+},
+
+watch:{
+  userData: async function checkIsLogged() {
+    this.authListener()
+   }
+},
   methods: {
-    submitAuth(data: any) {
+
+    userAuth(data: any) {
       this.showAuthModal=false;
-      return this.user = data
+    return this.userData=data
     },
-    submitReg(data: any) {
+    userReg(data: any) {
       this.showRegModal=false;
-      return this.user = data
+      return this.userData=data
     },
     signOut() {
       this.$router.push('/')
-      signOut(getAuth())
-      return this.user = null;
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('userData');
+      // signOut(getAuth())
+      return this.userData = null;
     },
+    authListener(){
+    const user = localStorage.getItem('jwt')
+    console.log(user)
+    if(!user){
+       return this.isLoggedIn= false
+    }else{
+      return this.isLoggedIn = true
+    }
+}
   
   },
   components: { AuthModal, RegisterModal }
@@ -69,15 +96,15 @@ export default {
       <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
       <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
     <Teleport to="body">
-    <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false" :submitAuth='submitAuth' >
+    <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false"  :user="userAuth" >
+      <!-- :submitAuth='submitAuth' -->
       <template #header>
         <h3 class="title_modal"> Sign In</h3>
       </template>
     </AuthModal>
   </Teleport>
   <Teleport to="body">
-    <RegisterModal :showRegModal="showRegModal" @close="showRegModal = false" :submitReg='submitReg'>
-   
+    <RegisterModal :showRegModal="showRegModal"  @close="showRegModal = false" :user="userReg" >
       <template #header>
         <h3 class="title_modal"> Sign Up</h3>
       </template>
@@ -88,7 +115,7 @@ export default {
   <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="isLoggedIn"  to="/recipes">Recipes</RouterLink>
-        <RouterLink v-if="isLoggedIn"  to="/locations" >Locations</RouterLink>
+        <!-- <RouterLink v-if="isLoggedIn"  to="/locations" >Locations</RouterLink> -->
       </nav>
   <RouterView />
   <RouterView name="users" />

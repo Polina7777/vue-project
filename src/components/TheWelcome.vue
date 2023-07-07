@@ -9,7 +9,6 @@
 <style >
 .description {
   padding: 40px;
-  /* font-size: 30px; */
   font-size: 2rem;
   color:rgb(233, 233, 248);
 }

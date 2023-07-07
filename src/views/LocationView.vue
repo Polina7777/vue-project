@@ -4,6 +4,5 @@ import LocationCard from '../components/LocationCard.vue'
 
   <template>
   <LocationCard /> 
-  <!-- :cardId=$route.params.id  -->
   </template>
 

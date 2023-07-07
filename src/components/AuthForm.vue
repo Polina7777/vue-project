@@ -1,5 +1,4 @@
 <script lang="ts" >
-import { useRouter } from 'vue-router' // import router
 import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
@@ -7,12 +6,10 @@ import { ref } from 'vue'
 import { userApi } from '@/api-requests/user-api'
 
 export default {
-  props: ['submitAuth'],
+  props: ['user'],
   data () {
     return {
     v$: useValidate(),
-     name: '',
-     surname: '',
      email:'',
      password:'',
      errMsg: ref(),
@@ -27,15 +24,8 @@ export default {
   async submit() {
     const isFormCorrect = await this.v$.$validate()
     if (isFormCorrect) {
-  //  this.reg()
-      // this.signIn()
       this.login()
       this.$router.push('/')
-       return this.submitAuth({
-        // name: this.name,
-        // surname: this.surname,
-        email: this.email,
-        password: this.password })
     }else {
         alert('Form failed validation')
      }
@@ -73,40 +63,33 @@ export default {
 //     }
 //   });
 // }
-async login() {
-  // e.preventDefault() 
-  console.log('log')               
+async login() {             
   try {
   const res = await userApi.loginUser(this.email,this.password)
-  console.log(res)
-   const { jwt, user } = res.data
-    window.localStorage.setItem('jwt', jwt)
-     window.localStorage.setItem('userData', JSON.stringify(user))
-    const res2 = userApi.userBearer(jwt,user)
-    console.log(res)
-      window.localStorage.setItem('bookmarks', JSON.stringify(res2?.data?.bookmarks || []))
-      this.$router.push('/')
-       } catch(error) {
+    localStorage.setItem('jwt', res.jwt)
+     localStorage.setItem('userData', JSON.stringify(res.user))
+    this.$router.push('/')
+    this.user({
+      jwt:res.jwt,
+      user:res.user
+    })
+   } catch(error) {
+    console.log(error)
       this.error = true
        this.password = ''
          }
        },
-//        async register(e) {
-//                         try {
-//                             e.preventDefault()
-//                                 await this.axios.post(`http://localhost:1337/api/auth/local/register`, {
-//                                 name: this.name,
-//                                 password: this.password,
-//                                 email: this.email,
-//                                 username: this.username
-//                             })
-//                             this.$router.push('login')
-//                         } catch(e) {
-//                             this.error = true
-//                             this.email = ''
-//                         } 
-//                     }
-// }
+  userBearer(jwt,user){
+    try {
+      const res2 = userApi.userBearer(jwt,user)
+    console.log(res2)
+  // localStorage.setItem('bookmarks', JSON.stringify(res2?.data?.bookmarks || []))
+      this.$router.push('/')
+    } catch (error) {
+      this.error = true
+      console.log(error)
+    }
+  }
 },
 validations() {
     return {
@@ -141,7 +124,6 @@ validations() {
     padding-bottom: 30px;
 }
 h2{
-  /* font-size: 15px; */
   font-size: 1rem;
 }
 .auth_input, .name {
@@ -165,7 +147,6 @@ h2{
 }
 .name_input{
   width:100%;
-  /* font-size: 15px; */
   font-size: 1rem;
 }
 .submit_button{
@@ -174,12 +155,10 @@ h2{
     background-color: rgb(114, 100, 126);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    /* font-size: 17px; */
     font-size: 1rem;
     align-items: center;
 }
 .error{
-  /* font-size: 10px; */
   font-size: 1rem;
   color:red
 }

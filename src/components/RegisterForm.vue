@@ -1,13 +1,12 @@
 <script lang='ts'>
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { useRouter } from 'vue-router' // import router
 import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
 import { userApi } from '@/api-requests/user-api'
 
 export default {
-  props: ['submitReg'],
+  props: ['user'],
   data () {
     return {
     v$: useValidate(),
@@ -22,20 +21,14 @@ export default {
       email: { required,email},
       password:{required,numeric,minLength:minLength(6)}
     },
-
     }
   },
   methods: {
   async submit() {
     const isFormCorrect = await this.v$.$validate()
-    if (isFormCorrect) {
-     this.register()
-     this.$router.push('/')
-       return this.submitReg({
-        name: this.name,
-        surname: this.surname,
-        email: this.email,
-        password: this.password })
+     if (isFormCorrect) {
+      this.register()
+      this.$router.push('/')
     }else {
         alert('Form failed validation')
      }
@@ -53,18 +46,18 @@ export default {
   // },
      async register(){
       try {
-     const registerData = await userApi.RegisterUser(this.name,this.surname,this.email,this.password)
-     console.log(registerData)
-     console.log('Successfully registered!');
-     return registerData
+     const registerData = await userApi.registerUser(this.name,this.surname,this.email,this.password)
+     localStorage.setItem('jwt', registerData.jwt)
+     localStorage.setItem('userData', JSON.stringify(registerData.user))
+    this.$router.push('/')
+    this.user({
+      jwt:registerData.jwt,
+      user:registerData.user
+    })
       }
     catch (err) {
       console.log(err);
     }
-    
-}
-
-
 },
 validations() {
     return {
@@ -74,28 +67,28 @@ validations() {
       password:{required,numeric,minLength:minLength(6),$autoDirty: true,$lazy: true }
   }
   },
-}
+}}
 </script>
 
 
 <template>
     <div class="auth_inputs__wrapper">
   <input class="auth_input" placeholder="Name" v-model="name"> 
-  <span class='error' v-if="v$.name.$error">
+  <!-- <span class='error' v-if="v$.name.$error">
         {{ v$.name.$errors[0].$message }}
-      </span>
+      </span> -->
   <input class="auth_input" placeholder="Surname" v-model="surname"> 
-  <span class='error' v-if="v$.surname.$error">
+  <!-- <span class='error' v-if="v$.surname.$error">
         {{ v$.surname.$errors[0].$message }}
-      </span>
+      </span> -->
   <input class="auth_input" type="email" placeholder="Email" v-model="email"> 
-  <span class='error' v-if="v$.email.$error">
+  <!-- <span class='error' v-if="v$.email.$error">
         {{ v$.email.$errors[0].$message }}
-      </span>
+      </span> -->
   <input class="auth_input" type="password" placeholder="Password" v-model="password"> 
-  <span class='error' v-if="v$.password.$error">
+  <!-- <span class='error' v-if="v$.password.$error">
         {{ v$.password.$errors[0].$message }}
-      </span>
+      </span> -->
 </div>
 <button class='submit_button' @click=submit>Submit</button>
 </template>

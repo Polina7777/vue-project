@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import RegisterForm from './RegisterForm.vue';
+
 const props = defineProps({
  showRegModal: Boolean,
- submitReg:Function,
+ user:Function,
 })
 </script>
 
@@ -19,7 +20,7 @@ const props = defineProps({
         </div>
         <div class="modal-body">
             <slot name="body">
-        <RegisterForm :submitReg='submitReg' />
+        <RegisterForm :user='user' />
 
    </slot>
         </div>
@@ -88,15 +89,6 @@ justify-content: center;
   float: right;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 .modal-enter-from {
   opacity: 0;
 }
@@ -113,7 +105,6 @@ justify-content: center;
 .episode, .title {
 list-style-type: none;
 text-decoration: none;
-/* font-size: 18px; */
 font-size: 1rem;
 padding: 10px;
 }

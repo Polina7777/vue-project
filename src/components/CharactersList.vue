@@ -60,7 +60,7 @@ created() {
   computed: {
     filteredData() {
       console.log(this.info,'nknknnnknk')
-    return this.info
+ return this.info
       .filter(
         (item) => 
        { 
