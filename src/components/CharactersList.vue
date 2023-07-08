@@ -37,7 +37,8 @@ created() {
       tag:ref(),
       currentTag:ref(),
       loading:ref(),
-      favFilter:ref()
+      favFilter:ref(),
+      errorText:ref('No result!')
     };
   
   },
@@ -162,7 +163,6 @@ created() {
     },
     submitFilters (data: any) {
       this.showFiltersModal=false;
-      console.log(data,'data')
       this.filters = data
       this.getFilteredCardListByFiltersModal()
     
@@ -248,8 +248,8 @@ created() {
 <!-- <button v-if="(pageCount !== allPagesCount && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button> -->
 </div>
  </div>
- <div v-if="error" class="error_wrapper">
-<Error :errorText='error'/>
+ <div v-else="error" class="error_wrapper">
+<Error :errorText='errorText'/>
 <button class="error_button" @click="getCards">Try again</button>
 </div>
 </template>
