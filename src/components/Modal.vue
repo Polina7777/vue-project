@@ -1,12 +1,69 @@
-<script lang="ts" setup >
-const props = defineProps({
-  show: Boolean,
-  process:Array,
-  ingredients:Array,
-})
+<script lang="ts"  >
+import { ref } from 'vue'
+
+
+// const props = defineProps({
+//   show: Boolean,
+//   process:Array,
+//   ingredients:Array,
+// })
+// const height = window.innerHeight
+export default{
+  props:['show','process','ingredients'],
+
+  
+data() {
+    return {
+      scrollTop: 0,
+      stepsCount:this.process.length,
+      height:window.innerHeight/2.2,
+      width:window.innerWidth,
+      
+    };
+  },
+methods:{
+
+handleScroll(event) {
+      this.scrollTop = event.currentTarget.scrollTop;
+    },
+    styleCircle: function(index) {
+      let style = {};
+      if (index +1 === 1 || this.scrollTop >= index * 90 ){
+         style.backgroundColor = 'rgb(114, 100, 126)';
+      }else if (this.stepsCount<=2 && this.scrollTop >= index * 20 ) {
+        style.backgroundColor = 'rgb(114, 100, 126)';
+      }
+      return style;
+    }
+
+},
+computed: {
+    myStyles () {
+      return {
+
+        backgroundColor: 'rgb(114, 100, 126)',
+        height:this.scrollTop> 0 ? `${this.scrollTop+40}px`: 0,
+        maxHeight:`${this.height-100}px`,
+        minHeight:this.stepsCount <= 2 && this.scrollTop>0 ? '340px': '0px'
+
+      }
+    },
+    styleForHeight () {
+      return {
+        height:`${this.height-100}px`,
+        maxHeight:`${this.height-100}px`,
+        minHeight:this.stepsCount <= 2 ? 170*this.stepsCount:`${this.height-100}px`   
+ 
+      }
+    },
+
+}
+
+}
 </script>
 
 <template>
+  
   <Transition name="modal">
     <div v-if="show" class="modal-mask">
       <div class="modal-container">
@@ -25,18 +82,28 @@ const props = defineProps({
    <img class="ingredient_image" :src="item.attributes.image_url" />
   </li>
    </ul>
+   <div class="string" :style="styleForHeight"></div>
+  <div class="general_string" :style="myStyles" ></div>
+  <div class="scroll_wrapper" :style="styleForHeight"  @scroll="handleScroll" >
+
           <ul class="step_list">
-  <li class="step"  v-for="(item) in process">
-    <a class="name">{{item.attributes.name}}</a>
-    <a class="description">{{item.attributes.description}}</a>
+
+  <li class="step"  v-for="(item,index) in process">
+    <div class="title_wrapper">
+      <p class="circle" :style="styleCircle(index)"></p>
+<a class="name" :style="{ 'font-size': width/100 * 2 + 'px' }">{{item.attributes.name}}</a>
+  </div>
+    <a class="description" :style="{ 'font-size': width/100 * 1.5  + 'px' }">{{item.attributes.description}}</a>
   </li>
    </ul>
+  </div>
    </slot>
         </div>
       </div>
     </div>
   </Transition>
 </template>
+
 
 <style scoped>
 .modal-mask {
@@ -50,15 +117,17 @@ const props = defineProps({
   display: flex;
   transition: opacity 0.3s ease;
 }
+.scroll_wrapper {
+  height: 400px;
+  overflow-y: scroll;
+  position: relative;
 
+}
 .modal-container {
-  width: 70%;
-  min-height: 300px;
-  min-width: 300px;
-  height: 80%;
-  /* overflow: scroll; */
+  width: 60%;
+  height: 60%;
   margin: auto;
-  padding: 20px 30px;
+  padding: 10px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -67,12 +136,15 @@ const props = defineProps({
 background-color: rgb(156, 140, 170);
 border-radius:10px;
 color:rgba(0, 0, 255, 0.129);
+position: relative;
 }
 .step_list{
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    padding-left: 20px;
+
 }
 .modal-default-button{
     padding:7px 10px;
@@ -88,7 +160,7 @@ color:rgba(0, 0, 255, 0.129);
 }
 
 .modal-body {
-  margin: 50px 0;
+  margin-top: 50px;
 }
 
 .modal-default-button {
@@ -111,14 +183,50 @@ color:rgba(0, 0, 255, 0.129);
 list-style-type: none;
 text-decoration: none;
 font-size: 1rem;
-padding: 10px;
+padding: 10px 40px;
 }
 .step{
-  list-style-type: none;
+list-style-type: none;
 text-decoration: none;
 font-size: 1.2rem;
 font-weight: 600;
-padding: 10px;
+padding-left: 10px;
+height:200px;
+
+}
+.string{
+height: 100%;
+background-color: rgb(199, 199, 232);
+width: 3px;
+position: absolute;
+left: 49px;
+
+}
+.general_string{
+  width: 3px;
+background-color: rgb(114, 100, 126);
+position: absolute;
+left: 49px;
+}
+.title_wrapper {
+  display: flex;
+flex-direction: row;
+gap:20px;
+position: relative;
+}
+.circle{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border:2px solid rgb(114, 100, 126);
+  background-color: rgb(199, 199, 232);
+  position: absolute;
+left: -24px;
+}
+.name{
+  padding-left: 40px;
+  font-weight: 600;
+  /* font-size:30px; */
 }
 .ingredients_list{
   display: flex;
@@ -127,12 +235,12 @@ padding: 10px;
   justify-content: center;
   gap:10px;
   list-style: none;
+  margin-bottom: 30px;
 }
 .ingredient_image{
   width: 30px;
   height: 30px;
  justify-content: "center";
-
 }
 .ingredient{
   padding:7px 10px;
@@ -140,4 +248,6 @@ padding: 10px;
     background-color: rgb(135, 121, 148);
     border-radius:50%;
 }
+
+
 </style>

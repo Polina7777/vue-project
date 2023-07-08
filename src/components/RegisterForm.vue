@@ -104,7 +104,6 @@ validations() {
     padding-bottom: 30px;
 }
 h2{
-  /* font-size: 15px; */
   font-size: 1rem;
 }
 .auth_input, .name {

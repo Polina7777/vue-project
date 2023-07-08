@@ -9,8 +9,7 @@ import { url_ngrok } from "@/api-requests";
 import { favoritesApi } from "@/api-requests/favorites-api";
 import { userApi } from "@/api-requests/user-api";
 import { recipesApi } from "@/api-requests/recipes-api";
-import { threadId } from "worker_threads";
-import { runInThisContext } from "vm";
+
 
   export default {
 created() {
@@ -34,7 +33,6 @@ created() {
        serve: "",
        grams: "",
       }),
-      // filters: ref(),
       error:ref(),
       tag:ref(),
       currentTag:ref(),
@@ -47,25 +45,30 @@ created() {
    pageCount: async function newPage() {
      this.getCards()
    },
-   filters: async function filterList() {
-    this.pageCount = 1;
-    this.getCards()
-   },
+    
    currentTag: async function filterTag(){
-    console.log(this.currentTag,'current')
       this.filterByTag(this.currentTag?.id);
     
    },
 },
   computed: {
     filteredData() {
-      console.log(this.info,'nknknnnknk')
- return this.info
+      console.log(this.searchQuery,'1')
+    if(this.searchQuery){
+      console.log(this.searchQuery,'2')
+      return this.info
       .filter(
         (item) => 
        { 
       return  item.attributes.title.toLowerCase().includes(this.searchQuery.toLowerCase())}
       );
+    } else {
+      console.log(this.searchQuery,'3')
+      console.log(this.info,'info')
+      return this.info
+    }
+  
+
   },
 },
   methods: {
@@ -112,7 +115,7 @@ created() {
         const result = await response.json();
         resultArray.push(result.data);
       }
-      this.info = resultArray;
+      this.info = resultArray
       // setCardList(resultArray);
     } catch (error) {
       this.error = true;
@@ -124,7 +127,6 @@ created() {
   async  getFilteredCardListByFiltersModal(){
     this.loading = true;
     this.error = false;
-    console.log(this.filters,'this.filters')
     try {
       const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters);
       this.filters = {
@@ -133,9 +135,7 @@ created() {
        grams: "",
       }
       if (filteredCardList.length) {
-       console.log(filteredCardList,'thiiiiiiis')
-       this.info = filteredCardList
-        // setCardList(filteredCardList);
+     return  this.info = filteredCardList
       } else {
         this.error = true;
       }
@@ -186,7 +186,6 @@ created() {
     this.error = false
     this.favFilter=false;
     this.currentTag = item
-    // this.filterByTag(item.id)
   },
 
   },
