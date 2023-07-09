@@ -5,21 +5,15 @@
   import { userApi } from '@/api-requests/user-api';
 import { favoritesApi } from '../api-requests/favorites-api'
 import Modal from './Modal.vue';
-
 import { ref } from 'vue'
 
-
 export default {
-
     created() {
   this.getCard(this.$route.params.id)
-  // this.getUser()
-  // this.checkIsFavorite(this.info)
-  // this.getUsersFavoritesList()
+
   },
     data() {
         return {
-          // id: this.cardId,
           recipe:ref(),
             info: null,
             showModal: ref(false),
@@ -29,9 +23,10 @@ export default {
       checkComplite:ref(false),
       check:ref(false),
       userData:ref(),
+      userInfo:ref(),
       favoritesList:ref(),
-      extraInfo:ref()
-  
+      extraInfo:ref(),
+      error:ref(),
         };
     },
     watch: {
@@ -42,9 +37,6 @@ export default {
     this.checkIsFavorite(this.info)
    }
 },
-    // mounted() {
-    //     this.checkIsFavorite()
-    // },
     methods: {
       async  getCard(id: string) {
         try {
@@ -62,24 +54,19 @@ export default {
         recipeData.attributes.extra_info.data.attributes.kcal,
         recipeData.attributes.extra_info.data.attributes.serve,
       ];
-      const user = await userApi.getUsersById("1");
-      
-  
+      this.userInfo = JSON.parse(localStorage.getItem('userData'))
+      console.log(this.userInfo.id,'userInfo')
+      const user = await userApi.getUsersById(this.userInfo.id);
+      console.log(user,'sacjhca')
       this.ingredients = ingredientsData.attributes.ingredients.data
       this.extraInfo = extraInfoArray
       this.info = recipeData
       this.process = process.attributes.process_steps.data
       this.userData = user
-      // setExtraInfo(extraInfoArray);
-      // setRecipe(recipe);
-      // setProcess(process.attributes.process_steps.data);
-      // setUserData(user);
-      // this.checkIsFavorite(recipeData)
     } catch (err) {
-      console.log(err);
+      this.error = true;
     }
       },
-       
        goBack(){
         this.$router.push('/recipes')
        },
@@ -90,7 +77,6 @@ export default {
       return check;
   },
   likeClick(){
-    console.log(this.info)
     if (!this.info) return;
     const checkResult = this.checkIsFavorite(this.info);
     if (checkResult) {
@@ -100,19 +86,18 @@ export default {
     }
   },
   async getUsersFavoritesList() {
-    console.log(this.userData,this.info,'user,info')
+
     if (this.userData && this.info) {
       try {
         const favorites = await favoritesApi.getFavorites(
           this.userData?.favorite.id
         );
-        console.log(favorites,'favorites')
         const check = favorites?.find((item) => this.info?.id === item.id);
         check ? this.likeClicked=true : this.likeClicked=false;
         this.favoritesList = favorites;
         this.checkComplite = true;
       } catch (err) {
-        console.log(err);
+        this.error=true
       }
     }
   },
@@ -141,7 +126,7 @@ export default {
       this.likeClicked = false;
       this.getUsersFavoritesList();
     } catch (err) {
-      console.log(err);
+    this.error=true
     }
   },
     },
@@ -166,13 +151,9 @@ export default {
     <p :min = info.attributes.extra_info.data.attributes.min class="kcal">{{info.attributes.extra_info.data.attributes.min}} </p>
     <p :serve = info.attributes.extra_info.data.attributes.serve class="kcal">{{info.attributes.extra_info.data.attributes.serve}} </p>
     </div>
-   <button id="show-modal" @click="showModal = true">Show process  </button>
+   <button id="show-modal" @click="showModal = true">Show process</button>
     <Teleport to="body">
-    <Modal :show="showModal" @close="showModal = false" :process="process" :ingredients="ingredients" >
-      <!-- <template #header>
-        <h3 class="title_modal">Episodes with {{ info.name }}:</h3>
-      </template> -->
-    </Modal>
+    <Modal :show="showModal" @close="showModal = false" :process="process" :ingredients="ingredients" />
   </Teleport> 
     </div>
   </div>
@@ -190,7 +171,7 @@ export default {
   .extra_info{
     padding: 15px 15px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:15px;
     color:rgb(224, 224, 243);
     display: flex;
@@ -201,10 +182,9 @@ export default {
   .back_button{
     padding:5px 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    /* font-size: 17px; */
     font-size: 1rem;
 align-self: center;
   }
@@ -228,7 +208,7 @@ align-self: center;
     align-items: center;
     padding:20px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(156, 140, 170);
+    background-color: var(--background-secondary);
     border-radius:10px;
     margin:10px;
     color:rgb(224, 224, 243);
@@ -242,18 +222,13 @@ align-self: center;
     font-size: 1.2rem;
     align-items: flex-end;
   }
-  .status, .species, .gender{
-    /* font-size:20px; */
-    font-size: 1rem;
-    padding: 10px;
-  }
+
   #show-modal{
     padding:20px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    /* font-size: 20px; */
     font-size: 1rem;
   }
   .description{

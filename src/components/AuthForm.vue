@@ -66,6 +66,8 @@ export default {
 async login() {             
   try {
   const res = await userApi.loginUser(this.email,this.password)
+  console.log(res)
+  if (res.data){
     localStorage.setItem('jwt', res.jwt)
      localStorage.setItem('userData', JSON.stringify(res.user))
     this.$router.push('/')
@@ -73,6 +75,10 @@ async login() {
       jwt:res.jwt,
       user:res.user
     })
+  } else {
+    alert(res.error.message)
+  }
+    
    } catch(error) {
     console.log(error)
       this.error = true
@@ -152,14 +158,14 @@ h2{
 .submit_button{
     padding:5px 8px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(114, 100, 126);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(240, 240, 245);
     font-size: 1rem;
     align-items: center;
 }
 .error{
-  font-size: 1rem;
+  font-size: 0.5rem;
   color:red
 }
 

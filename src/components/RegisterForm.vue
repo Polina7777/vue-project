@@ -4,6 +4,8 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
 import { userApi } from '@/api-requests/user-api'
+import { favoritesApi } from '@/api-requests/favorites-api'
+import { threadId } from 'worker_threads'
 
 export default {
   props: ['user'],
@@ -19,7 +21,10 @@ export default {
       name:{required,minLength:minLength(3)},
       surname:{required,minLength:minLength(3)},
       email: { required,email},
-      password:{required,numeric,minLength:minLength(6)}
+      password:{required,numeric,minLength:minLength(6)},
+      error:ref(),
+      user:ref(),
+      userId:ref(),
     },
     }
   },
@@ -46,17 +51,33 @@ export default {
   // },
      async register(){
       try {
-     const registerData = await userApi.registerUser(this.name,this.surname,this.email,this.password)
-     localStorage.setItem('jwt', registerData.jwt)
-     localStorage.setItem('userData', JSON.stringify(registerData.user))
-    this.$router.push('/')
-    this.user({
-      jwt:registerData.jwt,
-      user:registerData.user
+     const res = await userApi.registerUser(this.name,this.surname,this.email,this.password)
+     const collection = await favoritesApi.createFavoritesCollection()
+     console.log(res.user.id)
+     const setCollectionToUser = await userApi.setFavoritesCollectionForUser(res.user.id,collection.id,res.jwt)
+    //  const fav = await favoritesApi.createFavoritesCollection()
+     console.log(setCollectionToUser,'setcoltouser')
+     if(res.jwt){ 
+     localStorage.setItem('jwt', res.jwt);
+     localStorage.setItem('userData', JSON.stringify(res.user));
+     this.$router.push('/')
+
+   this.user({
+      jwt:res.jwt,
+      user:res.user
     })
-      }
+     }else if(res.error){
+    alert(res.error.message)
+      this.name = '';
+     this.surname = '';
+     this.email = '';
+     this.password = '';
+
+     }
+    }
     catch (err) {
       console.log(err);
+       this.password = ''
     }
 },
 validations() {
@@ -127,22 +148,19 @@ h2{
 }
 .name_input{
   width:100%;
-  /* font-size: 15px; */
   font-size: 1rem;
 }
 .submit_button{
     padding:5px 8px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(114, 100, 126);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    /* font-size: 17px; */
     font-size: 1rem;
     align-items: center;
 }
 .error{
-  /* font-size: 10px; */
-  font-size: 1rem;
+  font-size: 0.5rem;
   color:red
 }
 

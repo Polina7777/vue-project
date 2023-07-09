@@ -19,19 +19,26 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --background-general:#1c1424;
+ --background-secondary:#302137;
+  --text-primary:#cfe38a;
+  --text-secondary:#e7ebda;
+  --border-color:#cfe38a;
+
+
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
+  --color-background: var(--background-general);
+  --color-background-soft: var(--background-secondary);
   --color-background-mute: var(--vt-c-white-mute);
 
-  --color-border: var(--vt-c-divider-light-2);
+  --color-border: var(--border-color);
   --color-border-hover: var(--vt-c-divider-light-1);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: var(--text-primary);
+  --color-text: var(--text-secondary);
 
   --section-gap: 160px;
 }
@@ -61,7 +68,7 @@
 body {
   min-height: 100vh;
   color: var(--color-text);
-  background-color: rgb(205, 195, 214);
+  background-color:var(--background-general);
   line-height: 1.6;
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
     Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;

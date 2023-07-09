@@ -16,7 +16,27 @@ export const getUsersById = async (id: string) => {
   const user = data;
   return user;
 };
-
+export const setFavoritesCollectionForUser = async (id: string, collection: any,token: any) => {
+  const collectionId = String(collection.id);
+  // try {
+    const response = await fetch(`${url_ngrok}api/users/${id}`, {
+      headers:{
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      },
+      method: "PUT",
+      body: JSON.stringify({
+            connect: [collectionId],
+      }),
+    });
+    const data = await response.json();
+    console.log(data,'ghghg')
+    return data
+  // } 
+  // catch (error) {
+  //   console.log(error);
+  // }
+};
 // export const RegUser = async (name,surname,email,password) => {
 //   const response = await fetch(`${url_ngrok}api/users`, {
 //     headers:{
@@ -36,7 +56,7 @@ export const getUsersById = async (id: string) => {
 //   return user;
 // };
 // http://localhost:1337/api/auth/local/register
-export const registerUser = async (name,surname,email,password) => {
+export const registerUser = async (name: any,surname: any,email: any,password: any) => {
   const username = `${name} ${surname}`
   const response = await fetch(`${url_ngrok}api/auth/local/register`, {
     headers:{
@@ -54,7 +74,7 @@ export const registerUser = async (name,surname,email,password) => {
   const user = data;
   return user;
 };
-export const loginUser = async (email,password) => {
+export const loginUser = async (email: any,password: any) => {
   const response = await fetch(`${url_ngrok}api/auth/local`, {
     headers:{
            "Content-Type": "application/json",
@@ -73,7 +93,7 @@ export const loginUser = async (email,password) => {
     //  window.localStorage.setItem('userData', JSON.stringify(user))
 
 };
-export const userBearer = async (jwt,user)=>{
+export const userBearer = async (jwt: any,user: { id: any; })=>{
  const response = await fetch(`${url_ngrok}api/users/${user.id}?populate=*`, {
     headers:{
            "Content-Type": "application/json",
@@ -83,7 +103,8 @@ export const userBearer = async (jwt,user)=>{
 
   });
   const data = await response.json();
+
   return data;
 }
 
-export const userApi = { getUsers, getUsersById,registerUser,loginUser,userBearer};
+export const userApi = { getUsers, getUsersById,setFavoritesCollectionForUser ,registerUser,loginUser,userBearer};

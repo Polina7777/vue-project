@@ -99,7 +99,7 @@ h2{
 .submit_button{
   padding:7px 12px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(114, 100, 126);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(240, 240, 245);
     /* font-size: 17px; */

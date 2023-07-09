@@ -1,3 +1,4 @@
+import { collection } from "firebase/firestore";
 import { url_ngrok } from ".";
 
 export const getFavorites = async (id: string) => {
@@ -7,6 +8,25 @@ export const getFavorites = async (id: string) => {
   const data = await response.json();
   const favorites = data.data.attributes.foods.data;
   return favorites;
+};
+export const createFavoritesCollection = async () => {
+  const response = await fetch(`${url_ngrok}api/favorites`, {
+    headers:{
+      "Content-Type": "application/json",
+      },
+    method: "POST",
+    body: JSON.stringify({
+      data: {
+        foods: {
+        },
+      },
+    }),
+  });
+  const data = await response.json();
+  const collection = data.data
+ return collection
+  // const favorites = data.data.attributes.foods.data;
+  // return favorites;
 };
 
 export const setFavorite = async (id: string, recipe: any) => {
@@ -51,4 +71,4 @@ export const deleteFavorite = async (id: string, recipe:any) => {
   }
 };
 
-export const favoritesApi = { getFavorites, setFavorite, deleteFavorite };
+export const favoritesApi = { getFavorites, setFavorite, deleteFavorite,createFavoritesCollection };

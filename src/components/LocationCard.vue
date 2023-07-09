@@ -52,7 +52,7 @@ methods:{
   .back_button{
     padding:5px 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(224, 224, 243);
     font-size: 17px;
@@ -67,10 +67,9 @@ align-self: center;
     align-items: center;
     flex-direction:column;
     align-items:center;
-   /* min-width:500px; */
     padding:20px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(156, 140, 170);
+    background-color: var(--background-general);
     border-radius:10px;
     margin:10px;
     color:rgb(224, 224, 243);

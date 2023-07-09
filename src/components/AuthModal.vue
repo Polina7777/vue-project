@@ -50,7 +50,7 @@ const props = defineProps({
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   border:2px solid rgb(199, 199, 232);
-background-color: rgb(156, 140, 170);
+  background-color: var(--background-general);
 border-radius:10px;
 color:rgba(0, 0, 255, 0.129);
 }
@@ -63,10 +63,9 @@ color:rgba(0, 0, 255, 0.129);
 .modal-default-button{
     padding:5px 8px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(114, 100, 126);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    /* font-size: 17px; */
     font-size: 1rem;
   }
 .modal-header h3 {

@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
-import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default {
 
@@ -15,40 +14,13 @@ export default {
     userData:ref()
     };
   },
-//  create() {
-//     onAuthStateChanged(getAuth(),(user) => {
-//     if (user) {
-//     this.isLoggedIn = true // if we have a user
-//     } else {
-//       this.isLoggedIn = false // if we do not
-//     } 
-//   },
-//   )},
-  // beforeMount() {
-  //   onAuthStateChanged(getAuth(),(user) => {
-  //   if (user) {
-  //   this.isLoggedIn = true // if we have a user
-  //   } else {
-  //     this.isLoggedIn = false // if we do not
-  //   } 
-  // },
-// )
-// },
-//   async mounted() {
-//     onAuthStateChanged(getAuth(),(user) => {
-//     if (user) {
-//     this.isLoggedIn = true // if we have a user
-//     } else {
-//       this.isLoggedIn = false // if we do not
-//     }
-// })
-//     },
 
 beforeMount() {
 this.authListener()
 },
 onMounted(){
    this.authListener()
+   console.log(this.userData)
 },
 
 watch:{
@@ -57,25 +29,22 @@ watch:{
    }
 },
   methods: {
-
     userAuth(data: any) {
       this.showAuthModal=false;
-    return this.userData=data
+      return this.userData=JSON.parse(data);
     },
     userReg(data: any) {
       this.showRegModal=false;
-      return this.userData=data
+      return this.userData=data;
     },
     signOut() {
       this.$router.push('/')
       localStorage.removeItem('jwt');
       localStorage.removeItem('userData');
-      // signOut(getAuth())
       return this.userData = null;
     },
     authListener(){
     const user = localStorage.getItem('jwt')
-    console.log(user)
     if(!user){
        return this.isLoggedIn= false
     }else{
@@ -91,6 +60,9 @@ watch:{
 <template>
   <header>
     <div class="wrapper">
+      <p v-if="userData" style="color: azure;">{{ userData.username }}</p>
+      <!-- {{userData}} -->
+      <!-- <p v-if="isLoggedIn">{{ userData.name }}</p> -->
       <!-- <div> -->
       <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn"> Sign in </button>
       <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
@@ -115,7 +87,6 @@ watch:{
   <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="isLoggedIn"  to="/recipes">Recipes</RouterLink>
-        <!-- <RouterLink v-if="isLoggedIn"  to="/locations" >Locations</RouterLink> -->
       </nav>
   <RouterView />
   <RouterView name="users" />
@@ -124,25 +95,27 @@ watch:{
 <style>
 header {
   line-height: 1.5;
-  background-color: rgb(149, 138, 168);;
-  height: 70px;
+  background-color: var(--background-secondary);
+  height: 100px;
+  display: flex;
+flex-direction: row;
+justify-content: end;
+align-items: center;
+color: aliceblue;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+
 
 nav {
   width: 100%;
   font-size: 1.5rem;
   text-align: center;
   justify-content: space-between;
-  color:rgb(237, 237, 246);
+  color:var(--text-secondary)
 }
 
 nav a.router-link-exact-active {
-  color:rgb(111, 68, 145);
+  color:var(--text-primary)
 }
 
 nav a.router-link-exact-active:hover {
@@ -157,11 +130,14 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
+.title_modal {
+color: var(--text-primary)
+}
 .auth{
   padding: 10px 15px;
   transition: all 0.3s ease;
   border:2px solid rgb(199, 199, 232);
-  background-color: rgb(114, 100, 126);
+  background-color: var(--background-primary);
 border-radius:10px;
 color:rgba(230, 230, 246, 0.972);
 font-size: 1rem;

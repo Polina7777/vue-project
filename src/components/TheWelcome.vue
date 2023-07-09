@@ -1,4 +1,6 @@
+
 <script setup lang="ts">
+
 </script>
 
 <template>
@@ -7,10 +9,13 @@
 </div>
 </template>
 <style >
+
 .description_welcome {
   padding: 40px;
   font-size: 2rem;
-  color:rgb(233, 233, 248);
+  color:var(--color-heading);
+
+
 }
   .welcome_wrapper {
     display: flex;
@@ -18,6 +23,7 @@
    align-items: center;
    text-align: center;
    height: 100%;
+   background-color: var(--background-genera);
   }
   @media (max-width: 1024px) {
 

@@ -1,13 +1,5 @@
 <script lang="ts"  >
-import { ref } from 'vue'
 
-
-// const props = defineProps({
-//   show: Boolean,
-//   process:Array,
-//   ingredients:Array,
-// })
-// const height = window.innerHeight
 export default{
   props:['show','process','ingredients'],
 
@@ -40,7 +32,6 @@ handleScroll(event) {
 computed: {
     myStyles () {
       return {
-
         backgroundColor: 'rgb(114, 100, 126)',
         height:this.scrollTop> 0 ? `${this.scrollTop+40}px`: 0,
         maxHeight:`${this.height-100}px`,
@@ -133,7 +124,7 @@ computed: {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   border:2px solid rgb(199, 199, 232);
-background-color: rgb(156, 140, 170);
+  background-color: var(--background-general);
 border-radius:10px;
 color:rgba(0, 0, 255, 0.129);
 position: relative;
@@ -149,7 +140,7 @@ position: relative;
 .modal-default-button{
     padding:7px 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(224, 224, 243);
     font-size: 1rem;
@@ -204,7 +195,7 @@ left: 49px;
 }
 .general_string{
   width: 3px;
-background-color: rgb(114, 100, 126);
+  background-color: var(--background-general);
 position: absolute;
 left: 49px;
 }
@@ -218,7 +209,8 @@ position: relative;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border:2px solid rgb(114, 100, 126);
+
+  border:2px solid var(--background-general);
   background-color: rgb(199, 199, 232);
   position: absolute;
 left: -24px;
@@ -226,7 +218,6 @@ left: -24px;
 .name{
   padding-left: 40px;
   font-weight: 600;
-  /* font-size:30px; */
 }
 .ingredients_list{
   display: flex;
@@ -245,7 +236,7 @@ left: -24px;
 .ingredient{
   padding:7px 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:50%;
 }
 

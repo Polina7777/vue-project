@@ -54,9 +54,7 @@ created() {
 },
   computed: {
     filteredData() {
-      console.log(this.searchQuery,'1')
     if(this.searchQuery){
-      console.log(this.searchQuery,'2')
       return this.info
       .filter(
         (item) => 
@@ -64,8 +62,6 @@ created() {
       return  item.attributes.title.toLowerCase().includes(this.searchQuery.toLowerCase())}
       );
     } else {
-      console.log(this.searchQuery,'3')
-      console.log(this.info,'info')
       return this.info
     }
   
@@ -82,7 +78,6 @@ created() {
       this.info = await recipesApi.getAllRecipesWithIngredientCollection()
     } catch (err) {
       this.error = true;
-      console.log(err);
     } finally {
       this.loading = false;
     }
@@ -94,7 +89,6 @@ created() {
       this.categories = await categoryApi.getCategoriesOfRecipes()
     } catch (err) {
       this.error = true;
-      console.log(err);
     } finally {
       this.loading = false;
     }
@@ -106,7 +100,6 @@ created() {
     try {
       const user = await userApi.getUsersById("1");
       const filteredList = await favoritesApi.getFavorites(user.favorite.id);
-      console.log(filteredList,'liiist')
       const idArr = filteredList.map((item: any) => item.id);
       const resultArray = [];
       for (const item of idArr) {
@@ -116,11 +109,9 @@ created() {
         const result = await response.json();
         resultArray.push(result.data);
       }
-      this.info = resultArray
-      // setCardList(resultArray);
+      this.info = resultArray;
     } catch (error) {
       this.error = true;
-      console.log(error);
     } finally {
       this.loading = false;
     }
@@ -143,7 +134,6 @@ created() {
       this.loading = false;
     } catch (err) {
       this.error = true;
-      console.log(err);
     } finally {
       this.loading = false;
     }
@@ -174,10 +164,8 @@ created() {
       this.loading = true;
     try {
      this.info = await filtersApi.filtersByTags(tag);
-      // this.info = filteredList
     } catch (err) {
       this.error = true
-      console.log(err);
     } finally {
       this.loading = false;
     }
@@ -229,7 +217,6 @@ created() {
 </ul>
 </div>
 <div  class="pagination_wrapper">
-<!-- <button v-if="(pageCount>1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt; </button> -->
   <ul class="card_list">
   <li class="card"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'recipe' ,params : {id: item.id}}" >
@@ -245,7 +232,6 @@ created() {
   </li>
 </ul>
 
-<!-- <button v-if="(pageCount !== allPagesCount && !searchQuery.length && allPagesCount !==1)" class="arrow" @click="onClickRightHandler"> > </button> -->
 </div>
  </div>
  <div v-else="error" class="error_wrapper">
@@ -276,10 +262,9 @@ align-items: center;
   .error_button{
     padding:10px 18px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(114, 100, 126);
+    background-color: var(--background-general);
     border-radius:10px;
-    color:rgb(240, 240, 245);
-    /* font-size: 17px; */
+    color:var(--text-secondary);
     font-size: 1rem;
   }
   .card_list {
@@ -287,7 +272,7 @@ align-items: center;
     flex-direction:row;
     flex-wrap:wrap;
     justify-content: center;
-    background-color: rgb(205, 195, 214);
+    background-color: var(--background-general);
     width: 100%;
   }
   .image{
@@ -325,9 +310,9 @@ align-items: center;
     padding: 5px 9px;
     min-width: 120px;
     border-radius: 10px;
-    border:1px solid rgb(207, 234, 102);
-    background-color: rgb(94, 83, 103);
-    color:rgb(207, 234, 102);
+    border:1px solid var(--text-primary);
+    background-color: var(--background-general);
+    color:var(--text-primary);
     justify-content: center;
     align-items: center;
     gap:7px;
@@ -341,7 +326,7 @@ margin: 10px;
   input{
     padding: 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(230, 225, 234);
+    background-color: var(--background-secondary);
     border-radius:10px;
     font-size: 1rem;
     color:rgb(156, 140, 170);
@@ -352,9 +337,8 @@ margin: 10px;
     height: 50px;
     width: 50px;
     border-radius: 50%;
-    /* font-size: 20px; */
     font-size: 1rem;
-    color:rgb(157, 145, 167);
+    color: var(--background-general);
     background-color: rgb(230, 225, 234); 
   }
     .card {
@@ -366,7 +350,7 @@ margin: 10px;
     height: 330px;
     padding:10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(156, 140, 170);
+    background-color: var(--background-secondary);
     border-radius:10px;
     margin:10px;
     color:rgba(0, 0, 255, 0.129);
@@ -374,31 +358,26 @@ margin: 10px;
   #show-modal{
     padding:5px 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: rgb(135, 121, 148);
+    background-color: var(--background-general);
     border-radius:10px;
     color:rgb(224, 224, 243);
-    /* font-size: 17px; */
     font-size: 1rem;
   }
   .title{
-    /* font-size:20px; */
     font-size: 1.2rem;
-    /* padding: 10px; */
   }
   .description{
     font-size: 0.8rem;
     padding: 15px;
   }
 .count{
-    /* font-size:20px; */
     font-size: 1rem;
     padding: 10px;
-    color:rgba(232, 232, 238, 0.898);
+    color:var(--text-secondary);
     font-weight: 600;
   }
   .title_modal{
-    color:rgb(240, 240, 245);
-    /* font-size:21px; */
+    color:var(--text-secondary);;
     font-size: 1rem;
   }
   .pagination_wrapper{
