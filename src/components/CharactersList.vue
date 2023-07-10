@@ -77,8 +77,9 @@ created() {
       this.loading = true;
     this.favFilter=false;
     this.getCategories();
+    const sortType = this.sortAsc? 'asc': 'desc';
     try {
-      this.info = await recipesApi.getAllRecipesWithIngredientCollection()
+      this.info = await recipesApi.getAllRecipesWithIngredientCollection(sortType)
     } catch (err) {
       this.error = true;
     } finally {
@@ -100,9 +101,11 @@ created() {
       this.loading = true;
       this.favFilter=true;
       this.error = false;
+      this.loading = true;
+      const sortType = this.sortAsc? 'asc': 'desc';
     try {
       const user = await userApi.getUsersById(this.userInfo.id);
-      const filteredList = await favoritesApi.getFavorites(user.favorite.id);
+      const filteredList = await favoritesApi.getFavorites(user.favorite.id,sortType);
       const idArr = filteredList.map((item: any) => item.id);
       const resultArray = [];
       for (const item of idArr) {
@@ -127,13 +130,14 @@ created() {
   async  getFilteredCardListByFiltersModal(){
     this.loading = true;
     this.error = false;
+    const sortType = this.sortAsc? 'asc': 'desc';
     try {
-      const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters);
-      this.filters = {
-        kcal: "",
-       serve: "",
-       grams: "",
-      }
+      const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters,sortType);
+      // this.filters = {
+      //   kcal: "",
+      //  serve: "",
+      //  grams: "",
+      // }
       if (filteredCardList.length) {
      return  this.info = filteredCardList
       } else {
@@ -150,14 +154,32 @@ created() {
     this.loading = true;
     this.error = false;
     try {
-    this.sortAsc ?  this.info = await recipesApi.sortRecipeASC() : this.info = await recipesApi.sortRecipeDESC()
-   
-    //   if (sortedCardList.length) {
-    //  return  this.info = sortedCardList
-    //   } else {
-    //     this.error = true;
-    //   }
-    //   this.loading = false;
+let sortList;
+    // this.sortAsc ?  this.info = await recipesApi.sortRecipeASC() : this.info = await recipesApi.sortRecipeDESC();
+  if(this.sortAsc){
+    sortList = this.info.sort(function (a, b) {
+  if (a.attributes.title < b.attributes.title) {
+    return -1;
+  }
+  if (a.attributes.title > a.attributes.title) {
+    return 1;
+  }
+  return 0;
+}
+);
+    return this.info = sortList
+  }else{
+  sortList = this.info.sort(function (a, b) {
+  if (b.attributes.title < a.attributes.title) {
+    return -1;
+  }
+  if (a.attributes.title > a.attributes.title) {
+    return 1;
+  }
+  return 0;
+})
+  return this.info = sortList
+  }
     } catch (err) {
       this.error = true;
     } finally {
@@ -165,7 +187,6 @@ created() {
     }
   },
   toggleSortType(){
-    console.log(this.sortAsc,'sortAsc')
     return this.sortAsc =!this.sortAsc
   },
 
@@ -192,8 +213,9 @@ created() {
       this.error = false
       this.favFilter=false;
       this.loading = true;
+      const sortType = this.sortAsc? 'asc': 'desc';
     try {
-     this.info = await filtersApi.filtersByTags(tag);
+     this.info = await filtersApi.filtersByTags(tag,sortType);
     } catch (err) {
       this.error = true
     } finally {
@@ -248,16 +270,15 @@ created() {
 </div>
 
 <div  class="pagination_wrapper">
-
   <ul class="card_list">
     <div class="buttons_wrapper">
-<button @click="toggleSortType">
+<button class="sort_button" @click="toggleSortType">
 <img src='https://www.svgrepo.com/show/356266/sort-descending.svg' class="sort_image"/>
 </button>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
   <li class="card"  v-for="(item) in filteredData">
-<RouterLink :to="{name : 'recipe' ,params : {id: item.id}}" >
+<RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" >
     <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
     <img :src="item.attributes.image_url" class="image"/>
     <div class="small_info">
@@ -331,13 +352,15 @@ align-items: center;
  border-radius: 50%;
  align-self: center;
   }
-  .sort_image{
+.sort_image{
+ align-self: center;
  width: 40px;
  height: 40px;
  border-radius: 50%;
- align-self: center;
- background-color: transparent;
-border-color: transparent;
+  }
+  .sort_button{
+  background-color: transparent;
+  border-color: transparent;
   }
   .tag {
     display: flex;

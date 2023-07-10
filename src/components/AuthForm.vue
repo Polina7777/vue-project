@@ -33,7 +33,6 @@ export default {
 async login() {             
   try {
   const res = await userApi.loginUser(this.email,this.password)
-  console.log(res)
   if (res.data){
     localStorage.setItem('jwt', res.jwt)
      localStorage.setItem('userData', JSON.stringify(res.user))
@@ -55,7 +54,6 @@ async login() {
   userBearer(jwt,user){
     try {
       const res2 = userApi.userBearer(jwt,user)
-    console.log(res2)
       this.$router.push('/')
     } catch (error) {
       this.error = true

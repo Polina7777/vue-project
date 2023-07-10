@@ -54,10 +54,10 @@ export default {
         recipeData.attributes.extra_info.data.attributes.kcal,
         recipeData.attributes.extra_info.data.attributes.serve,
       ];
-      this.userInfo = JSON.parse(localStorage.getItem('userData'))
-      console.log(this.userInfo.id,'userInfo')
+      this.userInfo = JSON.parse(localStorage.getItem('userData') as string)
+  
       const user = await userApi.getUsersById(this.userInfo.id);
-      console.log(user,'sacjhca')
+
       this.ingredients = ingredientsData.attributes.ingredients.data
       this.extraInfo = extraInfoArray
       this.info = recipeData
@@ -89,9 +89,7 @@ export default {
 
     if (this.userData && this.info) {
       try {
-        const favorites = await favoritesApi.getFavorites(
-          this.userData?.favorite.id
-        );
+        const favorites = await favoritesApi.getFavorites(this.userData?.favorite.id);
         const check = favorites?.find((item) => this.info?.id === item.id);
         check ? this.likeClicked=true : this.likeClicked=false;
         this.favoritesList = favorites;
