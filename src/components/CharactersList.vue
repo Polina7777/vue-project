@@ -1,6 +1,6 @@
 
 <script lang="ts">
-import { ref, watch } from "vue";
+import { ref} from "vue";
 import FiltersModal from './FiltersModal.vue'
 import Error from "./Error.vue";
 import { categoryApi } from '../api-requests/category-api.ts'
@@ -14,20 +14,21 @@ import { recipesApi } from "@/api-requests/recipes-api";
   export default {
 created() {
   this.getCards()
+  if (localStorage.getItem('userData')) {
+        this.userInfo = JSON.parse(localStorage.getItem('userData') as string);
+  }
   },
 
   data() {
     return {
       info: [],
+       userInfo: ref(),
      searchQuery: ref(""),
      categories:ref(),
      smallInfo:ref(),
       pageCount: ref(1),
       allPagesCount:ref(),
       showFiltersModal: ref(false),
-      filterName:ref(''),
-      filterStatus:ref(''),
-      filterGender:ref(''),
       filters: ref({
        kcal: "",
        serve: "",
@@ -98,7 +99,7 @@ created() {
       this.favFilter=true;
       this.error = false;
     try {
-      const user = await userApi.getUsersById("1");
+      const user = await userApi.getUsersById(this.userInfo.id);
       const filteredList = await favoritesApi.getFavorites(user.favorite.id);
       const idArr = filteredList.map((item: any) => item.id);
       const resultArray = [];
@@ -109,7 +110,12 @@ created() {
         const result = await response.json();
         resultArray.push(result.data);
       }
-      this.info = resultArray;
+        if(resultArray.length){
+          return  this.info = resultArray;
+        }else{
+          this.error=true
+        }
+
     } catch (error) {
       this.error = true;
     } finally {

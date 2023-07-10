@@ -5,7 +5,7 @@ import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
 import { userApi } from '@/api-requests/user-api'
 import { favoritesApi } from '@/api-requests/favorites-api'
-import { threadId } from 'worker_threads'
+
 
 export default {
   props: ['user'],
@@ -38,30 +38,14 @@ export default {
         alert('Form failed validation')
      }
     },
-  //   register(){
-  //   createUserWithEmailAndPassword(getAuth(),this.email,this.password) // need .value because ref()
-  //   .then((data) => {
-  //     console.log('Successfully registered!');
-  //     this.$router.push('/')
-  //   })
-  //   .catch(error => {
-  //     console.log(error.code)
-  //     alert(error.message);
-  //   });
-  // },
      async register(){
       try {
-     const res = await userApi.registerUser(this.name,this.surname,this.email,this.password)
      const collection = await favoritesApi.createFavoritesCollection()
-     console.log(res.user.id)
-     const setCollectionToUser = await userApi.setFavoritesCollectionForUser(res.user.id,collection.id,res.jwt)
-    //  const fav = await favoritesApi.createFavoritesCollection()
-     console.log(setCollectionToUser,'setcoltouser')
+     const res = await userApi.registerUser(this.name,this.surname,this.email,this.password,collection.id)
      if(res.jwt){ 
      localStorage.setItem('jwt', res.jwt);
      localStorage.setItem('userData', JSON.stringify(res.user));
      this.$router.push('/')
-
    this.user({
       jwt:res.jwt,
       user:res.user
@@ -80,6 +64,7 @@ export default {
        this.password = ''
     }
 },
+
 validations() {
     return {
       name:{required,minLength:minLength(3),maxLength:maxLength(15),$autoDirty: true ,$lazy: true },

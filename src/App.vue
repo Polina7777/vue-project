@@ -61,9 +61,6 @@ watch:{
   <header>
     <div class="wrapper">
       <p v-if="userData" style="color: azure;">{{ userData.username }}</p>
-      <!-- {{userData}} -->
-      <!-- <p v-if="isLoggedIn">{{ userData.name }}</p> -->
-      <!-- <div> -->
       <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn"> Sign in </button>
       <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
       <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
@@ -86,7 +83,7 @@ watch:{
   </header>
   <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="isLoggedIn"  to="/recipes">Recipes</RouterLink>
+        <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
       </nav>
   <RouterView />
   <RouterView name="users" />
@@ -103,8 +100,6 @@ justify-content: end;
 align-items: center;
 color: aliceblue;
 }
-
-
 
 nav {
   width: 100%;
