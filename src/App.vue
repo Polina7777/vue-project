@@ -5,13 +5,20 @@ import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
 
 export default {
+  created() {
 
+  if (localStorage.getItem('userData')) {
+  const info = JSON.parse(localStorage.getItem('userData') as string)
+  this.userName = info.username
+  }
+  },
   data() {
     return {
     showAuthModal: ref(false),
     showRegModal: ref(false),
     isLoggedIn:ref(false),
-    userData:ref()
+    userData:ref(),
+    userName:ref()
     };
   },
 
@@ -20,7 +27,6 @@ this.authListener()
 },
 onMounted(){
    this.authListener()
-   console.log(this.userData)
 },
 
 watch:{
@@ -31,11 +37,15 @@ watch:{
   methods: {
     userAuth(data: any) {
       this.showAuthModal=false;
-      return this.userData=JSON.parse(data);
+      this.userData = localStorage.getItem('userData')
+      const info = JSON.parse(localStorage.getItem('userData') as string)
+  this.userName = info.username
     },
     userReg(data: any) {
       this.showRegModal=false;
-      return this.userData=data;
+      this.userData = localStorage.getItem('userData')
+      const info = JSON.parse(localStorage.getItem('userData') as string)
+  this.userName = info.username
     },
     signOut() {
       this.$router.push('/')
@@ -50,7 +60,8 @@ watch:{
     }else{
       return this.isLoggedIn = true
     }
-}
+},
+
   
   },
   components: { AuthModal, RegisterModal }
@@ -59,14 +70,18 @@ watch:{
 
 <template>
   <header>
-    <div class="wrapper">
-      <p v-if="userData" style="color: azure;">{{ userData.username }}</p>
+    <!-- <div class="wrapper"> -->
+      <div v-if="isLoggedIn" class="hello_wrapper">
+      <p class="hello"> Hello, {{userName}} !</p>
+      <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/>
+    </div>
+    <div class="auth_wrapper">
       <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn"> Sign in </button>
       <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
+    </div>
       <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
     <Teleport to="body">
     <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false"  :user="userAuth" >
-      <!-- :submitAuth='submitAuth' -->
       <template #header>
         <h3 class="title_modal"> Sign In</h3>
       </template>
@@ -79,14 +94,13 @@ watch:{
       </template>
     </RegisterModal>
   </Teleport>
-    </div>
   </header>
   <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
       </nav>
   <RouterView />
-  <RouterView name="users" />
+  <!-- <RouterView name="users" /> -->
 </template>
 
 <style>
@@ -96,10 +110,32 @@ header {
   height: 100px;
   display: flex;
 flex-direction: row;
-justify-content: end;
 align-items: center;
-color: aliceblue;
+color: var(--text-primary);
+justify-content: space-between;
 }
+.hello_image{
+  width: 30px;
+  height: 30px;
+}
+.hello{
+  color: var(--text-primary);
+  font-size: 30px;
+  font-weight: 600;
+}
+.hello_wrapper{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+ align-items: center;
+ padding: 10px 15px;
+ gap:10px;
+}
+.auth_wrapper{
+  display: flex;
+flex-direction: row;
+}
+
 
 nav {
   width: 100%;
@@ -144,5 +180,21 @@ margin: 10px;
     text-align: center;
     font-size: 2rem;
   }
+}
+@media (max-width: 500px) {
+.hello_wrapper{
+  justify-content: center;
+}
+.hello{
+  font-size: 1.3rem;
+  flex-wrap: wrap;
+}
+.hello_image{
+  width: 20px;
+  height: 20px;
+}
+.auth{
+  font-size: 1rem;
+}
 }
 </style>
