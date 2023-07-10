@@ -1,6 +1,5 @@
 <script lang='ts'>
 import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import useValidate from '@vuelidate/core'
 import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
 import { userApi } from '@/api-requests/user-api'
@@ -11,21 +10,21 @@ export default {
   props: ['user'],
   data () {
     return {
-    v$: useValidate(),
+      v$: useValidate(),
      name: '',
      surname: '',
      email:'',
      password:'',
      errMsg: ref(),
      rules:{
-      name:{required,minLength:minLength(3)},
-      surname:{required,minLength:minLength(3)},
-      email: { required,email},
-      password:{required,numeric,minLength:minLength(6)},
-      error:ref(),
-      user:ref(),
-      userId:ref(),
+      name:{ required, minLength:minLength(3) },
+      surname:{ required, minLength:minLength(3) },
+      email: { required, email},
+      password:{ required,numeric,minLength:minLength(6) }
     },
+    error:ref(),
+      // user:ref(),
+      userId:ref(),
     }
   },
   methods: {
@@ -52,7 +51,7 @@ export default {
     })
      }else if(res.error){
     alert(res.error.message)
-      this.name = '';
+    this.name = '';
      this.surname = '';
      this.email = '';
      this.password = '';
@@ -65,6 +64,8 @@ export default {
     }
 },
 
+
+},
 validations() {
     return {
       name:{required,minLength:minLength(3),maxLength:maxLength(15),$autoDirty: true ,$lazy: true },
@@ -72,29 +73,28 @@ validations() {
       email: { required,email,$autoDirty: true,$lazy: true},
       password:{required,numeric,minLength:minLength(6),$autoDirty: true,$lazy: true }
   }
-  },
-}}
+  },}
 </script>
 
 
 <template>
     <div class="auth_inputs__wrapper">
   <input class="auth_input" placeholder="Name" v-model="name"> 
-  <!-- <span class='error' v-if="v$.name.$error">
+  <span class='error' v-if="v$.name.$error">
         {{ v$.name.$errors[0].$message }}
-      </span> -->
+      </span>
   <input class="auth_input" placeholder="Surname" v-model="surname"> 
-  <!-- <span class='error' v-if="v$.surname.$error">
+  <span class='error' v-if="v$.surname.$error">
         {{ v$.surname.$errors[0].$message }}
-      </span> -->
+      </span>
   <input class="auth_input" type="email" placeholder="Email" v-model="email"> 
-  <!-- <span class='error' v-if="v$.email.$error">
+  <span class='error' v-if="v$.email.$error">
         {{ v$.email.$errors[0].$message }}
-      </span> -->
+      </span>
   <input class="auth_input" type="password" placeholder="Password" v-model="password"> 
-  <!-- <span class='error' v-if="v$.password.$error">
+  <span class='error' v-if="v$.password.$error">
         {{ v$.password.$errors[0].$message }}
-      </span> -->
+      </span>
 </div>
 <button class='submit_button' @click=submit>Submit</button>
 </template>
@@ -145,7 +145,7 @@ h2{
     align-items: center;
 }
 .error{
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   color:red
 }
 

@@ -1,7 +1,6 @@
 <script lang="ts" >
 import useValidate from '@vuelidate/core'
-import { required,email,numeric,minLength,maxLength } from '@vuelidate/validators'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { required,email,numeric,minLength} from '@vuelidate/validators'
 import { ref } from 'vue'
 import { userApi } from '@/api-requests/user-api'
 
@@ -30,39 +29,7 @@ export default {
         alert('Form failed validation')
      }
     },
-    // async reg(){
-    //   try {
-    //  const registerData = await userApi.RegisterUser(this.name,this.surname,this.email,this.password)
-    //  console.log(registerData)
-    //  return registerData
-    //   }
-    // catch (err) {
-    //   console.log(err);
-    // }
-    
-//     signIn(){ 
-//     signInWithEmailAndPassword(getAuth(),this.email,this.password)
-//   .then((data) => {
-//     console.log('Successfully logged in!');
-//     this.$router.push('/')
-//   })
-//   .catch(error => {
-//     switch (error.code) {
-//       case 'auth/invalid-email':
-//           this.errMsg.value = 'Invalid email'
-//           break
-//       case 'auth/user-not-found':
-//           this.errMsg.value = 'No account with that email was found'
-//           break
-//       case 'auth/wrong-password':
-//          this.errMsg.value = 'Incorrect password'
-//           break  
-//       default:
-//           this.errMsg.value = 'Email or password was incorrect'
-//           break
-//     }
-//   });
-// }
+
 async login() {             
   try {
   const res = await userApi.loginUser(this.email,this.password)
@@ -89,7 +56,6 @@ async login() {
     try {
       const res2 = userApi.userBearer(jwt,user)
     console.log(res2)
-  // localStorage.setItem('bookmarks', JSON.stringify(res2?.data?.bookmarks || []))
       this.$router.push('/')
     } catch (error) {
       this.error = true
@@ -105,6 +71,30 @@ validations() {
   },
 }
 </script>
+<!-- 
+//     signIn(){ 
+  //     signInWithEmailAndPassword(getAuth(),this.email,this.password)
+  //   .then((data) => {
+  //     console.log('Successfully logged in!');
+  //     this.$router.push('/')
+  //   })
+  //   .catch(error => {
+  //     switch (error.code) {
+  //       case 'auth/invalid-email':
+  //           this.errMsg.value = 'Invalid email'
+  //           break
+  //       case 'auth/user-not-found':
+  //           this.errMsg.value = 'No account with that email was found'
+  //           break
+  //       case 'auth/wrong-password':
+  //          this.errMsg.value = 'Incorrect password'
+  //           break  
+  //       default:
+  //           this.errMsg.value = 'Email or password was incorrect'
+  //           break
+  //     }
+  //   });
+  // } -->
 
 <template>
     <div class="auth_inputs__wrapper">
@@ -165,7 +155,7 @@ h2{
     align-items: center;
 }
 .error{
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   color:red
 }
 

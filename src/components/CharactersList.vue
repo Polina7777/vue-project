@@ -15,7 +15,7 @@ import { recipesApi } from "@/api-requests/recipes-api";
 created() {
   this.getCards()
   if (localStorage.getItem('userData')) {
-        this.userInfo = JSON.parse(localStorage.getItem('userData') as string);
+  this.userInfo = JSON.parse(localStorage.getItem('userData') as string);
   }
   },
 
@@ -29,6 +29,7 @@ created() {
       pageCount: ref(1),
       allPagesCount:ref(),
       showFiltersModal: ref(false),
+      sortAsc:ref(false),
       filters: ref({
        kcal: "",
        serve: "",
@@ -47,11 +48,12 @@ created() {
    pageCount: async function newPage() {
      this.getCards()
    },
-    
    currentTag: async function filterTag(){
       this.filterByTag(this.currentTag?.id);
-    
    },
+   sortAsc: async function sort() {
+     this.sortCardList()
+   }
 },
   computed: {
     filteredData() {
@@ -144,6 +146,28 @@ created() {
       this.loading = false;
     }
   },
+  async sortCardList(){
+    this.loading = true;
+    this.error = false;
+    try {
+    this.sortAsc ?  this.info = await recipesApi.sortRecipeASC() : this.info = await recipesApi.sortRecipeDESC()
+   
+    //   if (sortedCardList.length) {
+    //  return  this.info = sortedCardList
+    //   } else {
+    //     this.error = true;
+    //   }
+    //   this.loading = false;
+    } catch (err) {
+      this.error = true;
+    } finally {
+      this.loading = false;
+    }
+  },
+  toggleSortType(){
+    console.log(this.sortAsc,'sortAsc')
+    return this.sortAsc =!this.sortAsc
+  },
 
     onClickLeftHandler(){
       if(this.pageCount <=1){
@@ -204,7 +228,7 @@ created() {
 </div>
 <div class="page_info__wrapper" >
 <!-- <p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p> -->
-<button id="show-modal" @click="showFiltersModal = true"> Filters</button>
+
 </div>
 <div>
 
@@ -222,8 +246,16 @@ created() {
 
 </ul>
 </div>
+
 <div  class="pagination_wrapper">
+
   <ul class="card_list">
+    <div class="buttons_wrapper">
+<button @click="toggleSortType">
+<img src='https://www.svgrepo.com/show/356266/sort-descending.svg' class="sort_image"/>
+</button>
+<button id="show-modal" @click="showFiltersModal = true"> Filters</button>
+</div>
   <li class="card"  v-for="(item) in filteredData">
 <RouterLink :to="{name : 'recipe' ,params : {id: item.id}}" >
     <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
@@ -265,6 +297,11 @@ align-items: center;
 flex-direction: column;
 align-items: center;
   }
+  .buttons_wrapper{
+    display: flex;
+    flex-direction: row-reverse;
+    width: 85%;
+  }
   .error_button{
     padding:10px 18px;
     border:2px solid rgb(199, 199, 232);
@@ -286,12 +323,21 @@ align-items: center;
  height: 110px;
  border-radius: 50%;
  align-self: center;
+ margin: 10px;
   }
   .tag_image{
  width: 30px;
  height: 30px;
  border-radius: 50%;
  align-self: center;
+  }
+  .sort_image{
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ align-self: center;
+ background-color: transparent;
+border-color: transparent;
   }
   .tag {
     display: flex;
@@ -351,10 +397,8 @@ margin: 10px;
     display: flex;
     align-items: center;
     flex-direction:column;
-    justify-content: center;
     width:280px;
-    height: 330px;
-    padding:10px;
+    padding:20px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-secondary);
     border-radius:10px;
@@ -371,6 +415,7 @@ margin: 10px;
   }
   .title{
     font-size: 1.2rem;
+    text-align: center;
   }
   .description{
     font-size: 0.8rem;
