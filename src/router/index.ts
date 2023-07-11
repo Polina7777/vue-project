@@ -23,19 +23,7 @@ const router = createRouter({
         allowAnonymous: false
       }
     },
-    {
-      path: '/locations',
-      name: 'locations',
-      component: () => import('../views/LocationsView.vue'),
-      props: true,
-      meta:{
-        isAuth:true,
-        allowAnonymous: false
-      }
-    },
-    
     { path: '/recipes/:id', name: 'recipe' ,component: () => import('../views/CharacterView.vue')},
-    { path: '/locations/:id', name: 'location' ,component: () => import('../views/LocationView.vue')},
   ]
 })
 export default router

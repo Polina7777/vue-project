@@ -13,17 +13,19 @@ data() {
   },
 methods:{
 
-handleScroll(event) {
+handleScroll(event:any) {
       this.scrollTop = event.currentTarget.scrollTop;
     },
-    styleCircle: function(index) {
-      let style = {};
+    styleCircle: function(index: number) {
       if (index +1 === 1 || this.scrollTop >= index * 90 ){
-         style.backgroundColor = 'rgb(114, 100, 126)';
+        return{
+          backgroundColor:'rgb(114, 100, 126)'
+        }
       }else if (this.stepsCount<=2 && this.scrollTop >= index * 20 ) {
-        style.backgroundColor = 'rgb(114, 100, 126)';
+        return{
+          backgroundColor:'rgb(114, 100, 126)'
+        }
       }
-      return style;
     }
 
 },

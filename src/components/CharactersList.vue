@@ -1,14 +1,15 @@
 
 <script lang="ts">
 import { ref} from "vue";
-import FiltersModal from './FiltersModal.vue'
+import FiltersModal from './FiltersModal.vue';
 import Error from "./Error.vue";
-import { categoryApi } from '../api-requests/category-api.ts'
-import { filtersApi } from '../api-requests/filters-api.ts'
+import { categoryApi } from "@/api-requests/category-api";
+import { filtersApi } from "@/api-requests/filters-api";
 import { url_ngrok } from "@/api-requests";
 import { favoritesApi } from "@/api-requests/favorites-api";
 import { userApi } from "@/api-requests/user-api";
 import { recipesApi } from "@/api-requests/recipes-api";
+import type {IRecipe, ITag } from "@/interfaces";
 
 
   export default {
@@ -22,11 +23,11 @@ created() {
 
   data() {
     return {
-      info: [],
-       userInfo: ref(),
-     searchQuery: ref(""),
-     categories:ref(),
-     smallInfo:ref(),
+      info:ref<any>(),
+      userInfo: ref(),
+      searchQuery: ref(""),
+      categories:ref(),
+      smallInfo:ref(),
       pageCount: ref(1),
       allPagesCount:ref(),
       showFiltersModal: ref(false),
@@ -61,7 +62,7 @@ created() {
      this.sortCardList()
    },
    favoritesList:async function checkFav(){
-    this.checkIsFavorite(this.info)
+      this.checkIsFavorite(this.info)
    },
    userData: async function getFav() {
      this.getUsersFavoritesList()
@@ -69,10 +70,10 @@ created() {
 },
   computed: {
     filteredData() {
-    if(this.searchQuery){
+    if(this.searchQuery && this.info){
       return this.info
       .filter(
-        (item) => 
+        (item:IRecipe) => 
        { 
       return  item.attributes.title.toLowerCase().includes(this.searchQuery.toLowerCase())}
       );
@@ -167,7 +168,7 @@ created() {
 let sortList;
     // this.sortAsc ?  this.info = await recipesApi.sortRecipeASC() : this.info = await recipesApi.sortRecipeDESC();
   if(this.sortAsc){
-    sortList = this.info.sort(function (a, b) {
+    sortList = this.info?.sort(function (a:IRecipe, b:IRecipe) {
   if (a.attributes.title < b.attributes.title) {
     return -1;
   }
@@ -179,7 +180,7 @@ let sortList;
 );
     return this.info = sortList
   }else{
-  sortList = this.info.sort(function (a, b) {
+  sortList = this.info?.sort(function (a:IRecipe, b:IRecipe) {
   if (b.attributes.title < a.attributes.title) {
     return -1;
   }
@@ -232,18 +233,18 @@ let sortList;
       this.loading = false;
     }
   },
- handleTagClick (item) {
+ handleTagClick (item:ITag) {
     this.error = false
     this.favFilter=false;
     this.currentTag = item
   },
-  checkIsFavorite(recipe){
-      const check = this.favoritesList?.find((item) => recipe.id === item.id);
+  checkIsFavorite(recipe:IRecipe){
+      const check = this.favoritesList?.find((item:IRecipe) => recipe.id === item.id);
       // this.checkComplite=true
       // check ? this.likeClicked=true : this.likeClicked=false;
       return check;
   },
-  likeClick(item){
+  likeClick(item:IRecipe){
     if (!item) return;
     this.cardInfo = item
     const checkResult = this.checkIsFavorite(this.cardInfo);
@@ -282,11 +283,10 @@ let sortList;
     }
   },
   async getUsersFavoritesList() {
-
-if (this.userData && this.info) {
+  if (this.userData && this.info) {
   try {
     const favorites = await favoritesApi.getFavorites(this.userData?.favorite.id);
-    const check = favorites?.find((item) => this.info?.id === item.id);
+    const check = favorites?.find((item:IRecipe) => this.info?.id === item.id);
     check ? this.likeClicked=true : this.likeClicked=false;
     this.favoritesList = favorites;
     this.checkComplite = true;

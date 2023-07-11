@@ -1,26 +1,27 @@
 <script lang="ts">
-  import { recipesApi } from '@/api-requests/recipes-api';
-  import { processApi } from '@/api-requests/process-api';
-  import {ingredientsApi} from '../api-requests/ingredients-api';
-  import { userApi } from '@/api-requests/user-api';
+import { recipesApi } from '@/api-requests/recipes-api';
+import { processApi } from '@/api-requests/process-api';
+import {ingredientsApi} from '../api-requests/ingredients-api';
+import { userApi } from '@/api-requests/user-api';
 import { favoritesApi } from '../api-requests/favorites-api'
 import Modal from './Modal.vue';
 import { ref } from 'vue'
+import type { IRecipe } from '@/interfaces';
 
 export default {
   // props:['likeClicked','checkComplite','userData','favoritesList','checkComplite','likeClick'],
     created() {
-  this.getCard(this.$route.params.id)
+  this.getCard(this.$route.params.id as string)
 
   },
     data() {
-        return {
-          recipe:ref(),
-            info: null,
-            showModal: ref(false),
-            process:ref(),
-            ingredients:ref(),
-            likeClicked:ref(false),
+      return {
+      recipe:ref(),
+      info: ref<IRecipe>(),
+      showModal: ref(false),
+      process:ref(),
+      ingredients:ref(),
+      likeClicked:ref(false),
       checkComplite:ref(false),
       check:ref(false),
       userData:ref(),
@@ -35,7 +36,8 @@ export default {
      this.getUsersFavoritesList()
    },
    favoritesList:async function checkFav(){
-    this.checkIsFavorite(this.info)
+    if(this.info){
+    this.checkIsFavorite(this.info)}
    }
 },
     methods: {
@@ -71,8 +73,8 @@ export default {
        goBack(){
         this.$router.push('/recipes')
        },
-      checkIsFavorite(recipe){
-      const check = this.favoritesList?.find((item) => recipe.id === item.id);
+      checkIsFavorite(recipe:IRecipe){
+      const check = this.favoritesList?.find((item:IRecipe) => recipe.id === item.id);
       this.checkComplite=true
       check ? this.likeClicked=true : this.likeClicked=false;
       return check;
@@ -92,7 +94,7 @@ export default {
     if (this.userData && this.info) {
       try {
         const favorites = await favoritesApi.getFavorites(this.userData?.favorite.id);
-        const check = favorites?.find((item) => this.info?.id === item.id);
+        const check = favorites?.find((item:IRecipe) => this.info?.id === item.id);
         check ? this.likeClicked=true : this.likeClicked=false;
         this.favoritesList = favorites;
         this.checkComplite = true;

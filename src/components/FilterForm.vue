@@ -36,34 +36,6 @@ export default {
   <h2>Grams:</h2>
   <input class="name" placeholder="grams" v-model="grams"> 
 </div>
-<!-- <div class="status_input">
-  <h2>Status</h2>
-  <div class="radio_wrapper">
-  <input type="radio" id="alive" value="alive" v-model="status">
-  <label for="alive">Alive</label>
-
-  <input type="radio" id="dead" value="dead" v-model="status">
-  <label for="dead">Dead</label>
-
-  <input type="radio" id="unknow" value="unknow" v-model="status">
-  <label for="unknow">Unknow</label>
-</div>
-</div> -->
-<!-- <div class="gender_input">
-  <h2>Gender</h2>
-  <div class="radio_wrapper">
-  <input type="radio" id="female" value="female" v-model="gender">
-  <label for="female">Female</label>
-
-  <input type="radio" id="male" value="male" v-model="gender">
-  <label for="male">Male</label>
-
-  <input type="radio" id="genderless" value="genderless" v-model="gender">
-  <label for="genderless">Genderless</label>
-  <input type="radio" id="unknow" value="unknow" v-model="gender">
-  <label for="unknow">Unknow</label>
-</div>
-</div> -->
 <button class="submit_button" @click=submit>Submit</button>
 </div>
 </template>

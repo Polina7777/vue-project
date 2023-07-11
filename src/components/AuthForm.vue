@@ -51,7 +51,7 @@ async login() {
        this.password = ''
          }
        },
-  userBearer(jwt,user){
+  userBearer(jwt:string,user:any){
     try {
       const res2 = userApi.userBearer(jwt,user)
       this.$router.push('/')
@@ -69,30 +69,6 @@ validations() {
   },
 }
 </script>
-<!-- 
-//     signIn(){ 
-  //     signInWithEmailAndPassword(getAuth(),this.email,this.password)
-  //   .then((data) => {
-  //     console.log('Successfully logged in!');
-  //     this.$router.push('/')
-  //   })
-  //   .catch(error => {
-  //     switch (error.code) {
-  //       case 'auth/invalid-email':
-  //           this.errMsg.value = 'Invalid email'
-  //           break
-  //       case 'auth/user-not-found':
-  //           this.errMsg.value = 'No account with that email was found'
-  //           break
-  //       case 'auth/wrong-password':
-  //          this.errMsg.value = 'Incorrect password'
-  //           break  
-  //       default:
-  //           this.errMsg.value = 'Email or password was incorrect'
-  //           break
-  //     }
-  //   });
-  // } -->
 
 <template>
     <div class="auth_inputs__wrapper">
