@@ -14,6 +14,7 @@ import { recipesApi } from "@/api-requests/recipes-api";
   export default {
 created() {
   this.getCards()
+ 
   if (localStorage.getItem('userData')) {
   this.userInfo = JSON.parse(localStorage.getItem('userData') as string);
   }
@@ -40,7 +41,12 @@ created() {
       currentTag:ref(),
       loading:ref(),
       favFilter:ref(),
-      errorText:ref('No result!')
+      errorText:ref('No result!'),
+      favoritesList:ref(),
+      likeClicked:ref(false),
+      checkComplite:ref(false),
+      userData:ref(),
+      cardInfo:ref(),
     };
   
   },
@@ -53,7 +59,13 @@ created() {
    },
    sortAsc: async function sort() {
      this.sortCardList()
-   }
+   },
+   favoritesList:async function checkFav(){
+    this.checkIsFavorite(this.info)
+   },
+   userData: async function getFav() {
+     this.getUsersFavoritesList()
+   },
 },
   computed: {
     filteredData() {
@@ -76,6 +88,9 @@ created() {
       this.error = false;
       this.loading = true;
     this.favFilter=false;
+    this.userInfo = JSON.parse(localStorage.getItem('userData') as string)
+    const user = await userApi.getUsersById(this.userInfo.id);
+    this.userData = user
     this.getCategories();
     const sortType = this.sortAsc? 'asc': 'desc';
     try {
@@ -105,7 +120,7 @@ created() {
       const sortType = this.sortAsc? 'asc': 'desc';
     try {
       const user = await userApi.getUsersById(this.userInfo.id);
-      const filteredList = await favoritesApi.getFavorites(user.favorite.id,sortType);
+      const filteredList = await favoritesApi.getFavorites(user.favorite.id);
       const idArr = filteredList.map((item: any) => item.id);
       const resultArray = [];
       for (const item of idArr) {
@@ -133,11 +148,6 @@ created() {
     const sortType = this.sortAsc? 'asc': 'desc';
     try {
       const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters,sortType);
-      // this.filters = {
-      //   kcal: "",
-      //  serve: "",
-      //  grams: "",
-      // }
       if (filteredCardList.length) {
      return  this.info = filteredCardList
       } else {
@@ -227,6 +237,64 @@ let sortList;
     this.favFilter=false;
     this.currentTag = item
   },
+  checkIsFavorite(recipe){
+      const check = this.favoritesList?.find((item) => recipe.id === item.id);
+      // this.checkComplite=true
+      // check ? this.likeClicked=true : this.likeClicked=false;
+      return check;
+  },
+  likeClick(item){
+    if (!item) return;
+    this.cardInfo = item
+    const checkResult = this.checkIsFavorite(this.cardInfo);
+    if (checkResult) {
+      this.deleteFavorite();
+    } else {
+     this.addNewFavorite();
+    }
+  },
+  async addNewFavorite(){
+    if (this.userData) {
+      try {
+        const favorite = await favoritesApi.setFavorite(
+         this.userData.favorite.id,
+          this.cardInfo
+        );
+        this.likeClicked = true;
+        this.getUsersFavoritesList();
+      } catch (err) {
+        console.log(err, "error");
+      }
+    }
+  },
+  async  deleteFavorite(){
+    try {
+      if (this.userData) {
+        const favorite = await favoritesApi.deleteFavorite(
+         this.userData.favorite.id,
+          this.cardInfo
+        );
+      }
+      this.likeClicked = false;
+      this.getUsersFavoritesList();
+    } catch (err) {
+    this.error=true
+    }
+  },
+  async getUsersFavoritesList() {
+
+if (this.userData && this.info) {
+  try {
+    const favorites = await favoritesApi.getFavorites(this.userData?.favorite.id);
+    const check = favorites?.find((item) => this.info?.id === item.id);
+    check ? this.likeClicked=true : this.likeClicked=false;
+    this.favoritesList = favorites;
+    this.checkComplite = true;
+  } catch (err) {
+    this.error=true
+  }
+}
+},
 
   },
 
@@ -278,7 +346,11 @@ let sortList;
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
   <li class="card"  v-for="(item) in filteredData">
-<RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" >
+    <button class="button_like" @click="()=>likeClick(item)">
+      <img class="like" v-if="(checkIsFavorite(item))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
+    <img class="like" v-if="!(checkIsFavorite(item))" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
+  </button>
+<RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" :likeClicked="likeClicked" :checkComplite="checkComplite" :userData="userData" :favoritesList="favoritesList" :likeClick="likeClick">
     <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
     <img :src="item.attributes.image_url" class="image"/>
     <div class="small_info">
@@ -368,6 +440,15 @@ align-items: center;
   }
   .tag_title{
     font-size: 1rem;
+  }
+  .button_like{
+    align-self: end;
+    background-color: transparent;
+    border: transparent;
+  }
+  .like{
+    width: 40px;
+    height:40px
   }
   .tag_list {
    display: flex;

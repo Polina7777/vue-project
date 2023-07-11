@@ -8,6 +8,7 @@ import Modal from './Modal.vue';
 import { ref } from 'vue'
 
 export default {
+  // props:['likeClicked','checkComplite','userData','favoritesList','checkComplite','likeClick'],
     created() {
   this.getCard(this.$route.params.id)
 
@@ -77,6 +78,7 @@ export default {
       return check;
   },
   likeClick(){
+    console.log(this.info)
     if (!this.info) return;
     const checkResult = this.checkIsFavorite(this.info);
     if (checkResult) {
