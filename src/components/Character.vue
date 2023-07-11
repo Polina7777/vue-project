@@ -146,7 +146,7 @@ export default {
     <img :src="info.attributes.image_url" class="image"/>
 
     <div class="extra_info">
-      <p :kcal = info.attributes.extra_info.data.attributes.kcal class="kcal">{{info.attributes.extra_info.data.attributes.kcal}} </p>
+   <p :kcal = info.attributes.extra_info.data.attributes.kcal class="kcal">{{info.attributes.extra_info.data.attributes.kcal}} </p>
     <p :grams = info.attributes.extra_info.data.attributes.grams class="kcal">{{info.attributes.extra_info.data.attributes.grams}} </p>
     <p :min = info.attributes.extra_info.data.attributes.min class="kcal">{{info.attributes.extra_info.data.attributes.min}} </p>
     <p :serve = info.attributes.extra_info.data.attributes.serve class="kcal">{{info.attributes.extra_info.data.attributes.serve}} </p>
@@ -186,7 +186,7 @@ export default {
     border-radius:10px;
     color:rgb(224, 224, 243);
     font-size: 1rem;
-align-self: center;
+    align-self: center;
   }
   .card_wrapper {
   padding: 40px;
@@ -207,15 +207,20 @@ align-self: center;
     flex-direction:column;
     align-items: center;
     padding:20px;
+    width: 59%;
+    min-width: 290px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-secondary);
     border-radius:10px;
     margin:10px;
     color:rgb(224, 224, 243);
   }
+  .card_wrapper {
+    display: flex;
+    justify-content: center;
+  }
   .title{
     font-size: 1.5rem;
-    padding: 10px;
   }
   .title_modal{
     color:rgb(229, 223, 234);;
@@ -234,5 +239,13 @@ align-self: center;
   .description{
     padding: 10px;
   }
- 
+  @media (max-width:540px) {  
+  .image{
+ width:150px;
+ height: 150px;
+ border-radius: 70px;
+ padding: 10px;
+ align-self: center;
+  }
+}
 </style>

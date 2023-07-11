@@ -2,14 +2,12 @@
 
 export default{
   props:['show','process','ingredients'],
-
-  
 data() {
     return {
       scrollTop: 0,
       stepsCount:this.process.length,
-      height:window.innerHeight/2.2,
-      width:window.innerWidth,
+      height:window.innerHeight,
+      width:window.innerWidth
       
     };
   },
@@ -17,6 +15,7 @@ methods:{
 
 handleScroll(event) {
       this.scrollTop = event.currentTarget.scrollTop;
+      console.log(this.height)
     },
     styleCircle: function(index) {
       let style = {};
@@ -31,30 +30,77 @@ handleScroll(event) {
 },
 computed: {
     myStyles () {
+      console.log(this.height)
       return {
         backgroundColor: 'rgb(114, 100, 126)',
         height:this.scrollTop> 0 ? `${this.scrollTop+40}px`: 0,
-        maxHeight:`${this.height-100}px`,
-        minHeight:this.stepsCount <= 2 && this.scrollTop>0 ? '340px': '0px'
+        maxHeight:`${this.height/3}px`,
+        minHeight:this.stepsCount <= 2 && this.scrollTop>0 ? `${this.height/3}px`: '0px'
 
       }
     },
     styleForHeight () {
-      return {
-        height:`${this.height-100}px`,
-        maxHeight:`${this.height-100}px`,
-        minHeight:this.stepsCount <= 2 ? 170*this.stepsCount:`${this.height-100}px`   
- 
-      }
-    },
 
+
+
+             if(this.width > 540){
+      return {
+               height:`${this.height/3}px`,
+         maxHeight:`${this.height/3}px`,
+        minHeight:this.stepsCount <= 2 ? 180*this.stepsCount:`${this.height/3}px`  
+      }
+    }else{
+      return {
+        height:`${this.height/3.3}px`,
+         maxHeight:`${this.height/3.3}px`,
+        minHeight:this.stepsCount <= 2 ? 180*this.stepsCount:`${this.height/3.3}px` 
+      }
+    }
+    },
+    descriptionStyle () {
+      if(this.width > 540){
+      return {
+        fontSize:  `${this.width/60}px`,
+        padding: '10px 40px'
+      }
+    }else{
+      return {
+        fontSize:  `${this.width/33}px`,
+        padding: '10px'
+      }
+    }
+    },
+    nameStyle () {
+      if(this.width > 540){
+      return {
+        fontSize:  `${this.width/40}px`,
+        padding: '10px 40px'
+      }
+    }else{
+      return {
+        fontSize:  `${this.width/24}px`,
+        padding: '10px'
+      }
+    }
+    },
+    stringPosition(){
+      if(this.width > 540){
+      return {
+       left:'49px',
+      }
+    }else{
+      return {
+        left:'29px',
+      }
+    }
+    }
 }
 
 }
 </script>
 
 <template>
-  
+
   <Transition name="modal">
     <div v-if="show" class="modal-mask">
       <div class="modal-container">
@@ -73,8 +119,8 @@ computed: {
    <img class="ingredient_image" :src="item.attributes.image_url" />
   </li>
    </ul>
-   <div class="string" :style="styleForHeight"></div>
-  <div class="general_string" :style="myStyles" ></div>
+   <div class="string" :style="[styleForHeight,stringPosition]"></div>
+  <div class="general_string" :style="[myStyles,stringPosition]" ></div>
   <div class="scroll_wrapper" :style="styleForHeight"  @scroll="handleScroll" >
 
           <ul class="step_list">
@@ -82,9 +128,9 @@ computed: {
   <li class="step"  v-for="(item,index) in process">
     <div class="title_wrapper">
       <p class="circle" :style="styleCircle(index)"></p>
-<a class="name" :style="{ 'font-size': width/100 * 2 + 'px' }">{{item.attributes.name}}</a>
+<a class="name" :style="nameStyle">{{item.attributes.name}}</a>
   </div>
-    <a class="description" :style="{ 'font-size': width/100 * 1.5  + 'px' }">{{item.attributes.description}}</a>
+    <a class="description" :style="descriptionStyle">{{item.attributes.description}}</a>
   </li>
    </ul>
   </div>
@@ -115,7 +161,7 @@ computed: {
 
 }
 .modal-container {
-  width: 60%;
+  width: 87%;
   height: 60%;
   margin: auto;
   padding: 10px 30px;
@@ -173,7 +219,6 @@ position: relative;
 .description {
 list-style-type: none;
 text-decoration: none;
-font-size: 1rem;
 padding: 10px 40px;
 }
 .step{
@@ -186,7 +231,6 @@ height:200px;
 
 }
 .string{
-height: 100%;
 background-color: rgb(199, 199, 232);
 width: 3px;
 position: absolute;
@@ -194,8 +238,8 @@ left: 49px;
 
 }
 .general_string{
-  width: 3px;
-  background-color: var(--background-general);
+width: 3px;
+background-color: var(--background-general);
 position: absolute;
 left: 49px;
 }
@@ -209,7 +253,6 @@ position: relative;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-
   border:2px solid var(--background-general);
   background-color: rgb(199, 199, 232);
   position: absolute;
@@ -240,5 +283,24 @@ left: -24px;
     border-radius:50%;
 }
 
+@media (max-width:630px) {
+  .ingredient_image{
+  width: 20px;
+  height: 20px;
+}
+}
+
+@media (max-width:540px) {
+  .modal-container{
+    padding: 10px;
+}
+.modal-default-button{
+  font-size: 0.7rem;
+}
+.ingredient_image{
+  width: 15px;
+  height: 15px;
+}
+}
 
 </style>

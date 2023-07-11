@@ -337,14 +337,15 @@ if (this.userData && this.info) {
 </ul>
 </div>
 
-<div  class="pagination_wrapper">
-  <ul class="card_list">
-    <div class="buttons_wrapper">
+<div  class="card_list__wrapper"> 
+  <div class="buttons_wrapper">
 <button class="sort_button" @click="toggleSortType">
 <img src='https://www.svgrepo.com/show/356266/sort-descending.svg' class="sort_image"/>
 </button>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
+  <ul class="card_list">
+
   <li class="card"  v-for="(item) in filteredData">
     <button class="button_like" @click="()=>likeClick(item)">
       <img class="like" v-if="(checkIsFavorite(item))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
@@ -392,8 +393,8 @@ align-items: center;
   }
   .buttons_wrapper{
     display: flex;
-    flex-direction: row-reverse;
-    width: 85%;
+    padding: 20px;
+    align-items: center;
   }
   .error_button{
     padding:10px 18px;
@@ -501,7 +502,7 @@ margin: 10px;
     display: flex;
     align-items: center;
     flex-direction:column;
-    width:280px;
+    width:290px;
     padding:20px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-secondary);
@@ -511,6 +512,7 @@ margin: 10px;
   }
   #show-modal{
     padding:5px 10px;
+    height: 35px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-general);
     border-radius:10px;
@@ -541,10 +543,18 @@ margin: 10px;
     justify-content: center;
     width:100%;
   }
-  @media (max-width: 450px) {
+  @media (max-width: 500px) {
 .arrow{
   height: 30px;
     width: 30px;
 }
+.tag_list {
+   display: flex;
+    overflow-x: scroll;
+   flex-wrap: nowrap;
+  }
+  .card{
+    padding: 10px;
+  }
 }
 </style>
