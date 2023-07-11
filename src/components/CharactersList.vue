@@ -320,8 +320,6 @@ if (this.userData && this.info) {
 <!-- <p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p> -->
 
 </div>
-<div>
-
   <ul class="tag_list">
     <button class="tag_button" @click="filterByFavorites">
     <h1 title="Favorites" class="tag_title">Favorites</h1>
@@ -335,7 +333,6 @@ if (this.userData && this.info) {
   </li>
 
 </ul>
-</div>
 
 <div  class="card_list__wrapper"> 
   <div class="buttons_wrapper">
@@ -393,7 +390,6 @@ align-items: center;
   }
   .buttons_wrapper{
     display: flex;
-    padding: 20px;
     align-items: center;
   }
   .error_button{
@@ -548,12 +544,15 @@ margin: 10px;
   height: 30px;
     width: 30px;
 }
-.tag_list {
+/* .tag_list {
    display: flex;
     overflow-x: scroll;
    flex-wrap: nowrap;
-  }
+  } */
   .card{
+    padding: 10px;
+  }
+  .card_list__wrapper {
     padding: 10px;
   }
 }

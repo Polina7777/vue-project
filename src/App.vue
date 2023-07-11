@@ -70,7 +70,6 @@ watch:{
 
 <template>
   <header>
-    <!-- <div class="wrapper"> -->
       <div v-if="isLoggedIn" class="hello_wrapper">
       <p class="hello"> Hello, {{userName}} !</p>
       <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/>
@@ -100,14 +99,13 @@ watch:{
         <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
       </nav>
   <RouterView />
-  <!-- <RouterView name="users" /> -->
 </template>
 
 <style>
 header {
   line-height: 1.5;
   background-color: var(--background-secondary);
-  height: 100px;
+  height: 80px;
   display: flex;
 flex-direction: row;
 align-items: center;

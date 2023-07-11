@@ -15,7 +15,6 @@ methods:{
 
 handleScroll(event) {
       this.scrollTop = event.currentTarget.scrollTop;
-      console.log(this.height)
     },
     styleCircle: function(index) {
       let style = {};
@@ -30,7 +29,6 @@ handleScroll(event) {
 },
 computed: {
     myStyles () {
-      console.log(this.height)
       return {
         backgroundColor: 'rgb(114, 100, 126)',
         height:this.scrollTop> 0 ? `${this.scrollTop+40}px`: 0,
@@ -40,13 +38,10 @@ computed: {
       }
     },
     styleForHeight () {
-
-
-
-             if(this.width > 540){
+     if(this.width > 540){
       return {
-               height:`${this.height/3}px`,
-         maxHeight:`${this.height/3}px`,
+       height:`${this.height/3}px`,
+        maxHeight:`${this.height/3}px`,
         minHeight:this.stepsCount <= 2 ? 180*this.stepsCount:`${this.height/3}px`  
       }
     }else{
