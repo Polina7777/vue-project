@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CharactersList from "../components/CharactersList.vue"
+import CardList from "../components/CardList.vue"
 import { useRouter } from 'vue-router'
 import { onBeforeUnmount, onMounted } from 'vue'
 const router = useRouter()
@@ -20,7 +20,7 @@ onMounted(()=>{
 </script>
 
 <template>
-<CharactersList  />
+<CardList  />
 </template>
 
 <style>

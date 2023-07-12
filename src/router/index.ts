@@ -16,14 +16,14 @@ const router = createRouter({
     {
       path: '/recipes',
       name: 'recipes',
-      component: () => import('../views/CharactersView.vue'),
+      component: () => import('../views/CardsView.vue'),
       props: true,
       meta:{
         isAuth:true,
         allowAnonymous: false
       }
     },
-    { path: '/recipes/:id', name: 'recipe' ,component: () => import('../views/CharacterView.vue')},
+    { path: '/recipes/:id', name: 'recipe' ,component: () => import('../views/CardView.vue')},
   ]
 })
 export default router
