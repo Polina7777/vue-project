@@ -104,7 +104,8 @@ watch:{
 <style>
 header {
   line-height: 1.5;
-  background-color: var(--background-secondary);
+  background-color: var(--background-primary);
+  border-bottom: 1px solid rgb(199, 199, 232);
   height: 80px;
   display: flex;
 flex-direction: row;
@@ -133,8 +134,6 @@ justify-content: space-between;
   display: flex;
 flex-direction: row;
 }
-
-
 nav {
   width: 100%;
   font-size: 1.5rem;
@@ -144,7 +143,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color:var(--text-primary)
+  color:rgb(199, 199, 232)
 }
 
 nav a.router-link-exact-active:hover {

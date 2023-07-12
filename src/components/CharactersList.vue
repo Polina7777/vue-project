@@ -15,7 +15,7 @@ import type {IRecipe, ITag } from "@/interfaces";
   export default {
 created() {
   this.getCards()
- 
+  this.getLikedRecipes()
   if (localStorage.getItem('userData')) {
   this.userInfo = JSON.parse(localStorage.getItem('userData') as string);
   }
@@ -48,6 +48,7 @@ created() {
       checkComplite:ref(false),
       userData:ref(),
       cardInfo:ref(),
+      likesList:ref()
     };
   
   },
@@ -67,6 +68,11 @@ created() {
    userData: async function getFav() {
      this.getUsersFavoritesList()
    },
+   likeClicked:async function(){
+      this.getUsersFavoritesList()
+      this.getLikedRecipes()
+   },
+
 },
   computed: {
     filteredData() {
@@ -80,8 +86,6 @@ created() {
     } else {
       return this.info
     }
-  
-
   },
 },
   methods: {
@@ -130,6 +134,7 @@ created() {
         );
         const result = await response.json();
         resultArray.push(result.data);
+        this.likesList = resultArray
       }
         if(resultArray.length){
           return  this.info = resultArray;
@@ -142,6 +147,30 @@ created() {
     } finally {
       this.loading = false;
     }
+  },
+  async getLikedRecipes(){
+
+    try {
+      const user = await userApi.getUsersById(this.userInfo.id);
+      const filteredList = await favoritesApi.getFavorites(user.favorite.id);
+      const idArr = filteredList.map((item: any) => item.id);
+      const resultArray = [];
+      for (const item of idArr) {
+        const response = await fetch(
+          `${url_ngrok}api/foods/${item}?populate=*`
+        );
+        const result = await response.json();
+        resultArray.push(result.data);   
+      }
+     return  this.likesList = resultArray
+    } catch (error) {
+      this.error = true;
+    } finally {
+      this.loading = false;
+    }
+  },
+  async checkLikeColor(){
+
   },
   async  getFilteredCardListByFiltersModal(){
     this.loading = true;
@@ -166,7 +195,6 @@ created() {
     this.error = false;
     try {
 let sortList;
-    // this.sortAsc ?  this.info = await recipesApi.sortRecipeASC() : this.info = await recipesApi.sortRecipeDESC();
   if(this.sortAsc){
     sortList = this.info?.sort(function (a:IRecipe, b:IRecipe) {
   if (a.attributes.title < b.attributes.title) {
@@ -201,23 +229,22 @@ let sortList;
     return this.sortAsc =!this.sortAsc
   },
 
-    onClickLeftHandler(){
-      if(this.pageCount <=1){
-        return 1
-      }
-        return  this.pageCount--
-    },
-    onClickRightHandler(){
-     if(this.pageCount === this.allPagesCount){
-      return 1
-     }
-      return this.pageCount++
-    },
+    // onClickLeftHandler(){
+    //   if(this.pageCount <=1){
+    //     return 1
+    //   }
+    //     return  this.pageCount--
+    // },
+    // onClickRightHandler(){
+    //  if(this.pageCount === this.allPagesCount){
+    //   return 1
+    //  }
+    //   return this.pageCount++
+    // },
     submitFilters (data: any) {
       this.showFiltersModal=false;
       this.filters = data
       this.getFilteredCardListByFiltersModal()
-    
     },
     async filterByTag (tag: string){
       this.error = false
@@ -239,15 +266,17 @@ let sortList;
     this.currentTag = item
   },
   checkIsFavorite(recipe:IRecipe){
+    console.log(this.favoritesList)
       const check = this.favoritesList?.find((item:IRecipe) => recipe.id === item.id);
-      // this.checkComplite=true
-      // check ? this.likeClicked=true : this.likeClicked=false;
+      this.checkComplite=true
+      console.log(check)
+      check ? this.likeClicked=true : this.likeClicked=false;
       return check;
   },
   likeClick(item:IRecipe){
     if (!item) return;
     this.cardInfo = item
-    const checkResult = this.checkIsFavorite(this.cardInfo);
+    const checkResult= this.likesList?.find((i:IRecipe) => item.id === i.id)
     if (checkResult) {
       this.deleteFavorite();
     } else {
@@ -262,7 +291,8 @@ let sortList;
           this.cardInfo
         );
         this.likeClicked = true;
-        this.getUsersFavoritesList();
+        // this.getUsersFavoritesList();
+        this.getLikedRecipes()
       } catch (err) {
         console.log(err, "error");
       }
@@ -277,7 +307,8 @@ let sortList;
         );
       }
       this.likeClicked = false;
-      this.getUsersFavoritesList();
+      // this.getUsersFavoritesList();
+      this.getLikedRecipes()
     } catch (err) {
     this.error=true
     }
@@ -295,9 +326,7 @@ let sortList;
   }
 }
 },
-
   },
-
   components: { FiltersModal,Error }
   }
 </script>
@@ -345,8 +374,8 @@ let sortList;
 
   <li class="card"  v-for="(item) in filteredData">
     <button class="button_like" @click="()=>likeClick(item)">
-      <img class="like" v-if="(checkIsFavorite(item))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
-    <img class="like" v-if="!(checkIsFavorite(item))" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
+      <img class="like" v-if="(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
+    <img class="like" v-if="!(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
   </button>
 <RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" :likeClicked="likeClicked" :checkComplite="checkComplite" :userData="userData" :favoritesList="favoritesList" :likeClick="likeClick">
     <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
@@ -499,6 +528,7 @@ margin: 10px;
     align-items: center;
     flex-direction:column;
     width:290px;
+    height: 405px;
     padding:20px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-secondary);
