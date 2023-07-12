@@ -6,10 +6,11 @@ export const getAllRecipes = async()=>{
     const recipes = data.data
     return recipes;
 }
-export const getAllRecipesWithIngredientCollection = async(sortType:string)=>{
-    const response = await fetch(`${url_ngrok}api/foods?sort=title%3A${sortType}&populate=*`,{method:'GET'});
+export const getAllRecipesWithIngredientCollection = async(sortType:string,page:any)=>{
+    const response = await fetch(`${url_ngrok}api/foods?pagination[page]=${page}&pagination[pageSize]=3&sort=title%3A${sortType}&populate=*`,{method:'GET'});
     const data = await response.json();
-    const recipes = data.data
+    console.log(data)
+    const recipes = data
     return recipes;
 }
 export const getRecipeById = async(id:string)=>{

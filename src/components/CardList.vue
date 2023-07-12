@@ -99,7 +99,9 @@ created() {
     this.getCategories();
     const sortType = this.sortAsc? 'asc': 'desc';
     try {
-      this.info = await recipesApi.getAllRecipesWithIngredientCollection(sortType)
+      const recipesData = await recipesApi.getAllRecipesWithIngredientCollection(sortType,this.pageCount)
+      this.info = recipesData.data
+      this.allPagesCount = recipesData.meta.pagination.pageCount
     } catch (err) {
       this.error = true;
     } finally {
@@ -229,18 +231,18 @@ let sortList;
     return this.sortAsc =!this.sortAsc
   },
 
-    // onClickLeftHandler(){
-    //   if(this.pageCount <=1){
-    //     return 1
-    //   }
-    //     return  this.pageCount--
-    // },
-    // onClickRightHandler(){
-    //  if(this.pageCount === this.allPagesCount){
-    //   return 1
-    //  }
-    //   return this.pageCount++
-    // },
+    onClickLeftHandler(){
+      if(this.pageCount <=1){
+        return 1
+      }
+        return  this.pageCount--
+    },
+    onClickRightHandler(){
+     if(this.pageCount === this.allPagesCount){
+      return 1
+     }
+      return this.pageCount++
+    },
     submitFilters (data: any) {
       this.showFiltersModal=false;
       this.filters = data
@@ -266,10 +268,8 @@ let sortList;
     this.currentTag = item
   },
   checkIsFavorite(recipe:IRecipe){
-    console.log(this.favoritesList)
       const check = this.favoritesList?.find((item:IRecipe) => recipe.id === item.id);
       this.checkComplite=true
-      console.log(check)
       check ? this.likeClicked=true : this.likeClicked=false;
       return check;
   },
@@ -346,7 +346,7 @@ let sortList;
   <input  v-model="searchQuery">
 </div>
 <div class="page_info__wrapper" >
-<!-- <p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p> -->
+<p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p>
 
 </div>
   <ul class="tag_list">
@@ -362,7 +362,8 @@ let sortList;
   </li>
 
 </ul>
-
+<div class="pagination_wrapper">
+<button v-if="(pageCount !== 1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt </button>
 <div  class="card_list__wrapper"> 
   <div class="buttons_wrapper">
 <button class="sort_button" @click="toggleSortType">
@@ -390,6 +391,9 @@ let sortList;
   </li>
 </ul>
 
+</div>
+
+<button v-if="(pageCount !== allPagesCount && !searchQuery.length)" class="arrow" @click="onClickRightHandler"> > </button>
 </div>
  </div>
  <div v-else="error" class="error_wrapper">
@@ -420,6 +424,11 @@ align-items: center;
   .buttons_wrapper{
     display: flex;
     align-items: center;
+  }
+  .pagination_wrapper{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
   }
   .error_button{
     padding:10px 18px;
@@ -563,12 +572,7 @@ margin: 10px;
     color:var(--text-secondary);;
     font-size: 1rem;
   }
-  .pagination_wrapper{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width:100%;
-  }
+
   @media (max-width: 500px) {
 .arrow{
   height: 30px;
