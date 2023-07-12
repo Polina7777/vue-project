@@ -428,6 +428,8 @@ align-items: center;
   .pagination_wrapper{
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
     width: 80%;
   }
   .error_button{
