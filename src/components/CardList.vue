@@ -33,9 +33,9 @@ created() {
       showFiltersModal: ref(false),
       sortAsc:ref(false),
       filters: ref({
-       kcal: "",
-       serve: "",
-       grams: "",
+       kcal: null,
+       serve: null,
+       grams: null,
       }),
       error:ref(),
       tag:ref(),
@@ -54,13 +54,17 @@ created() {
   },
   watch: {
    pageCount: async function newPage() {
+    console.log((Object.values(this.filters).filter(item=> item)).length)
     if(this.currentTag === null) {
       this.filterByFavorites()
+    } else if((Object.values(this.filters).filter(item=> item)).length){
+      this.getFilteredCardListByFiltersModal()
+    }else {
+      this.getCards()
     }
-     this.getCards()
+  
    },
    currentTag: async function filterTag(){
-    console.log(this.currentTag)
     this.favFilter=false
       this.filterByTag(this.currentTag?.id);
    },
@@ -143,28 +147,25 @@ created() {
         );
         const result = await response.json();
         resultArray.push(result.data);
-
         this.likesList = resultArray
-
       }
         if(resultArray.length){
           this.allPagesCount =  Math.ceil(resultArray.length/3)
-          let array = resultArray; //массив, можно использовать массив объектов
-let size = 3; //размер подмассива
-let subarray = []; //массив в который будет выведен результат.
+          if (this.pageCount > this.allPagesCount) {
+            return this.pageCount = 1
+          }
+          let array = resultArray;
+let size = 3; 
+let subarray = [];
 for (let i = 0; i <Math.ceil(array.length/size); i++){
-    subarray[i] = array.slice((i*size), (i*size) + size);
+   subarray[i] = array.slice((i*size), (i*size) + size);
 }
-console.log(subarray);
-
-   this.info =subarray[this.pageCount-1]
-   console.log(this.info,this.currentTag,'ghhgh')
+   this.info = subarray[this.pageCount-1]
    return this.info
           // return  this.info = resultArray;
         }else{
           this.error=true
         }
-
     } catch (error) {
       this.error = true;
     } finally {
@@ -199,10 +200,20 @@ console.log(subarray);
     this.loading = true;
     this.error = false;
     const sortType = this.sortAsc? 'asc': 'desc';
+    console.log(this.filters)
     try {
-      const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters,sortType);
-      if (filteredCardList.length) {
-     return  this.info = filteredCardList
+      const filteredCardList = await filtersApi.filtersByFiltersForm(this.filters,sortType,this.pageCount);
+      if (filteredCardList.filteredData.length) {
+      //   if (this.pageCount > this.allPagesCount) {
+      //     this.filters ={
+      //  kcal: "",
+      //  serve: "",
+      //  grams: "",
+      // }
+          //   return this.pageCount = 1
+          // }
+        this.allPagesCount = filteredCardList.pagination.pageCount
+     return  this.info = filteredCardList.filteredData
       } else {
         this.error = true;
       }

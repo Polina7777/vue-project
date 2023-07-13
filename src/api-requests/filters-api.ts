@@ -6,7 +6,6 @@ import { url_ngrok } from ".";
     { method: "GET" }
   );
   const data = await response.json();
-  console.log(data)
   const filteredData = data.data;
   const pagination = data.meta.pagination
   return {filteredData,pagination};
@@ -16,14 +15,17 @@ import { url_ngrok } from ".";
   kcal: string;
   serve: string;
   grams: string;
-},sortType:string) => {
+},sortType:string,page:number) => {
   const response = await fetch(
-    `${url_ngrok}api/foods?sort=title%3A${sortType}&populate=*&filters[extra_info][kcal][$containsi]=${filters.kcal}&filters[extra_info][serve][$containsi]=${filters.serve}&filters[extra_info][grams][$containsi]=${filters.grams}`,
+    `${url_ngrok}api/foods?pagination[page]=${page}&pagination[pageSize]=3&sort=title%3A${sortType}&populate=*&filters[extra_info][kcal][$containsi]=${filters.kcal}&filters[extra_info][serve][$containsi]=${filters.serve}&filters[extra_info][grams][$containsi]=${filters.grams}`,
     { method: "GET" }
   );
   const data = await response.json();
+  console.log(data,'filters')
   const filteredData = data.data;
-  return filteredData;
+  const pagination = data.meta.pagination
+  return {filteredData,pagination};
+  // return filteredData;
 };
 
 export const filtersApi = { filtersByTags, filtersByFiltersForm };
