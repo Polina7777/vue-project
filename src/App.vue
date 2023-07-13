@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
+import type { IUser } from './interfaces';
 
 export default {
   created() {
@@ -14,11 +15,11 @@ export default {
   },
   data() {
     return {
-    showAuthModal: ref(false),
-    showRegModal: ref(false),
-    isLoggedIn:ref(false),
+    showAuthModal: ref<boolean>(false),
+    showRegModal: ref<boolean>(false),
+    isLoggedIn:ref<boolean>(false),
     userData:ref(),
-    userName:ref()
+    userName:ref<string>()
     };
   },
 
@@ -108,10 +109,10 @@ header {
   border-bottom: 1px solid rgb(199, 199, 232);
   height: 80px;
   display: flex;
-flex-direction: row;
-align-items: center;
-color: var(--text-primary);
-justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  color: var(--text-primary);
+  justify-content: space-between;
 }
 .hello_image{
   width: 30px;

@@ -15,16 +15,15 @@ export default {
      surname: '',
      email:'',
      password:'',
-     errMsg: ref(),
+     errMsg: ref<string>(),
      rules:{
       name:{ required, minLength:minLength(3) },
       surname:{ required, minLength:minLength(3) },
       email: { required, email},
       password:{ required,numeric,minLength:minLength(6) }
     },
-    error:ref(),
-      // user:ref(),
-      userId:ref(),
+    error:ref<string>(),
+    userId:ref<string>(),
     }
   },
   methods: {
@@ -146,7 +145,7 @@ h2{
 }
 .error{
   font-size: 0.7rem;
-  color:red
+  color:rgb(168, 11, 11)
 }
 
   </style>

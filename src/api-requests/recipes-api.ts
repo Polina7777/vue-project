@@ -9,7 +9,6 @@ export const getAllRecipes = async()=>{
 export const getAllRecipesWithIngredientCollection = async(sortType:string,page:any)=>{
     const response = await fetch(`${url_ngrok}api/foods?pagination[page]=${page}&pagination[pageSize]=3&sort=title%3A${sortType}&populate=*`,{method:'GET'});
     const data = await response.json();
-    console.log(data)
     const recipes = data
     return recipes;
 }

@@ -11,12 +11,12 @@ export default {
     v$: useValidate(),
      email:'',
      password:'',
-     errMsg: ref(),
+     errMsg: ref<string>(),
      rules:{
       email: { required,email},
       password:{required,numeric,minLength:minLength(6)}
     },
-    error:ref()
+    error:ref<boolean>()
     }
   },
   methods: {
@@ -130,7 +130,7 @@ h2{
 }
 .error{
   font-size: 0.7rem;
-  color:red
+  color:rgb(176, 9, 9)
 }
 
   </style>

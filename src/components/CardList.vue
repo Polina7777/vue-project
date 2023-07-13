@@ -54,9 +54,14 @@ created() {
   },
   watch: {
    pageCount: async function newPage() {
+    if(this.currentTag === null) {
+      this.filterByFavorites()
+    }
      this.getCards()
    },
    currentTag: async function filterTag(){
+    console.log(this.currentTag)
+    this.favFilter=false
       this.filterByTag(this.currentTag?.id);
    },
    sortAsc: async function sort() {
@@ -124,6 +129,8 @@ created() {
       this.favFilter=true;
       this.error = false;
       this.loading = true;
+      // this.pageCount = 1
+      this.currentTag = null
       const sortType = this.sortAsc? 'asc': 'desc';
     try {
       const user = await userApi.getUsersById(this.userInfo.id);
@@ -136,10 +143,24 @@ created() {
         );
         const result = await response.json();
         resultArray.push(result.data);
+
         this.likesList = resultArray
+
       }
         if(resultArray.length){
-          return  this.info = resultArray;
+          this.allPagesCount =  Math.ceil(resultArray.length/3)
+          let array = resultArray; //массив, можно использовать массив объектов
+let size = 3; //размер подмассива
+let subarray = []; //массив в который будет выведен результат.
+for (let i = 0; i <Math.ceil(array.length/size); i++){
+    subarray[i] = array.slice((i*size), (i*size) + size);
+}
+console.log(subarray);
+
+   this.info =subarray[this.pageCount-1]
+   console.log(this.info,this.currentTag,'ghhgh')
+   return this.info
+          // return  this.info = resultArray;
         }else{
           this.error=true
         }
@@ -255,7 +276,9 @@ let sortList;
       this.loading = true;
       const sortType = this.sortAsc? 'asc': 'desc';
     try {
-     this.info = await filtersApi.filtersByTags(tag,sortType);
+      const result = await filtersApi.filtersByTags(tag,sortType,this.pageCount)
+     this.info = result.filteredData
+     this.allPagesCount = result.pagination.pageCount
     } catch (err) {
       this.error = true
     } finally {
@@ -264,8 +287,9 @@ let sortList;
   },
  handleTagClick (item:ITag) {
     this.error = false
+    this.pageCount=1
     this.favFilter=false;
-    this.currentTag = item
+    this.currentTag = item;
   },
   checkIsFavorite(recipe:IRecipe){
       const check = this.favoritesList?.find((item:IRecipe) => recipe.id === item.id);
