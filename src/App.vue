@@ -3,11 +3,9 @@ import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
-import type { IUser } from './interfaces';
 
 export default {
   created() {
-
   if (localStorage.getItem('userData')) {
   const info = JSON.parse(localStorage.getItem('userData') as string)
   this.userName = info.username
@@ -36,13 +34,13 @@ watch:{
    }
 },
   methods: {
-    userAuth(data: any) {
+    userAuth() {
       this.showAuthModal=false;
       this.userData = localStorage.getItem('userData')
       const info = JSON.parse(localStorage.getItem('userData') as string)
   this.userName = info.username
     },
-    userReg(data: any) {
+    userReg() {
       this.showRegModal=false;
       this.userData = localStorage.getItem('userData')
       const info = JSON.parse(localStorage.getItem('userData') as string)

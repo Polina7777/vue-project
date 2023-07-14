@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import ErrorVue from '@/components/Error.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +13,10 @@ const router = createRouter({
         isAuth:false,
         allowAnonymous: true
       }
+    },
+    {
+      path: "/:catchAll(.*)",
+      component: ErrorVue,
     },
     {
       path: '/recipes',

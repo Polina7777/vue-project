@@ -14,7 +14,7 @@ width: 100%;
 }
 .welcome_image{
   opacity: 0.3;
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
 }
 

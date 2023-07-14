@@ -3,6 +3,7 @@
 import { ref} from "vue";
 import FiltersModal from './FiltersModal.vue';
 import Error from "./Error.vue";
+import Loader from "./Loader.vue"
 import { categoryApi } from "@/api-requests/category-api";
 import { filtersApi } from "@/api-requests/filters-api";
 import { url_ngrok } from "@/api-requests";
@@ -10,7 +11,7 @@ import { favoritesApi } from "@/api-requests/favorites-api";
 import { userApi } from "@/api-requests/user-api";
 import { recipesApi } from "@/api-requests/recipes-api";
 import type {IRecipe, ITag } from "@/interfaces";
-
+import { gsap } from "gsap";
 
   export default {
 created() {
@@ -128,13 +129,21 @@ created() {
       this.loading = false;
     }
     },
-    async filterByFavorites(){
-      this.loading = true;
+    favoriteTagClick(){
+     this.pageCount = 1;
+     this.currentTag = null;
+     this.loading = true;
       this.favFilter=true;
       this.error = false;
       this.loading = true;
-      // this.pageCount = 1
-      this.currentTag = null
+      this.filterByFavorites()
+    },
+    async filterByFavorites(){
+      // this.loading = true;
+      // this.favFilter=true;
+      // this.error = false;
+      // this.loading = true;
+      // this.currentTag = null
       const sortType = this.sortAsc? 'asc': 'desc';
     try {
       const user = await userApi.getUsersById(this.userInfo.id);
@@ -361,8 +370,28 @@ let sortList;
   }
 }
 },
+//  onEnter(el, done) {
+//   gsap.to(el, {
+//     opacity: 1,
+//     height: '405px',
+//     delay: el.dataset.index * 0.30,
+//     onComplete: done
+//   })
+// },
+//  onBeforeEnter(el) {
+//   el.style.opacity = 0
+//   el.style.height = 0
+// },
+// onLeave(el, done) {
+//   gsap.to(el, {
+//     opacity: 0,
+//     height: '405px',
+//     delay: el.dataset.index * 0.30,
+//     // onComplete: done
+//   })
+// }
   },
-  components: { FiltersModal,Error }
+  components: { FiltersModal,Error, Loader}
   }
 </script>
 
@@ -384,12 +413,13 @@ let sortList;
 <p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p>
 
 </div>
+
   <ul class="tag_list">
-    <button class="tag_button" @click="filterByFavorites">
+    <button class="tag_button" @click="favoriteTagClick">
     <h1 title="Favorites" class="tag_title">Favorites</h1>
     <img src='https://www.svgrepo.com/show/422454/heart-love-romantic.svg' class="tag_image"/>
   </button>
-  <li class="tag"  v-for="(item) in categories">
+  <li class="tag"  v-for="(item,index)  in categories">
     <button class="tag_button" @click="handleTagClick(item)">
     <h1 :title = item.attributes.name class="tag_title">{{item.attributes.name}}</h1>
     <img :src="item.attributes.image_url" class="tag_image"/>
@@ -397,6 +427,10 @@ let sortList;
   </li>
 
 </ul>
+
+<!-- <div v-if="loading"> -->
+<Loader v-if="loading"/>
+<!-- </div> -->
 <div class="pagination_wrapper">
 <button v-if="(pageCount !== 1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt </button>
 <div  class="card_list__wrapper"> 
@@ -406,9 +440,19 @@ let sortList;
 </button>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
-  <ul class="card_list">
+<!-- <transition-group tag="ul" class="content__list" name="company">
+  <li class="company" v-for="company in list" :key="company.id">
+    ... -->
+  <!-- </li>
+</transition-group> -->
+<TransitionGroup  
+class="card_list" 
+name="card"
+ tag="ul"
+>
+  <!-- <ul class="card_list"> -->
 
-  <li class="card"  v-for="(item) in filteredData">
+  <li class="card"   v-for="(item,index) in filteredData" :key="item" :data-index="index">
     <button class="button_like" @click="()=>likeClick(item)">
       <img class="like" v-if="(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
     <img class="like" v-if="!(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
@@ -424,8 +468,8 @@ let sortList;
   
 </RouterLink>
   </li>
-</ul>
-
+<!-- </ul> -->
+</TransitionGroup>
 </div>
 
 <button v-if="(pageCount !== allPagesCount && !searchQuery.length)" class="arrow" @click="onClickRightHandler"> > </button>
@@ -438,6 +482,33 @@ let sortList;
 </template>
 
 <style scoped>
+.card {
+  transition: all 800ms ease-in-out 500px;
+  backface-visibility: hidden;
+  z-index: 1;
+}
+
+
+.card-move {
+  transition: all 800ms ease-in-out 500ms;
+}
+
+
+.card-enter-active {
+  transition: all 800ms ease-out 500px;
+}
+
+
+.card-leave-active {
+  transition: all 800ms ease-in;
+  position: absolute;
+  z-index: 0;
+}
+
+.card-enter, .card-leave-to {
+  opacity: 0;
+  transition: all 800ms ease-in;
+}
   .card_list__wrapper {
     display: flex;
     flex-direction: column;
@@ -579,7 +650,7 @@ margin: 10px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-secondary);
     border-radius:10px;
-    margin:10px;
+    margin:10px 40px;
     color:rgba(0, 0, 255, 0.129);
   }
   #show-modal{

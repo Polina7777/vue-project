@@ -1,116 +1,83 @@
-<script lang="ts">
-import { ref } from 'vue';
-
-export default {
-    data() {
-        return {
-           loader:ref(true)
-        }
-    },
-
-
- 
-
-};
-</script>
-
 <template>
-    <div v-if="loader" className={styles.lds_roller}>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+  <svg class="loading-spinner">
+    <circle
+      :cx="circlePositions[index]  && circlePositions[index].x"
+      :cy="circlePositions[index] && circlePositions[index].y"
+      :r="item.radius"
+      :fill="item.color"
+      v-for="(item, index) in circles"
+      :key="index"/>
+  </svg>
 </template>
 
+<script lang="ts">
+const CENTER_X = 50;
+const CENTER_Y = 50;
+const RADIUS = 20;
+
+function positionOnCircle(radius:any, angle:any, center:any) {
+  return {
+    x: center.x + (radius * Math.cos(toRadians(angle))),
+    y: center.y + (radius * Math.sin(toRadians(angle)))
+  };
+};
+
+function toRadians(angle:number) {
+  return angle * Math.PI / 180;
+};
+
+function calculatePositions(component: { circles: any[]; }) {
+  let angleIncrement = 360 / component.circles.length;
+  let positions = {};
+  component.circles.forEach((circle, index:number) => {
+    positions[index] = positionOnCircle(
+      RADIUS,
+      angleIncrement * index,
+      {x: CENTER_X, y: CENTER_Y}
+    )
+  });
+  return positions;
+}
+
+export default {
+  data() {
+    return {
+      circles: [
+        {color: '#E0F2F1', radius: 0},
+        {color: '#B2DFDB', radius: 0},
+        {color: '#80CBC4', radius: 0},
+        {color: '#4DB6AC', radius: 0},
+        {color: '#26A69A', radius: 0},
+        {color: '#00897B', radius: 0},
+        {color: '#00796B', radius: 0},
+        {color: '#00695C', radius: 0},
+        {color: '#004D40', radius: 0},
+      ],
+      counter: 0,
+      interval: null
+    }
+  },
+  computed: {
+    circlePositions: calculatePositions
+  },
+  created() {
+    this.interval = setInterval(() => {
+      this.counter++;
+      this.circles = this.circles.map((item, index) => ({
+        ...item,
+        radius: (this.counter + index) % 8
+      }));
+    }, 70);
+  },
+  destroyed() {
+    clearInterval(this.interval);
+  }
+}
+</script>
 
 <style scoped>
-.lds_roller {
-    display: inline-block;
-    position: absolute;
-    top: 45%;
-    left: 45%;
-  }
-  .lds_roller div {
-    animation: lds_roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    transform-origin: 40px 40px;
-  }
-  .lds_roller div:after {
-    content: " ";
-    display: block;
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background:  linear-gradient( 17deg, var(--primary-color-first) 7%,#ddbb2c 100% );
-    margin: -4px 0 0 -4px;
-  }
-  .lds_roller div:nth-child(1) {
-    animation-delay: -0.036s;
-  }
-  .lds_roller div:nth-child(1):after {
-    top: 63px;
-    left: 63px;
-  }
-  .lds_roller div:nth-child(2) {
-    animation-delay: -0.072s;
-  }
-  .lds_roller div:nth-child(2):after {
-    top: 68px;
-    left: 56px;
-  }
-  .lds_roller div:nth-child(3) {
-    animation-delay: -0.108s;
-  }
-  .lds_roller div:nth-child(3):after {
-    top: 71px;
-    left: 48px;
-  }
-  .lds_roller div:nth-child(4) {
-    animation-delay: -0.144s;
-  }
-  .lds_roller div:nth-child(4):after {
-    top: 72px;
-    left: 40px;
-  }
-  .lds_roller div:nth-child(5) {
-    animation-delay: -0.18s;
-  }
-  .lds_roller div:nth-child(5):after {
-    top: 71px;
-    left: 32px;
-  }
-  .lds_roller div:nth-child(6) {
-    animation-delay: -0.216s;
-  }
-  .lds_roller div:nth-child(6):after {
-    top: 68px;
-    left: 24px;
-  }
-  .lds_roller div:nth-child(7) {
-    animation-delay: -0.252s;
-  }
-  .lds_roller div:nth-child(7):after {
-    top: 63px;
-    left: 17px;
-  }
-  .lds_roller div:nth-child(8) {
-    animation-delay: -0.288s;
-  }
-  .lds_roller div:nth-child(8):after {
-    top: 56px;
-    left: 12px;
-  }
-  @keyframes lds_roller {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+.loading-spinner {
+  width: 100px;
+  height: 100px;
+}
 </style>
