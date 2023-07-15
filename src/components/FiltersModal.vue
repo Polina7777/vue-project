@@ -45,8 +45,9 @@ const props = defineProps({
 
 .modal-container {
   width: 440px;
-  height: 420px;
-  min-height: 420px;
+  /* height: 420px;
+  min-height: 420px; */
+  height: 80dvh;
   margin: auto;
   padding: 10px 10px;
   background-color: #fff;
@@ -97,7 +98,7 @@ color:rgba(0, 0, 255, 0.129);
 
 @media (max-width: 550px) {
   .modal-container {
-    height: 230px;
+    height: 380px;
     width: 270px;
   }
 }

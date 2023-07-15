@@ -62,7 +62,7 @@ computed: {
       }
     }else{
       return {
-        fontSize:  `${this.width/33}px`,
+        fontSize:  `${this.width/40}px`,
         padding: '10px'
       }
     }
@@ -253,7 +253,7 @@ position: relative;
   border:2px solid var(--background-general);
   background-color: rgb(199, 199, 232);
   position: absolute;
-left: -24px;
+  left: -24px;
 }
 .name{
   padding-left: 40px;

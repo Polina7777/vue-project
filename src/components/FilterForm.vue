@@ -51,10 +51,9 @@ export default {
     color:rgb(229, 229, 242);
 }
 h2{
-  /* font-size: 15px; */
   font-size: 1rem;
 }
-.status_input, .gender_input, .name {
+.name {
   display: flex;
   flex-direction: column;
  color:rgb(233, 233, 239) ;
@@ -74,37 +73,14 @@ h2{
     background-color: var(--background-general);
     border-radius:10px;
     color:rgb(240, 240, 245);
-    /* font-size: 17px; */
     font-size: 1rem;
     margin-top: 15px;
 }
-.radio_wrapper{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap:10px;
-  padding: 10px;
-}
 .name_input{
   width:100%;
-  /* font-size: 15px; */
   font-size: 1rem;
 }
 @media (max-width: 550px) {
-  .radio_wrapper{
-  display: flex;
- flex-wrap: wrap;
-  align-items: center;
-  padding: 5px;
-  gap:5px;
-}
-.status_input, .gender_input, .name {
-    margin:5px 0;
-    padding: 5px;
-    outline:none;
-    flex-wrap: wrap;
-    
-}
 .filters_wrapper {
     padding: 0 10px;
 }

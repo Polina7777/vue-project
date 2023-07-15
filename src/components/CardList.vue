@@ -603,6 +603,8 @@ align-items: center;
 display: flex;
 gap:11px;
 margin: 10px;
+padding-left: 40px;
+
 }
   input{
     padding: 10px;
