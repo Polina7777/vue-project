@@ -69,12 +69,15 @@ watch:{
       return this.isLoggedIn = true
     }
 },
-// openAuthForm (){
-//  this.showAuthModal = true
-// },
-// openRegForm (){
-//  this.showRegModal = true
-// },
+openAuthForm (){
+  console.log('dsvsd')
+ this.showAuthModal = true
+
+},
+openRegForm (){
+  console.log('dsvsd')
+ this.showRegModal = true
+},
 
   
   },
@@ -124,8 +127,24 @@ watch:{
       </button>
     </div>
       <Teleport to="body">
-<MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut" />
-    </Teleport>
+<!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut" /> -->
+<MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" :showAuthModal="openAuthForm" :showRegModal="openRegForm" :isLoggedIn="isLoggedIn" :signOut="signOut" />
+</Teleport>
+
+    <Teleport to="body">
+    <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false"  :user="userAuth" >
+      <template #header>
+        <h3 class="title_modal"> Sign In</h3>
+      </template>
+    </AuthModal>
+  </Teleport>
+  <Teleport to="body">
+    <RegisterModal :showRegModal="showRegModal"  @close="showRegModal = false" :user="userReg" >
+      <template #header>
+        <h3 class="title_modal"> Sign Up</h3>
+      </template>
+    </RegisterModal>
+  </Teleport>
   </header>
   <nav  v-if="!mobileVersion">
         <RouterLink to="/">Home</RouterLink>

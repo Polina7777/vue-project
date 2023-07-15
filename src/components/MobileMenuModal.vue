@@ -13,9 +13,14 @@
 // })
 export default{
 props:['showMobileModal', 'userName', 'showAuthModal', 'showRegModal', 'isLoggedIn', 'signOut'],
-methods:{
-
-}
+// methods:{
+//   openAuthForm (){
+//  this.showAuthModal = true
+// },
+// openRegForm (){
+//  this.showRegModal = true
+// },
+// }
 }
 </script>
 <template>
@@ -37,7 +42,10 @@ methods:{
     </div>
                 <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
+        <RouterLink v-if="isLoggedIn" to="/recipes">
+          <button class="recipe_button" @click="$emit('close')">
+          Recipes
+        </button></RouterLink>
       </nav>
       <div class="auth_wrapper">
       <button class="auth" id="show-modal" @click="showAuthModal" v-if="!isLoggedIn"> Sign in </button>
@@ -124,10 +132,32 @@ nav{
   flex-direction: column;
   align-items: self-start;
   font-size: 21px;
+  color:var(--text-secondary)
+}
+nav a.router-link-exact-active, .recipe_buttton:active {
+  color:rgb(199, 199, 232)
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
 }
 
 
+nav a:first-of-type {
+  border: 0;
+}
+.auth_wrapper {
+  display: flex;
+  flex-direction: column;
+}
 .hello{
   font-size: 21px;
+}
+.recipe_button{
+  background-color: var(--background-general);
+  border: none;
+  font-size: 21px;
+  color:var(--text-secondary);
+  padding: 0;
 }
 </style>
