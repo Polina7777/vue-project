@@ -188,6 +188,7 @@ export default {
     color:rgb(224, 224, 243);
     font-size: 1rem;
     align-self: center;
+    margin-top: 20px;
   }
   .card_wrapper {
   padding: 40px;
