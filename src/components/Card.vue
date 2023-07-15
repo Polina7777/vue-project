@@ -9,7 +9,6 @@ import { ref } from 'vue'
 import type { IRecipe } from '@/interfaces';
 
 export default {
-  // props:['likeClicked','checkComplite','userData','favoritesList','checkComplite','likeClick'],
     created() {
   this.getCard(this.$route.params.id as string)
 

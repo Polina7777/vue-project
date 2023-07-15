@@ -440,11 +440,7 @@ let sortList;
 </button>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
-<!-- <transition-group tag="ul" class="content__list" name="company">
-  <li class="company" v-for="company in list" :key="company.id">
-    ... -->
-  <!-- </li>
-</transition-group> -->
+
 <TransitionGroup  
 class="card_list" 
 name="card"

@@ -4,8 +4,13 @@ import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
 
+import MobileMenuModal from './components/MobileMenuModal.vue';
 export default {
   created() {
+  const widthDevice = window.innerWidth;
+  if(widthDevice < 500) {
+   this.mobileVersion = true
+  }
   if (localStorage.getItem('userData')) {
   const info = JSON.parse(localStorage.getItem('userData') as string)
   this.userName = info.username
@@ -17,7 +22,11 @@ export default {
     showRegModal: ref<boolean>(false),
     isLoggedIn:ref<boolean>(false),
     userData:ref(),
-    userName:ref<string>()
+    showMobileModal:ref<boolean>(),
+    userName:ref<string>(),
+      height:window.innerHeight,
+      width:window.innerWidth,
+      mobileVersion:ref()
     };
   },
 
@@ -60,15 +69,21 @@ watch:{
       return this.isLoggedIn = true
     }
 },
+// openAuthForm (){
+//  this.showAuthModal = true
+// },
+// openRegForm (){
+//  this.showRegModal = true
+// },
 
   
   },
-  components: { AuthModal, RegisterModal }
+  components: { AuthModal, RegisterModal, MobileMenuModal }
 }
 </script>
 
 <template>
-  <header>
+  <header v-if="!mobileVersion">
       <div v-if="isLoggedIn" class="hello_wrapper">
       <p class="hello"> Hello, {{userName}} !</p>
       <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/>
@@ -76,8 +91,17 @@ watch:{
     <div class="auth_wrapper">
       <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn"> Sign in </button>
       <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
+      <!-- <button class="auth"  id="show-modal" @click="showMobileModal = true" >
+        <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
+      </button> -->
     </div>
       <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
+      <Teleport to="body">
+<!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut">
+  <template #header>
+      </template>
+</MobileMenuModal> -->
+      </Teleport>
     <Teleport to="body">
     <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false"  :user="userAuth" >
       <template #header>
@@ -93,7 +117,17 @@ watch:{
     </RegisterModal>
   </Teleport>
   </header>
-  <nav>
+  <header v-if="mobileVersion">
+    <div class="auth_wrapper">
+      <button class="auth"  id="show-modal" @click="showMobileModal = true" >
+        <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
+      </button>
+    </div>
+      <Teleport to="body">
+<MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut" />
+    </Teleport>
+  </header>
+  <nav  v-if="!mobileVersion">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
       </nav>
@@ -112,7 +146,7 @@ header {
   color: var(--text-primary);
   justify-content: space-between;
 }
-.hello_image{
+.hello_image, .burger{
   width: 30px;
   height: 30px;
 }
