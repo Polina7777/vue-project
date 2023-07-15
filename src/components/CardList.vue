@@ -13,6 +13,8 @@ import { recipesApi } from "@/api-requests/recipes-api";
 import type {IRecipe, ITag } from "@/interfaces";
 import { gsap } from "gsap";
 
+
+
   export default {
 created() {
   this.getCards()
@@ -49,23 +51,24 @@ created() {
       checkComplite:ref(false),
       userData:ref(),
       cardInfo:ref(),
-      likesList:ref()
+      likesList:ref(),
+      filterByFav:ref(false)
     };
   
   },
   watch: {
    pageCount: async function newPage() {
-    console.log((Object.values(this.filters).filter(item=> item)).length)
-    if(this.currentTag === null) {
+    console.log(this.currentTag)
+    if(this.currentTag === null || this.filterByFav) {
       this.filterByFavorites()
     } else if((Object.values(this.filters).filter(item=> item)).length){
       this.getFilteredCardListByFiltersModal()
     }else {
       this.getCards()
     }
-  
    },
    currentTag: async function filterTag(){
+    console.log(this.currentTag)
     this.favFilter=false
       this.filterByTag(this.currentTag?.id);
    },
@@ -131,7 +134,8 @@ created() {
     },
     favoriteTagClick(){
      this.pageCount = 1;
-     this.currentTag = null;
+     this.filterByFav = true;
+      // this.currentTag = {};
      this.loading = true;
       this.favFilter=true;
       this.error = false;
@@ -139,11 +143,10 @@ created() {
       this.filterByFavorites()
     },
     async filterByFavorites(){
-      // this.loading = true;
-      // this.favFilter=true;
-      // this.error = false;
-      // this.loading = true;
-      // this.currentTag = null
+      this.loading = true;
+      this.favFilter=true;
+      this.error = false;
+      this.loading = true;
       const sortType = this.sortAsc? 'asc': 'desc';
     try {
       const user = await userApi.getUsersById(this.userInfo.id);
@@ -174,9 +177,11 @@ for (let i = 0; i <Math.ceil(array.length/size); i++){
           // return  this.info = resultArray;
         }else{
           this.error=true
+          // this.currentTag = {id:4, attributes:{}}
         }
     } catch (error) {
       this.error = true;
+      // this.currentTag = {id:4, attributes:{}}
     } finally {
       this.loading = false;
     }
@@ -202,9 +207,6 @@ for (let i = 0; i <Math.ceil(array.length/size); i++){
       this.loading = false;
     }
   },
-  async checkLikeColor(){
-
-  },
   async  getFilteredCardListByFiltersModal(){
     this.loading = true;
     this.error = false;
@@ -225,10 +227,12 @@ for (let i = 0; i <Math.ceil(array.length/size); i++){
      return  this.info = filteredCardList.filteredData
       } else {
         this.error = true;
+        this.currentTag = {id:4, attributes:{}}
       }
       this.loading = false;
     } catch (err) {
       this.error = true;
+      this.currentTag = {id:4, attributes:{}}
     } finally {
       this.loading = false;
     }
@@ -301,6 +305,7 @@ let sortList;
      this.allPagesCount = result.pagination.pageCount
     } catch (err) {
       this.error = true
+      this.currentTag = {id:4, attributes:{}}
     } finally {
       this.loading = false;
     }
@@ -310,6 +315,7 @@ let sortList;
     this.pageCount=1
     this.favFilter=false;
     this.currentTag = item;
+    this.filterByFav = false;
   },
   checkIsFavorite(recipe:IRecipe){
       const check = this.favoritesList?.find((item:IRecipe) => recipe.id === item.id);
@@ -370,26 +376,6 @@ let sortList;
   }
 }
 },
-//  onEnter(el, done) {
-//   gsap.to(el, {
-//     opacity: 1,
-//     height: '405px',
-//     delay: el.dataset.index * 0.30,
-//     onComplete: done
-//   })
-// },
-//  onBeforeEnter(el) {
-//   el.style.opacity = 0
-//   el.style.height = 0
-// },
-// onLeave(el, done) {
-//   gsap.to(el, {
-//     opacity: 0,
-//     height: '405px',
-//     delay: el.dataset.index * 0.30,
-//     // onComplete: done
-//   })
-// }
   },
   components: { FiltersModal,Error, Loader}
   }
@@ -428,45 +414,43 @@ let sortList;
 
 </ul>
 
-<!-- <div v-if="loading"> -->
-<Loader v-if="loading"/>
-<!-- </div> -->
 <div class="pagination_wrapper">
 <button v-if="(pageCount !== 1 && !searchQuery.length)" class="arrow" @click="onClickLeftHandler"> &lt </button>
-<div  class="card_list__wrapper"> 
+<div  class="list_wrapper"> 
   <div class="buttons_wrapper">
 <button class="sort_button" @click="toggleSortType">
 <img src='https://www.svgrepo.com/show/356266/sort-descending.svg' class="sort_image"/>
 </button>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
 </div>
-
-<TransitionGroup  
+<!-- <div class="list_wrapper"> -->
+<!-- <TransitionGroup  
 class="card_list" 
 name="card"
  tag="ul"
->
-  <!-- <ul class="card_list"> -->
-
+> -->
+<ul class="card_list" >
   <li class="card"   v-for="(item,index) in filteredData" :key="item" :data-index="index">
     <button class="button_like" @click="()=>likeClick(item)">
       <img class="like" v-if="(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
     <img class="like" v-if="!(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
   </button>
 <RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" :likeClicked="likeClicked" :checkComplite="checkComplite" :userData="userData" :favoritesList="favoritesList" :likeClick="likeClick">
-    <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
-    <img :src="item.attributes.image_url" class="image"/>
+  <img :src="item.attributes.image_url" class="image"/>
+  <div class="recipe_text__wrapper">
+  <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
     <div class="small_info">
     <p :kcal = item.attributes.small_extra_info.data.attributes.kcal class="kcal">{{item.attributes.small_extra_info.data.attributes.kcal}} </p>
     <p :grams = item.attributes.small_extra_info.data.attributes.grams class="kcal">{{item.attributes.small_extra_info.data.attributes.grams}} </p>
   </div>
     <h3 :description = item.attributes.description class="description">{{item.attributes.description}}</h3>
-  
+  </div>
 </RouterLink>
   </li>
-<!-- </ul> -->
-</TransitionGroup>
+</ul>
+<!-- </TransitionGroup> -->
 </div>
+
 
 <button v-if="(pageCount !== allPagesCount && !searchQuery.length)" class="arrow" @click="onClickRightHandler"> > </button>
 </div>
@@ -478,23 +462,18 @@ name="card"
 </template>
 
 <style scoped>
-.card {
+/* .card {
   transition: all 800ms ease-in-out 500px;
   backface-visibility: hidden;
   z-index: 1;
 }
-
-
 .card-move {
   transition: all 800ms ease-in-out 500ms;
 }
 
-
 .card-enter-active {
   transition: all 800ms ease-out 500px;
 }
-
-
 .card-leave-active {
   transition: all 800ms ease-in;
   position: absolute;
@@ -504,19 +483,21 @@ name="card"
 .card-enter, .card-leave-to {
   opacity: 0;
   transition: all 800ms ease-in;
-}
+} */
   .card_list__wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content:flex-start;
     align-items: center;
     padding: 10px 20px;
-    width: 100%;
+    width: 100vw;
+    min-height: 80vh
   }
   .error_wrapper{
     display: flex;
 flex-direction: column;
 align-items: center;
+flex: 1;
   }
   .page_info__wrapper{
     display: flex;
@@ -526,13 +507,13 @@ align-items: center;
   .buttons_wrapper{
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   .pagination_wrapper{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
-    width: 80%;
+    width: 100%;
   }
   .error_button{
     padding:10px 18px;
@@ -546,13 +527,18 @@ align-items: center;
     display: flex;
     flex-direction:row;
     flex-wrap:wrap;
+    gap: 20px;
+    padding: 20px 0;
     justify-content: center;
     background-color: var(--background-general);
     width: 100%;
   }
+  .list_wrapper {
+    width: 95%;
+  }
   .image{
- width: 110px;
- height: 110px;
+ width: 120px;
+ height: 120px;
  border-radius: 50%;
  align-self: center;
  margin: 10px;
@@ -625,12 +611,11 @@ margin: 10px;
     border-radius:10px;
     font-size: 1rem;
     color:rgb(156, 140, 170);
-    margin: 15px;
     outline:none;
   }
   .arrow{
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
     font-size: 1rem;
     color: var(--background-general);
@@ -642,11 +627,10 @@ margin: 10px;
     flex-direction:column;
     width:290px;
     height: 405px;
-    padding:20px;
+    padding:10px;
     border:2px solid rgb(199, 199, 232);
     background-color: var(--background-secondary);
     border-radius:10px;
-    margin:10px 40px;
     color:rgba(0, 0, 255, 0.129);
   }
   #show-modal{
@@ -677,21 +661,128 @@ margin: 10px;
     font-size: 1rem;
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 570px) {
 .arrow{
-  height: 30px;
-    width: 30px;
+  height: 40px;
+    width: 40px;
 }
-/* .tag_list {
-   display: flex;
-    overflow-x: scroll;
-   flex-wrap: nowrap;
-  } */
   .card{
     padding: 10px;
+    margin: 10px;
   }
   .card_list__wrapper {
     padding: 10px;
+  }
+  .tag_title{
+    font-size: 1rem;
+  }
+  .tag_image{
+    width:20px;
+    height: 20px;
+  }
+  .tag_button{
+    min-width: 100px;
+  }
+
+}
+@media (max-width: 970px) {
+  .image{
+width: 130px;
+height: 130px;
+ border-radius: 50%;
+ align-self: center;
+ margin: 5px;
+ position: absolute;
+ top: 40px;
+left: 21px;
+  }
+  .card {
+    display: flex;
+    width:90%;
+    padding:10px;
+    border-radius:10px;
+    /* height: fit-content; */
+    height: 250px;
+    min-height: 250px;
+    position: relative;
+  }
+  .recipe_text__wrapper{
+    padding-left: 150px;
+  }
+  .small_info{
+ padding: 0px 7px;
+  }
+  .title{
+    font-size: 1.2rem;
+    padding: 10px 0;
+  }
+  .description{
+    padding: 10px;
+  }
+  .like{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 20px;
+  }
+  .arrow{
+    width: 27px;
+    height: 27px;
+  }
+  .tag_list{
+    padding: 10px;
+  }
+
+}
+@media (max-width: 490px) {
+.image{
+  width: 100px;
+height: 100px;
+ border-radius: 50%;
+ align-self: center;
+ margin: 5px;
+ position: absolute;
+ top: 40px;
+left: 21px;
+}
+@media (max-width: 450px) {
+.image{
+  width: 100px;
+height: 100px;
+ border-radius: 50%;
+ align-self: center;
+ margin: 5px;
+ position: absolute;
+ top: 30px;
+left: 21px;
+}
+}
+.small_info{
+ padding: 0px 5px;
+ font-size: 0.7rem;
+  }
+.title{
+    font-size: 1rem;
+    padding: 7px 0;
+  }
+  .description{
+    font-size: 0.7rem;
+    padding: 10px;
+    position: absolute;
+    left: 10px;
+    top: 150px;
+  }
+.card{
+  min-height: 250px;
+  min-width: 290px;
+}
+.recipe_text__wrapper{
+    padding-left: 120px;
+    padding-top: 30px;
+  }
+  .arrow{
+    width: 27px;
+    height: 27px;
   }
 }
 </style>

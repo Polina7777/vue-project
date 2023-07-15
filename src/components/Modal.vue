@@ -158,7 +158,7 @@ computed: {
 
 }
 .modal-container {
-  width: 87%;
+  width: 60%;
   height: 60%;
   margin: auto;
   padding: 10px 30px;
@@ -288,6 +288,21 @@ left: -24px;
 }
 
 @media (max-width:540px) {
+  .modal-container{
+    padding: 10px;
+}
+.modal-default-button{
+  font-size: 0.7rem;
+}
+.ingredient_image{
+  width: 15px;
+  height: 15px;
+}
+}
+@media (max-width:490px) {
+  .modal-container {
+    width: 80%;
+  }
   .modal-container{
     padding: 10px;
 }

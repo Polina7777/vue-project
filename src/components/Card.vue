@@ -208,6 +208,7 @@ export default {
     flex-direction:column;
     align-items: center;
     padding:20px;
+    max-height: 470px;
     width: 59%;
     min-width: 290px;
     border:2px solid rgb(199, 199, 232);
@@ -219,6 +220,9 @@ export default {
   .card_wrapper {
     display: flex;
     justify-content: center;
+    margin: auto;
+    width: 100vw;
+    min-height: 75vh
   }
   .title{
     font-size: 1.5rem;
@@ -240,6 +244,11 @@ export default {
   .description{
     padding: 10px;
   }
+  @media (max-width:650px) {  
+  .card{
+  width: 95vw;
+}
+}
   @media (max-width:540px) {  
   .image{
  width:150px;

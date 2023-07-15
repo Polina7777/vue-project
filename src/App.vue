@@ -6,15 +6,19 @@ import RegisterModal from './components/RegisterModal.vue';
 
 import MobileMenuModal from './components/MobileMenuModal.vue';
 export default {
+  
   created() {
   const widthDevice = window.innerWidth;
-  if(widthDevice < 500) {
+  if(widthDevice < 700) {
+    console.log(widthDevice)
    this.mobileVersion = true
+   console.log(this.mobileVersion)
   }
   if (localStorage.getItem('userData')) {
   const info = JSON.parse(localStorage.getItem('userData') as string)
   this.userName = info.username
   }
+
   },
   data() {
     return {
@@ -26,7 +30,7 @@ export default {
     userName:ref<string>(),
       height:window.innerHeight,
       width:window.innerWidth,
-      mobileVersion:ref()
+      mobileVersion:ref(false),
     };
   },
 
@@ -70,16 +74,13 @@ watch:{
     }
 },
 openAuthForm (){
-  console.log('dsvsd')
  this.showAuthModal = true
 
 },
 openRegForm (){
-  console.log('dsvsd')
  this.showRegModal = true
 },
-
-  
+ 
   },
   components: { AuthModal, RegisterModal, MobileMenuModal }
 }
@@ -122,7 +123,7 @@ openRegForm (){
   </header>
   <header v-if="mobileVersion">
     <div class="auth_wrapper">
-      <button class="auth"  id="show-modal" @click="showMobileModal = true" >
+      <button class="burger_button"  id="show-modal" @click="showMobileModal = true" >
         <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
       </button>
     </div>
@@ -151,12 +152,15 @@ openRegForm (){
         <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
       </nav>
   <RouterView />
+  <footer>
+    </footer>
 </template>
 
 <style>
-header {
+header, footer {
   line-height: 1.5;
-  background-color: var(--background-primary);
+   background-color: rgb(45, 34, 66);
+  border-top: 1px solid rgb(199, 199, 232);
   border-bottom: 1px solid rgb(199, 199, 232);
   height: 80px;
   display: flex;
@@ -164,6 +168,19 @@ header {
   align-items: center;
   color: var(--text-primary);
   justify-content: space-between;
+}
+header {
+  position: sticky;
+  z-index: 200;
+  top: 0;
+}
+footer{
+  height: 50px;
+}
+.burger_button{
+  background-color: transparent;
+  border: none;
+  padding: 5px 15px;
 }
 .hello_image, .burger{
   width: 30px;
@@ -223,14 +240,19 @@ color:rgba(230, 230, 246, 0.972);
 font-size: 1rem;
 margin: 10px;
 }
-@media (min-width: 1024px) {
-
+/* @media (min-width: 1024px) {
   nav {
     text-align: center;
     font-size: 2rem;
   }
-}
-@media (max-width: 500px) {
+  /* header{
+  height: 63px;
+  position: sticky;
+  z-index: 200;
+  top: 0;
+} */
+/* } */ 
+/* @media (max-width: 500px) {
 .hello_wrapper{
   justify-content: center;
 }
@@ -238,12 +260,18 @@ margin: 10px;
   font-size: 1.3rem;
   flex-wrap: wrap;
 }
-.hello_image{
-  width: 20px;
-  height: 20px;
-}
 .auth{
   font-size: 1rem;
 }
+.hello_image, .burger{
+  width: 20px;
+  height: 20px;
 }
+/* header{
+  height: 63px;
+  position: sticky;
+  z-index: 200;
+  top: 0;
+} */
+/* } */ 
 </style>

@@ -5,9 +5,9 @@ export default{
 }
 </script>
 <template>
-    <div class="error_wrapper">
+ 
     <p class="error">{{errorText}}</p>
-</div>
+
 </template>
 <style scoped>
 .error{
@@ -19,5 +19,7 @@ export default{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    flex: -webkit-fill-available;
+    min-height: 85vh
 }
 </style>
