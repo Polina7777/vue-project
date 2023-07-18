@@ -2,6 +2,7 @@
 <script lang="ts">
 import { ref} from "vue";
 import FiltersModal from './FiltersModal.vue';
+import ChartModal from "./ChartModal.vue";
 import Error from "./Error.vue";
 import Loader from "./Loader.vue"
 import { categoryApi } from "@/api-requests/category-api";
@@ -52,7 +53,9 @@ created() {
       userData:ref(),
       cardInfo:ref(),
       likesList:ref(),
-      filterByFav:ref(false)
+      filterByFav:ref(false),
+      showChartModal:ref(false),
+      allCardInfo:ref()
     };
   
   },
@@ -114,6 +117,7 @@ created() {
     try {
       const recipesData = await recipesApi.getAllRecipesWithIngredientCollection(sortType,this.pageCount)
       this.info = recipesData.data
+      this.allCardInfo = await recipesApi.getAllRecipesWithIngredientCollectionWithoutPagination()
       this.allPagesCount = recipesData.meta.pagination.pageCount
     } catch (err) {
       this.error = true;
@@ -377,7 +381,7 @@ let sortList;
 }
 },
   },
-  components: { FiltersModal,Error, Loader}
+  components: { FiltersModal,Error, Loader,ChartModal}
   }
 </script>
 
@@ -390,6 +394,15 @@ let sortList;
         <h3 class="title_modal"> Filters:</h3>
       </template>
     </FiltersModal>
+  </Teleport>
+</div>
+<div>
+    <Teleport to="body">
+    <ChartModal :showChartModal="showChartModal" @close="showChartModal = false" :allCardInfo="allCardInfo" >
+      <!-- <template #header>
+        <h3 class="title_modal"> Filters:</h3>
+      </template> -->
+    </ChartModal>
   </Teleport>
 </div>
     <div class="input_wrapper">
@@ -422,6 +435,7 @@ let sortList;
 <img src='https://www.svgrepo.com/show/356266/sort-descending.svg' class="sort_image"/>
 </button>
 <button id="show-modal" @click="showFiltersModal = true"> Filters</button>
+<button id="show-modal" @click="showChartModal = true"> Chart </button>
 </div>
 <!-- <div class="list_wrapper"> -->
 <!-- <TransitionGroup  
@@ -643,6 +657,7 @@ padding-left: 40px;
     border-radius:10px;
     color:rgb(224, 224, 243);
     font-size: 1rem;
+    margin:0 5px
   }
   .title{
     font-size: 1.2rem;
