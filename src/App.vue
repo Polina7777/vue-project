@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
-
+import Ramen from '../src/Ramen.js'
 import MobileMenuModal from './components/MobileMenuModal.vue';
 export default {
   
@@ -82,7 +82,7 @@ openRegForm (){
 },
  
   },
-  components: { AuthModal, RegisterModal, MobileMenuModal }
+  components: { AuthModal, RegisterModal, MobileMenuModal}
 }
 </script>
 
