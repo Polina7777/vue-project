@@ -94,66 +94,77 @@ camera.position.z = 1000;
 const scene = new THREE.Scene();
 let raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
-const point = new THREE.Vector2();
-
+let point = new THREE.Vector2();
+let time = 1;
+let move = 0;
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.getElementById("container").appendChild(renderer.domElement );
-let time = 0;
-let move = 0;
+// let time = 1;
+// let move = 0;
 let explode = false;
 const textures =[
   new THREE.TextureLoader().load(red),
 ]
+
 const mouseEffect=()=>{
-  window.addEventListener('mousewheel',(e)=>{
-    move += e.wheelDeltaY/4000;
-return move;
+  let state;
+   window.addEventListener('mousewheel',(e)=>{
+    //  window.addEventListener('click',(e)=>{
+      // console.log(e)
+
+      move += e.wheelDeltaY/4000;
+ state.move = move;
+      // console.log(move)
+  // return move;
+  })
+  return state
+}
+
+
+const mouseEffect2=()=>{
+  let test = new THREE.Mesh(
+    new THREE.PlaneGeometry(2000,2000),
+    new THREE.MeshBasicMaterial(),
+);
+
+  window.addEventListener('click',(event)=>{
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    raycaster.setFromCamera( mouse, camera );
+	// calculate objects intersecting the picking ray
+	let intersects = raycaster.intersectObjects([test]);
+
+ point.x = intersects[0].point.x;
+   point.y = intersects[0].point.y;
+ return point;
+  // return mouse;
+  },false)
+
+}
+
+const mouseEffect3=()=>{
+  window.addEventListener('mouseup',(e)=>{
+    gsap.to(materialShader.uniforms.mousePressed,{
+      duration:1,
+      value:0
+    })
+  }),
+  window.addEventListener('mousedown',(e)=>{
+gsap.to(materialShader.uniforms.mousePressed,{
+  duration:1,
+  value:1
+})
   })
 }
-// window.addEventListener('click',(e)=>{
-//    explode = !explode
-//    move += e.wheelDeltaY/4000;
-//    return move;
-
-// })
-
-// const mouseEffect2=()=>{
-//   let test = new THREE.Mesh(
-//     new THREE.PlaneGeometry(2000,2000),
-//     new THREE.MeshBasicMaterial(),
-// );
-
-//   window.addEventListener('mousemove',(event)=>{
-//     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-//     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-//     raycaster.setFromCamera( mouse, camera );
-// 	// calculate objects intersecting the picking ray
-// 	let intersects = raycaster.intersectObjects([test]);
-//    point.x = intersects[0].point.x;
-//    point.y = intersects[0].point.y;
-
-//   // return mouse;
-//   },false)
-
-// }
-
-// const mouseEffect3=()=>{
-//   window.addEventListener('mousedown',(e)=>{
-// gsap.to(materialShader.uniforms.mousePressed,{
-//   duration:1,
-//   value:1
-// })
-//   })
-// }
-// const mouseEffect4=()=>{
-//   window.addEventListener('mouseup',(e)=>{
-//     gsap.to(materialShader.uniforms.mousePressed,{
-//       duration:1,
-//       value:0
-//     })
-//   })
-// }
+const mouseEffect4=()=>{
+  window.addEventListener('mouseup',(e)=>{
+    gsap.to(materialShader.uniforms.mousePressed,{
+      duration:1,
+      value:0
+    })
+  })
+}
  const mask1 = new THREE.TextureLoader().load(mask);
 const materialShader = new THREE.ShaderMaterial({
           uniforms: {
@@ -165,7 +176,8 @@ const materialShader = new THREE.ShaderMaterial({
               mouse:{type:'v2',value:null},
               mousePressed:{type:'f',value:0},
               move:{type:'f',value:0},
-              time:{type:'f',value:0}
+              time:{type:'f',value:0},
+              // u_gravity: { value: new THREE.Vector3(0, 0, 0)},
           },
     
           vertexShader:
@@ -181,6 +193,7 @@ const materialShader = new THREE.ShaderMaterial({
           uniform float time;
           uniform vec2 mouse;
           uniform float mousePressed;
+
           void main(){
           vUv = uv;
           vec3 pos = position;
@@ -189,12 +202,16 @@ const materialShader = new THREE.ShaderMaterial({
           pos.z = mod(position.z + move*20. * aSpeed + aOffset, 2000.) - 1000.;
           vec3 stable = position;
           float dist = distance(stable.xy, mouse);
-          float area = 1. - smoothstep(0.,300.,dist);
-          stable.x +=50.*sin(0.1*time*aPress)*aDirection*mousePressed;
-          stable.y +=50.*sin(0.1*time*aPress)*aDirection*mousePressed;
-          stable.z +=200.*cos(0.1*time*aPress)*aDirection*mousePressed;
-          vec4 mvPosition = modelViewMatrix *  vec4(pos,1.);
-          gl_PointSize = 1300. * (1. / - mvPosition.z );
+          // float area = 1. - smoothstep(0.,100.,dist);
+          
+          // stable.x +=50.*sin(0.1*time*aPress)*aDirection*mousePressed;
+          // stable.y +=50.*sin(0.1*time*aPress)*aDirection*mousePressed;
+          // stable.z +=200.*cos(0.1*time*aPress)*aDirection*mousePressed;
+          stable.x +=10.*sin(time);
+          stable.y +=10.*sin(time);
+          stable.z +=100.*cos(time);
+           vec4 mvPosition = modelViewMatrix *  vec4(pos,1.);
+          gl_PointSize = 1000. * (1. / - mvPosition.z );
           gl_Position = projectionMatrix * mvPosition;
           vCoordinates = aCoordinates.xy;
           vPos = pos;
@@ -216,6 +233,7 @@ const materialShader = new THREE.ShaderMaterial({
           side:THREE.DoubleSide,
           transparent:true,
           depthTest:false,
+          depthWrite:false,
       });
       const number = 512*512;
      const geometryShader = new THREE.BufferGeometry();
@@ -225,6 +243,7 @@ const materialShader = new THREE.ShaderMaterial({
      const offset = new THREE.BufferAttribute(new Float32Array(number),1);
      const direction = new THREE.BufferAttribute(new Float32Array(number),1);
      const press = new THREE.BufferAttribute(new Float32Array(number),1);
+     const velocity =  new THREE.BufferAttribute(new Float32Array(number),1);
      function rand(a,b){
       return a+(b-a)*Math.random();
      }
@@ -232,12 +251,13 @@ const materialShader = new THREE.ShaderMaterial({
      for(let i = 0; i < 512; i++){
         let posX = i - 256;
         for(let j = 0; j < 512; j++) {
-        positions.setXYZ(index, posX, j-256, 0)
+        positions.setXYZ(index, posX*2, (j-256)*2, 0)
         coordinates.setXYZ(index,i,j,0)
         speeds.setX(index,rand(0.4,1))
         offset.setX(index,rand(-1000,1000))
         direction.setX(index,Math.random()>0.5?1:-1)
         press.setX(index,rand(0.4,1))
+        // velocity.setXYZ(index,(Math.random()-0.5))
         index++;
         }
      }
@@ -248,6 +268,7 @@ const materialShader = new THREE.ShaderMaterial({
  geometryShader.setAttribute("aOffset",offset);
  geometryShader.setAttribute("aDirection",direction);
  geometryShader.setAttribute("aPress",press);
+ geometryShader.setAttribute("velocity",velocity);
 const mesh = new THREE.Points(geometryShader, materialShader);
 scene.add(mesh);
 
@@ -267,7 +288,9 @@ function onWindowResize( event ) {
     time,
     materialShader,
     mouseEffect,
-    // mouseEffect2,
+   mouseEffect3,
+   mouseEffect4,
+     mouseEffect2,
      move
 	}
 }
@@ -286,15 +309,23 @@ function setControls (camera, domElement, deviceOrientationMode) {
   }
 
 (function init () {
-  const {scene, camera, renderer, time,materialShader,mouseEffect,mouseEffect2} = createScene()
+  const {scene, camera, renderer, time,materialShader,move,mouseEffect,mouseEffect2,mouseEffect3,mouseEffect4} = createScene()
   const { controls } = setControls(camera, renderer.domElement, window.location.hash.includes('deviceOrientation'))
+  // window.addEventListener('mousewheel',mouseEffect)
+
+move = mouseEffect()
 
   const animate = function () {
     requestAnimationFrame( animate )
+
+    // console.log(move)
     materialShader.uniforms.time.value = time;
-     materialShader.uniforms.move.value = mouseEffect();
-    //  materialShader.uniforms.move.value = move;
-    //  materialShader.uniforms.mouse.value = mouseEffect2();
+
+    //  materialShader.uniforms.move.value = mouseEffect();
+    materialShader.uniforms.move.value = move;
+       materialShader.uniforms.mousePressed.value = mouseEffect3();
+
+      materialShader.uniforms.mouse.value = mouseEffect2();
     renderer.render( scene, camera )
     // heartMesh.rotation.y -= 0.005
     // startAnim && beatingAnimation(heartMesh)
