@@ -10,9 +10,7 @@ export default {
   created() {
   const widthDevice = window.innerWidth;
   if(widthDevice < 700) {
-    console.log(widthDevice)
    this.mobileVersion = true
-   console.log(this.mobileVersion)
   }
   if (localStorage.getItem('userData')) {
   const info = JSON.parse(localStorage.getItem('userData') as string)
