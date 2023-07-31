@@ -810,7 +810,6 @@ function addPointsObject() {
 
             // ], i * 3)
           }
-          // object1.scale.set(10,10,10)
           final.scale.set(7,7,7);
           geo1.setAttribute('position', new THREE.Float32BufferAttribute(vertices1, 3))
           geo1.setAttribute('aRandom', new THREE.BufferAttribute(randomForParticles1, 3))
