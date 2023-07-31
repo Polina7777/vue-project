@@ -47,14 +47,14 @@ const final = new THREE.Group()
 scene.add(final)
 let clock = new THREE.Clock()
 
-const planetGeometry = new THREE.SphereGeometry(1, 50, 50)
-const count = planetGeometry.attributes.position.count //number of vertices in the geometry
-const randoms = new Float32Array(count)
-for (let i = 0; i < count; i++) {
-  randoms[i] = Math.random()
-}
+// const planetGeometry = new THREE.SphereGeometry(1, 50, 50)
+// const count = planetGeometry.attributes.position.count //number of vertices in the geometry
+// const randoms = new Float32Array(count)
+// for (let i = 0; i < count; i++) {
+//   randoms[i] = Math.random()
+// }
 
-planetGeometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
+// planetGeometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
 
 const material = new THREE.ShaderMaterial({
   vertexShader: `// uniform type is used for the data that don't change among the vertices (are uniform)
@@ -139,8 +139,7 @@ void main() {
     uColor1: { value: new THREE.Color(0x6c63ff) }
   }
 })
-const object1 = new THREE.Mesh(planetGeometry, material)
-object1.position.set(3, 3, 3)
+
 const starsMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: { value: new THREE.Color(0x31c48d) },
@@ -538,8 +537,8 @@ watch(aspectRatio, updateCamera)
 
 const loop = () => {
   renderer.render(scene, camera)
-  time++
-
+  time++;
+  final.rotation.y += 0.003;
   const elapsedTime = clock.getElapsedTime()
   material.uniforms.uTime.value = elapsedTime
   starsMaterial.uniforms.uTime.value = elapsedTime
@@ -811,7 +810,8 @@ function addPointsObject() {
 
             // ], i * 3)
           }
-          object1.scale.set(10,10,10)
+          // object1.scale.set(10,10,10)
+          final.scale.set(7,7,7);
           geo1.setAttribute('position', new THREE.Float32BufferAttribute(vertices1, 3))
           geo1.setAttribute('aRandom', new THREE.BufferAttribute(randomForParticles1, 3))
           geo2.setAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3))
@@ -865,12 +865,12 @@ function onMouseDown(event) {
         z: 6,
         ease: 'expo.in'
       })
-      .to(object1.scale, {
-        x: 2,
-        y: 2,
-        z: 2,
-        ease: 'expo.in'
-      })
+      // .to(object1.scale, {
+      //   x: 2,
+      //   y: 2,
+      //   z: 2,
+      //   ease: 'expo.in'
+      // })
       .to(starsMaterial.uniforms.uScale, {
         value: 0,
         duration: 3,
@@ -892,12 +892,12 @@ function onMouseUp(event) {
         z: 1,
         ease: 'expo.in'
       })
-      .to(object1.scale, {
-        x: 0,
-        y: 0,
-        z: 0,
-        ease: 'expo.in'
-      })
+      // .to(object1.scale, {
+      //   x: 0,
+      //   y: 0,
+      //   z: 0,
+      //   ease: 'expo.in'
+      // })
       .to(starsMaterial.uniforms.uScale, {
         value: 1,
         ease: 'expo.in'
