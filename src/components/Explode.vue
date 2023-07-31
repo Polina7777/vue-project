@@ -752,7 +752,7 @@ function addPointsObject() {
       object.add(pointsMesh3)
       object.add(pointsMesh2)
       object.add(pointsMesh1)
-
+      
       window.addEventListener('mousedown', explode, false)
 
       function explode() {

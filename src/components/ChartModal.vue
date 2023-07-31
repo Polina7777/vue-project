@@ -2,7 +2,7 @@
 import Chart from './Chart.vue';
 const props = defineProps({
  showChartModal: Boolean,
- allCardInfo: Array
+ allCardInfo: Array,
 })
 </script>
 <template>

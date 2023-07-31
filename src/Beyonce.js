@@ -27,12 +27,13 @@ export default class Sketch{
        this.paused = false;
         this.loader = new GLTFLoader();
 
-
+        this.example1 = new THREE.Object3D();
         this.loader.setDRACOLoader();
          let that = this;
         this.loader.load(
             './beyonce.glb',
             function ( glb ) {
+              console.log(glb)
        let geo = new THREE.BufferGeometry();
      let pos = glb.scene.children[0].geometry.attributes.position.array;
      geo.setAttribute('position', new THREE.BufferAttribute(pos,3))
@@ -45,7 +46,6 @@ export default class Sketch{
             console.log(e)
            }
         );
-
     
  this.setupResize();
  this.resize();

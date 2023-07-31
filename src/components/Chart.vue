@@ -1,6 +1,6 @@
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { DoughnutChart, BarChart} from 'vue-chart-3';
+  import {  BarChart} from 'vue-chart-3';
   import { Chart, registerables } from "chart.js";
   
   Chart.register(...registerables);
@@ -40,6 +40,7 @@
           },
         ],
       };
+      console.log(testDataByTime)
       const testDataByCalories = {
         // labels: ['Paris', 'Nîmes', 'Toulon', 'Perpignan', 'Autre'],
         labels: labels,
