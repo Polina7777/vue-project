@@ -926,7 +926,7 @@ function onMouseMove(event) {
   }
 }
 </script>
-<style>
+<style scoped>
 canvas {
   position: absolute;
 }

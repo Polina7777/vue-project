@@ -47,7 +47,7 @@ const props = defineProps({
   width: 440px;
   /* height: 420px;
   min-height: 420px; */
-  height: 80dvh;
+  height: 40dvh;
   margin: auto;
   padding: 10px 10px;
   background-color: #fff;

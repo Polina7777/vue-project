@@ -449,7 +449,7 @@ name="card"
       <img class="like" v-if="(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
     <img class="like" v-if="!(likesList?.find((i:IRecipe) => item.id === i.id))" src="https://www.svgrepo.com/show/408364/heart-love-like-favorite.svg"/>
   </button>
-<RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" :likeClicked="likeClicked" :checkComplite="checkComplite" :userData="userData" :favoritesList="favoritesList" :likeClick="likeClick">
+<RouterLink :key="item.id" :to="{name : 'recipe' ,params : {id: item.id}}" :likeClicked="likeClicked" :checkComplite="checkComplite" :userData="userData" :favoritesList="favoritesList" :likeClick="likeClick" class="router_link">
   <img :src="item.attributes.image_url" class="image"/>
   <div class="recipe_text__wrapper">
   <h1 :title = item.attributes.title class="title">{{item.attributes.title}}</h1>
@@ -505,7 +505,8 @@ name="card"
     align-items: center;
     padding: 10px 20px;
     width: 100vw;
-    min-height: 80vh
+    min-height: 80vh;
+    /* z-index: 3000; */
   }
   .error_wrapper{
     display: flex;
@@ -536,6 +537,7 @@ align-items: center;
     border-radius:10px;
     color:var(--text-secondary);
     font-size: 1rem;
+    z-index: 1000;
   }
   .card_list {
     display: flex;
@@ -572,6 +574,7 @@ align-items: center;
   .sort_button{
   background-color: transparent;
   border-color: transparent;
+  z-index: 1000;
   }
   .tag {
     display: flex;
@@ -584,6 +587,7 @@ align-items: center;
     align-self: end;
     background-color: transparent;
     border: transparent;
+    z-index: 1000;
   }
   .like{
     width: 40px;
@@ -599,6 +603,9 @@ align-items: center;
    gap:7px;
    padding: 20px;
   }
+  .router_link{
+    z-index: 1000;
+  }
   .tag_button{
     display: flex;
     flex-direction: row-reverse;
@@ -611,6 +618,7 @@ align-items: center;
     justify-content: center;
     align-items: center;
     gap:7px;
+    z-index: 1000;
 
   }
 .small_info{
@@ -657,7 +665,8 @@ padding-left: 40px;
     border-radius:10px;
     color:rgb(224, 224, 243);
     font-size: 1rem;
-    margin:0 5px
+    margin:0 5px;
+    z-index: 1000;
   }
   .title{
     font-size: 1.2rem;
@@ -692,10 +701,12 @@ padding-left: 40px;
   }
   .tag_title{
     font-size: 1rem;
+    z-index: 1000;
   }
   .tag_image{
     width:20px;
     height: 20px;
+    z-index: 1000;
   }
   .tag_button{
     min-width: 100px;
@@ -712,6 +723,7 @@ height: 130px;
  position: absolute;
  top: 40px;
 left: 21px;
+z-index: 1000;
   }
   .card {
     display: flex;
@@ -745,6 +757,7 @@ left: 21px;
   .arrow{
     width: 27px;
     height: 27px;
+    z-index: 1000;
   }
   .tag_list{
     padding: 10px;
@@ -800,6 +813,7 @@ left: 21px;
   .arrow{
     width: 27px;
     height: 27px;
+    z-index: 1000;
   }
 }
 </style>

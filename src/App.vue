@@ -4,8 +4,11 @@ import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
 import MobileMenuModal from './components/MobileMenuModal.vue';
-export default {
-  
+import Example from './components/Example.vue';
+
+
+
+ export default {
   created() {
   const widthDevice = window.innerWidth;
   if(widthDevice < 700) {
@@ -79,11 +82,12 @@ openRegForm (){
 },
  
   },
-  components: { AuthModal, RegisterModal, MobileMenuModal}
+  components: { AuthModal, RegisterModal, MobileMenuModal, Example }
 }
 </script>
 
 <template>
+ 
   <header v-if="!mobileVersion">
       <div v-if="isLoggedIn" class="hello_wrapper">
       <p class="hello"> Hello, {{userName}} !</p>
@@ -145,15 +149,22 @@ openRegForm (){
   </Teleport>
   </header>
   <nav  v-if="!mobileVersion">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
+        <RouterLink class='router_link' to="/">Home</RouterLink>
+        <RouterLink class='router_link' v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
       </nav>
   <RouterView />
   <footer>
     </footer>
+     <Example/>
 </template>
 
-<style>
+<style scoped>
+/* canvas{
+  position: absolute;
+  width:100vw;
+
+  height: 100vh;
+} */
 header, footer {
   line-height: 1.5;
    background-color: rgb(45, 34, 66);
@@ -165,6 +176,9 @@ header, footer {
   align-items: center;
   color: var(--text-primary);
   justify-content: space-between;
+}
+.router_link{
+  z-index: 1000;
 }
 header {
   position: sticky;
@@ -205,7 +219,8 @@ nav {
   font-size: 1.5rem;
   text-align: center;
   justify-content: space-between;
-  color:var(--text-secondary)
+  color:var(--text-secondary);
+  z-index: 1000;
 }
 
 nav a.router-link-exact-active {
@@ -237,38 +252,4 @@ color:rgba(230, 230, 246, 0.972);
 font-size: 1rem;
 margin: 10px;
 }
-/* @media (min-width: 1024px) {
-  nav {
-    text-align: center;
-    font-size: 2rem;
-  }
-  /* header{
-  height: 63px;
-  position: sticky;
-  z-index: 200;
-  top: 0;
-} */
-/* } */ 
-/* @media (max-width: 500px) {
-.hello_wrapper{
-  justify-content: center;
-}
-.hello{
-  font-size: 1.3rem;
-  flex-wrap: wrap;
-}
-.auth{
-  font-size: 1rem;
-}
-.hello_image, .burger{
-  width: 20px;
-  height: 20px;
-}
-/* header{
-  height: 63px;
-  position: sticky;
-  z-index: 200;
-  top: 0;
-} */
-/* } */ 
 </style>

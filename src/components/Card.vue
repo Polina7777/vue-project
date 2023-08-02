@@ -189,6 +189,7 @@ export default {
     font-size: 1rem;
     align-self: center;
     margin-top: 20px;
+    z-index: 1000;
   }
   .card_wrapper {
   padding: 40px;
@@ -198,6 +199,7 @@ export default {
     align-self: end;
     background-color: transparent;
     border: transparent;
+    z-index: 1000;
   }
   .like{
     width: 40px;
@@ -241,6 +243,7 @@ export default {
     border-radius:10px;
     color:rgb(224, 224, 243);
     font-size: 1rem;
+    z-index: 1000;
   }
   .description{
     padding: 10px;
