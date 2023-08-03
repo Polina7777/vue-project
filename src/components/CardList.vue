@@ -406,7 +406,7 @@ let sortList;
   </Teleport>
 </div>
     <div class="input_wrapper">
-  <input  v-model="searchQuery">
+  <input class="search_input"  v-model="searchQuery">
 </div>
 <div class="page_info__wrapper" >
 <p class="count">Page {{ pageCount }} from {{ allPagesCount }}</p>
@@ -539,6 +539,9 @@ align-items: center;
     font-size: 1rem;
     z-index: 1000;
   }
+  .search_input, .input_wrapper{
+    z-index: 1000;
+  }
   .card_list {
     display: flex;
     flex-direction:row;
@@ -613,12 +616,13 @@ align-items: center;
     min-width: 120px;
     border-radius: 10px;
     border:1px solid var(--text-primary);
-    background-color: var(--background-general);
+    /* background-color: var(--background-general); */
     color:var(--text-primary);
     justify-content: center;
     align-items: center;
     gap:7px;
     z-index: 1000;
+    background-color: transparent;
 
   }
 .small_info{
@@ -631,11 +635,13 @@ padding-left: 40px;
   input{
     padding: 10px;
     border:2px solid rgb(199, 199, 232);
-    background-color: var(--background-secondary);
+    /* background-color: var(--background-secondary); */
+    background-color: transparent;
     border-radius:10px;
     font-size: 1rem;
     color:rgb(156, 140, 170);
     outline:none;
+    z-index: 1000;
   }
   .arrow{
     height: 40px;
@@ -644,6 +650,7 @@ padding-left: 40px;
     font-size: 1rem;
     color: var(--background-general);
     background-color: rgb(230, 225, 234); 
+    z-index: 1000;
   }
     .card {
     display: flex;
