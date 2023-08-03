@@ -155,16 +155,11 @@ openRegForm (){
   <RouterView />
   <footer>
     </footer>
-     <Example/>
+     <!-- <Example/> -->
 </template>
 
 <style scoped>
-/* canvas{
-  position: absolute;
-  width:100vw;
 
-  height: 100vh;
-} */
 header, footer {
   line-height: 1.5;
    background-color: rgb(45, 34, 66);

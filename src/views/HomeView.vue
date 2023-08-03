@@ -2,6 +2,7 @@
 import  Example from '@/components/Example.vue';
 import TheWelcome from '../components/TheWelcome.vue'
 import Explode from '@/components/Explode.vue';
+import Animation from '@/components/2DAnimation.vue'
 // import Text from '@/components/Example.vue';
 
 </script>
@@ -9,8 +10,7 @@ import Explode from '@/components/Explode.vue';
 <template>
   <main>
     <TheWelcome />
-    <Explode/>
-    <!-- <Example/> -->
-
+    <!-- <Explode/> -->
+    <Animation/>
   </main>
 </template>
