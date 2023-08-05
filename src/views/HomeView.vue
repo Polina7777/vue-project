@@ -10,7 +10,8 @@ import Animation from '@/components/2DAnimation.vue'
 <template>
   <main>
     <TheWelcome />
-    <!-- <Explode/> -->
-    <Animation/>
+    <Explode/>
+    <!-- <Animation/> -->
+
   </main>
 </template>

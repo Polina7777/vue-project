@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import CardList from "../components/CardList.vue"
+import Animation from '@/components/2DAnimation.vue'
 import { useRouter } from 'vue-router'
 import { onBeforeUnmount, onMounted } from 'vue'
+
 const router = useRouter()
 
 const authListener=()=>{
@@ -20,7 +22,8 @@ onMounted(()=>{
 </script>
 
 <template>
-<CardList  />
+  <Animation/>
+<CardList />
 </template>
 
 <style>

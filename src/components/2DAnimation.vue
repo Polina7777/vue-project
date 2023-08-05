@@ -1,7 +1,8 @@
 <template>
-  <canvas id="canvas2D" class="canvas2D" ref="experiance2D">
-    <div id="model2D" ref="model2D"></div>
-  </canvas>
+  <!-- <div class="animation_wrapper"> -->
+  <canvas id="canvas2D" class="canvas2D" ref="experiance2D"></canvas>
+  <!-- </div> -->
+  
 </template>
 
 <script setup lang="ts">
@@ -24,41 +25,38 @@ let time = 0
 let move = 0
 const aspectRatio = computed(() => width / height)
 const raycaster = new THREE.Raycaster()
+
+// raycaster.layers.set( 1 );
 const experiance2D = ref<HTMLCanvasElement | null>(null)
 const model = ref<HTMLElement | null>(null)
 let clicked = ref<boolean>(false)
 scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 3000)
-camera.position.z = 1000
+ camera.position.z = 1000
+
+
 const mouse = new THREE.Vector2()
 const point = new THREE.Vector2()
-
 const directionallLight = new THREE.DirectionalLight(0xffffff, 1)
-scene.add(directionallLight)
 directionallLight.position.set(2, 2, 5)
 directionallLight.castShadow = true
 directionallLight.shadow.camera.bottom = -12
-//   const geometryPlane = new THREE.PlaneGeometry(30, 20, 1, 1)
-//   const plane = new THREE.Mesh(
-//     geometryPlane,
-//     new THREE.MeshBasicMaterial({ color: 0x00ff00, visible: false })
-//   )
-//   plane.position.set(0, 0, 0)
-//   scene.add(plane)
+scene.add(directionallLight)
+
 const test = new THREE.Mesh(
-  new THREE.PlaneGeometry(1100, 1100),
+  new THREE.PlaneGeometry(310, 310),
   new THREE.MeshBasicMaterial({ visible: true, color: 0x00ff00 })
 )
-// scene.add(test)
+//scene.add(test)
 const textures = [
-  new THREE.TextureLoader().load('../public/burger.jpg'),
+  new THREE.TextureLoader().load('../public/burger2.png'),
   new THREE.TextureLoader().load('../public/mask.jpg')
 ]
 const imageMaterial = new THREE.ShaderMaterial({
-    side: THREE.DoubleSide,
-   depthTest: false,
-//  depthWrite: false,
-  transparent:true,
+  side: THREE.DoubleSide,
+  depthTest: false,
+  depthWrite: false,
+  transparent: true,
   vertexShader: `varying vec2 vUv;
   varying vec3 vPos;
   varying vec2 vCoordinates;
@@ -92,13 +90,13 @@ const imageMaterial = new THREE.ShaderMaterial({
     //   stable.x += 50.*sin(0.1 * time * aPress)* aDirection * area;
     //   stable.y += 50.*sin(0.1 * time * aPress)* aDirection * area;
     //   stable.z += 200.*cos(0.1 * time * aPress)* aDirection * area;
-    stable.x += 50.*sin(0.1 * time * aPress)* aDirection * area* mousePressed;
-      stable.y += 50.*sin(0.1 * time * aPress)* aDirection * area* mousePressed;
+    stable.x += 100.*sin(0.1 * time * aPress)* aDirection * area* mousePressed;
+      stable.y += 100.*sin(0.1 * time * aPress)* aDirection * area* mousePressed;
       stable.z += 200.*cos(0.1 * time * aPress)* aDirection * area* mousePressed;
 
       //STABLE
   vec4 mvPosition =  modelViewMatrix * vec4( stable, 1.0 );
-     gl_PointSize = 5000. * (1. / -mvPosition.z);
+     gl_PointSize = 1700. * (1. / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
     vCoordinates = aCoordinates.xy;
     vPos = pos;
@@ -116,7 +114,7 @@ const imageMaterial = new THREE.ShaderMaterial({
         vec4 image = texture2D(t1,myUV);
       gl_FragColor = image;
       float alpha = 1. - clamp(0.,1.,abs(vPos.z/900.));
-      gl_FragColor.a *= maskTexture.r *alpha;
+      // gl_FragColor.a *= maskTexture.r *alpha;
    
        }`,
 
@@ -131,7 +129,9 @@ const imageMaterial = new THREE.ShaderMaterial({
   }
 })
 const final = new THREE.Group()
-scene.add(final)
+//test.position.set(width/2,height/2.5,0)
+// final.position.set(width/2,height/2,0)
+//scene.add(final)
 let clock = new THREE.Clock()
 
 //loadMouse();
@@ -152,8 +152,8 @@ watch(aspectRatio, updateCamera)
 const loop = () => {
   renderer.render(scene, camera)
   time++
-  //   final.rotation.x += 0.001;
-  //   final.rotation.y += 0.002;
+  // final.rotation.x += 0.01;
+  // final.rotation.y += 0.02;
   const elapsedTime = clock.getElapsedTime()
   imageMaterial.uniforms.move.value = move
   imageMaterial.uniforms.time.value = time
@@ -178,6 +178,10 @@ onMounted(() => {
   })
   renderer.setClearColor(0x000000, 0)
   const controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableRotate = false
+  controls.autoRotate = false
+  controls.enablePan = false
+  controls.enableZoom = false
   updateRenderer()
   updateCamera()
   loop()
@@ -227,9 +231,12 @@ function addMesh() {
   geometry.setAttribute('aDirection', direction)
   //const material = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
   const mesh = new THREE.Points(geometry, imageMaterial)
+  mesh.scale.set(0.3, 0.3, 0.3)
+  mesh.position.set(width / 2, height / 2, 0)
+
   //const mesh = new THREE.Mesh(geometry,material)
-  //scene.add(mesh)
-  final.add(mesh)
+  scene.add(mesh)
+  // final.add(mesh)
 }
 
 // function mouseEffect(){
@@ -257,17 +264,29 @@ function onMouseWheel(event) {
   move += event.wheelDeltaY / 1000
 }
 function onMouseMove(event) {
-  // const test = new THREE.Mesh(
-  //     new THREE.PlaneGeometry(100,100),
+  event.preventDefault();
+  // const test2 = new THREE.Mesh(
+  //     new THREE.PlaneGeometry(400,400),
   //     new THREE.MeshBasicMaterial({visible:true,color:0x00FF00})
   // )
-  // scene.add(test)
+  // test2.position.set(width/2,height/2,0)
+  // scene.add(test2)
+
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+//   const rect = renderer.domElement.getBoundingClientRect();
+// const x = event.clientX - rect.left;
+// const y = event.clientY - rect.top;
+
+// mouse.x = ( x / window.innerWidth ) *  2 - 1;
+// mouse.y = ( y / window.innerHeight) * - 2 + 1
   raycaster.setFromCamera(mouse, camera)
-  let intersects = raycaster.intersectObjects([test])
-  point.x = intersects[0].point.x
-  point.y = intersects[0].point.y
+  let intersects = raycaster.intersectObjects([test],false)
+  //let intersects = raycaster.intersectObjects(scene.children)
+  point.x = intersects[0].point.x * 7
+  point.y = intersects[0].point.y * 5
+  // point.x = intersects[0].point.x
+  // point.y = intersects[0].point.y
 }
 
 function onMouseDown(event) {
@@ -283,8 +302,13 @@ function onMouseUp(event) {
   })
 }
 </script>
-<!-- <style scoped>
+<style scoped>
 canvas {
   position: absolute;
+  z-index: 1000;
 }
-</style> -->
+.animation_wrapper{
+display: flex;
+justify-content: center;
+}
+</style>

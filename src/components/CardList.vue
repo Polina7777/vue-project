@@ -577,7 +577,7 @@ align-items: center;
   .sort_button{
   background-color: transparent;
   border-color: transparent;
-  z-index: 1000;
+  z-index: 1001;
   }
   .tag {
     display: flex;
@@ -590,7 +590,7 @@ align-items: center;
     align-self: end;
     background-color: transparent;
     border: transparent;
-    z-index: 1000;
+    z-index: 1001;
   }
   .like{
     width: 40px;

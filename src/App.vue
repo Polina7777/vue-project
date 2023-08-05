@@ -216,6 +216,7 @@ nav {
   justify-content: space-between;
   color:var(--text-secondary);
   z-index: 1000;
+
 }
 
 nav a.router-link-exact-active {
