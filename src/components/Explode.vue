@@ -47,14 +47,6 @@ const final = new THREE.Group()
 scene.add(final)
 let clock = new THREE.Clock()
 
-// const planetGeometry = new THREE.SphereGeometry(1, 50, 50)
-// const count = planetGeometry.attributes.position.count //number of vertices in the geometry
-// const randoms = new Float32Array(count)
-// for (let i = 0; i < count; i++) {
-//   randoms[i] = Math.random()
-// }
-
-// planetGeometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
 
 const material = new THREE.ShaderMaterial({
   vertexShader: `// uniform type is used for the data that don't change among the vertices (are uniform)
@@ -522,6 +514,7 @@ const materialPoint3 = new THREE.ShaderMaterial({
 
 })
 loadMouse()
+
 addPointsObject()
 
 function updateRenderer() {
@@ -682,14 +675,14 @@ function loadModel() {
       if (child.isMesh) {
         //    console.log(child);
 
-        //             // if (child.name == "cloth") {
-        //             //     child.material = new THREE.MeshPhongMaterial({
-        //             // color: colorValue,    // red (can also use a CSS color string here)
-        //             // flatShading: false
-        //             // });
+                    if (child.name == "cloth") {
+                        child.material = new THREE.MeshPhongMaterial({
+                    color: colorValue,    // red (can also use a CSS color string here)
+                    flatShading: false
+                    });
 
-        //             // }
-
+                    }
+console.log(child)
         child.material = material1
         const particlesMaterials = new THREE.PointsMaterial({ color: 0x31c48d, size: 0.02 })
         const particles = new THREE.Points(child.geometry, particlesMaterials)

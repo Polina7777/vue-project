@@ -38,7 +38,7 @@ props:['showMobileModal', 'userName', 'showAuthModal', 'showRegModal', 'isLogged
             <slot name="body">
        <div v-if="isLoggedIn" class="hello_wrapper">
       <p class="hello"> Hello, {{userName}} !</p>
-      <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/>
+      <!-- <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/> -->
     </div>
                 <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -71,11 +71,19 @@ props:['showMobileModal', 'userName', 'showAuthModal', 'showRegModal', 'isLogged
   display: flex;
   transition: opacity 0.3s ease;
 }
-
+#show-modal {
+  padding: 5px 10px;
+  height: 35px;
+  border: 2px solid rgb(199, 199, 232);
+  background-color: var(--background-general);
+  border-radius: 10px;
+  color: rgb(224, 224, 243);
+  font-size: 1rem;
+  margin: 0 5px;
+  z-index: 1000;
+}
 .modal-container {
-/* width: 40%; */
 min-width: 270px;
-/* margin: auto; */
 padding: 10px;
 background-color: #fff;
 border-radius: 2px;
@@ -150,8 +158,15 @@ nav a:first-of-type {
   display: flex;
   flex-direction: column;
 }
+
+.hello_image, .burger{
+  width: 30px;
+  height: 30px;
+}
 .hello{
-  font-size: 21px;
+  color: var(--text-primary);
+  font-size: 30px;
+  font-weight: 600;
 }
 .recipe_button{
   background-color: var(--background-general);

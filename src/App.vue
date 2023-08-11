@@ -87,7 +87,7 @@ openRegForm (){
 </script>
 
 <template>
- 
+    <!-- <Example/> -->
   <header v-if="!mobileVersion">
       <div v-if="isLoggedIn" class="hello_wrapper">
       <p class="hello"> Hello, {{userName}} !</p>
@@ -155,7 +155,7 @@ openRegForm (){
   <RouterView />
   <footer>
     </footer>
-     <!-- <Example/> -->
+     <Example/>
 </template>
 
 <style scoped>
@@ -218,7 +218,6 @@ nav {
   z-index: 1000;
 
 }
-
 nav a.router-link-exact-active {
   color:rgb(199, 199, 232)
 }
