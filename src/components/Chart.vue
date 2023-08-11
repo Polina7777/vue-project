@@ -29,7 +29,6 @@
              return Number(result)
             })
       const testDataByTime = {
-        // labels: ['Paris', 'Nîmes', 'Toulon', 'Perpignan', 'Autre'],
         labels: labels,
         datasets: [
           {
@@ -42,7 +41,6 @@
       };
       console.log(testDataByTime)
       const testDataByCalories = {
-        // labels: ['Paris', 'Nîmes', 'Toulon', 'Perpignan', 'Autre'],
         labels: labels,
         datasets: [
           {

@@ -24,8 +24,11 @@ let toggle = 0
 const experianceCursor = ref<HTMLCanvasElement | null>(null)
 const pointer = new THREE.Vector2()
 const spheres: any[] = []
-const width = window.innerWidth
-const height = window.innerHeight
+ const width = window.innerWidth
+ const height = window.innerHeight
+//const width = document.documentElement.clientWidth
+//const height = document.documentElement.clientHeight
+
 const aspectRatio = computed(() => width / height)
 const threshold = 0.1
 const pointSize = 0.01
@@ -33,7 +36,8 @@ const pointSize = 0.01
 scene = new THREE.Scene()
 clock = new THREE.Clock()
 
-camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000)
+// camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000)
+camera = new THREE.PerspectiveCamera(25,document.documentElement.clientWidth / document.documentElement.clientHeight, 1, 1000)
 camera.position.set(15, 0, 0)
 camera.lookAt(scene.position)
 camera.updateMatrix()
@@ -159,14 +163,15 @@ function init() {
 // }
 function onPointerMove(event) {
 	event.stopPropagation();
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+  pointer.x = (event.clientX / width) * 2 - 1
+  pointer.y = -(event.clientY / height) * 2 + 1
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight
+  // camera.aspect = window.innerWidth / window.innerHeight
+  camera.aspect = width / height
   camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(width, height)
 }
 
 function animate() {

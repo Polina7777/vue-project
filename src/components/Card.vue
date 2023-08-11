@@ -144,8 +144,8 @@ export default {
     <img class="like" v-if="likeClicked" src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg"/>
   </button>
   <h1 :title = info.attributes.title class="title">{{info.attributes.title}}</h1>
-    <img :src="info.attributes.image_url" class="image"/>
-
+    <img v-if="info.attributes.image_url" :src="info.attributes.image_url" class="image"/>
+    <p v-if="!info.attributes.image_url" :src="info.attributes.ingredient"></p>
     <div class="extra_info">
    <p :kcal = info.attributes.extra_info.data.attributes.kcal class="kcal">{{info.attributes.extra_info.data.attributes.kcal}} </p>
     <p :grams = info.attributes.extra_info.data.attributes.grams class="kcal">{{info.attributes.extra_info.data.attributes.grams}} </p>

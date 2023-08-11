@@ -17,8 +17,10 @@ let container: HTMLElement | null,
   renderer: THREE.WebGLRenderer,
   width: number,
   height: number
-width = window.innerWidth
-height = window.innerHeight
+// width = window.innerWidth
+// height = window.innerHeight
+width = document.documentElement.clientWidth
+height = document.documentElement.clientHeight
 let time = 0
 let move = 0
 const aspectRatio = computed(() => width / height)

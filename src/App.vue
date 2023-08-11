@@ -155,7 +155,7 @@ openRegForm (){
   <RouterView />
   <footer>
     </footer>
-     <Example/>
+     <!-- <Example/> -->
 </template>
 
 <style scoped>
