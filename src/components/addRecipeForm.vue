@@ -23,22 +23,33 @@ export default {
       mins: '',
       serve: '',
       steps: [],
-      ingredientArr:{name:'',image:''},
+     //ingredientArr:{name:'',image:''},
       ingredients: [],
       ingredientsArr: [{name:'',image:''}],
       categories: '',
-      category: ref({id:''}),
+      category: null,
       stepsArr: [{name:'Step 1',description:''}],
+       picked: ref(),
       errMsg: ref<string>(),
       rules: {
         title: { required, alpha, $autoDirty: true, $lazy: true },
-        description: { required, alpha, maxLength: maxLength(30), $autoDirty: true, $lazy: true },
+        description: { required, alpha, maxLength: maxLength(100), $autoDirty: true, $lazy: true },
         // image: { required },
-        smallInfoKcal: { required, numeric },
-        smallInfoGrams: { required, numeric },
-        mins: { required, numeric },
-        serve: { required, numeric },
-       // steps: { required, maxLength: maxLength(300) }
+        smallInfoKcal: { required, numeric, $autoDirty: true, $lazy: true},
+        smallInfoGrams: { required, numeric, $autoDirty: true, $lazy: true},
+        mins: { required, numeric, $autoDirty: true, $lazy: true },
+        serve: { required, numeric, $autoDirty: true, $lazy: true },
+        ingredientsArr:{
+          name:{required,alpha, maxLength: maxLength(30), $autoDirty: true, $lazy: true},
+          image:{}
+        },
+        stepsArr:{
+          // required,
+          // $each: {
+           name:{alpha,required},
+          description:{required,maxLength: maxLength(3), $autoDirty: true, $lazy: true}
+        // }
+        }
       },
       error: ref<boolean>()
     }
@@ -85,18 +96,13 @@ export default {
       }
     },
        async submitForm() {
+        this.submit()
         console.log(this.stepsArr)
         console.log(this.title,this.description,3,this.image,this.smallInfoKcal,this.smallInfoGrams,this.mins,this.serve,this.stepsArr,this.ingredientsArr)
       try {
-      const res = await recipesApi.createNewRecipe(this.title,this.description,3,this.image,this.smallInfoKcal,this.smallInfoGrams,this.mins,this.serve,this.stepsArr,this.ingredientsArr)
+      const res = await recipesApi.createNewRecipe(this.title,this.description,this.category,this.image,this.smallInfoKcal,this.smallInfoGrams,this.mins,this.serve,this.stepsArr,this.ingredientsArr)
       if (res.data){
-        // localStorage.setItem('jwt', res.jwt)
-        //  localStorage.setItem('userData', JSON.stringify(res.user))
-        // this.$router.push('/')
-        // this.user({
-        //   jwt:res.jwt,
-        //   user:res.user
-        // })
+       this.$router.push('/')
         console.log(res)
       } else {
         alert(res.error.message)
@@ -143,57 +149,63 @@ export default {
   validations() {
     return {
       title: { required, alpha, $autoDirty: true, $lazy: true },
-      description: { required, alpha, maxLength: maxLength(30), $autoDirty: true, $lazy: true },
+      description: { required, alpha, maxLength: maxLength(100), $autoDirty: true, $lazy: true },
       //image: { required },
-      smallInfoKcal: { required, numeric },
-      smallInfoGrams: { required, numeric },
-      mins: { required, numeric },
-      serve: { required, numeric },
-     // steps: { required, maxLength: maxLength(300)}
+      smallInfoKcal: { required, numeric, $autoDirty: true, $lazy: true },
+      smallInfoGrams: { required, numeric, $autoDirty: true, $lazy: true },
+      mins: { required, numeric, $autoDirty: true, $lazy: true},
+      serve: { required, numeric, $autoDirty: true, $lazy: true },
+      ingredientsArr:{
+          name:{required, maxLength: maxLength(400), $autoDirty: true, $lazy: true}
+        },
+        stepsArr:{
+          name:{alpha,required},
+          description:{required,alpha,maxLength: maxLength(400), $autoDirty: true, $lazy: true}
+        },
+
     }
   }
 }
 </script>
 
 <template>
+  <div class="modal_wrapper">
   <div class="recipes_inputs__wrapper">
     <input class="auth_input" type="file" placeholder="Image" @change="handleImageChange" />
     <img :src="imageUrl" alt="image" v-if="imageUrl" />
     <!-- <span class="error" v-if="v$.image.$error">
       {{ v$.image.$errors[0].$message }}
     </span> -->
-    <label for="title">Title:</label>
+    <p >Title:</p>
     <input class="auth_input" type="text" placeholder="Title" v-model="title" />
     <span class="error" v-if="v$.title.$error">
       {{ v$.title.$errors[0].$message }}
     </span>
-    <label for="description">Description:</label>
+    <p >Description:</p>
     <input class="auth_input" type="text" placeholder="Description" v-model="description" />
     <span class="error" v-if="v$.description.$error">
       {{ v$.description.$errors[0].$message }}
     </span>
     <div class="picker_box">
-      <label for="category">Category:</label>
-      <div class="picker_wrapper" v-for="(item, index) in categories">
-        <input type="radio" :value="item.attributes.id" v-model="category.id" />
-        <label for="item">{{ item.attributes.name }}</label>
-      </div>
+      <p class="category_title">Category:</p>
+      <label v-for="(item, index) in categories" :key="index">
+        <input type="radio" :value="item.id" v-model="category" />
+        {{ item.attributes.name }}
+        </label>
     </div>
+
 <div class="ingredients_wrapper">
-  <label for="ingredients">Ingredients:</label>
-      <ul>
-        <li class="ingredient" v-for="(item, index) in ingredientsArr">
-          <div class="input_wrapper">
+  <p for="ingredients">Ingredients:</p>
+          <div class="input_wrapper" v-for="(item, index) in ingredientsArr">
             <input class="auth_input" type="text" v-model="item.name" />
+            <span class="error" v-if="v$.ingredientsArr.name.$error">
+        {{ v$.ingredientsArr.name.$errors[0].$message }}
+      </span>
             <!-- <input class="auth_input" type="text" v-model="item.image" /> -->
-            <button class="submit_button" @click="deleteIngredient(index)">-</button>
-            <!-- <span class="error" v-if="v$.steps.$error">
-        {{ v$.steps.$errors[0].$message }}
-      </span> -->
-          </div>
-        </li>
-      </ul>
-      <button class="submit_button" @click="addIngredient">Add Ingredient</button>
+            <button class="count_button" @click="deleteIngredient(index)">-</button>
+     
+        </div>
+      <button class="count_button" @click="addIngredient">+</button>
 </div>
 
     <div class="info_wrapper">
@@ -226,24 +238,27 @@ export default {
         </span>
       </div>
     </div>
+    <p>Process: </p>
     <div class="process">
-      <label for="process">Process: </label>
-      <ul>
-        <li class="step" v-for="(item, index) in stepsArr">
+        <div class="step" v-for="(item, index) in stepsArr">
           <label for="step">{{ item.name }}</label>
           <div class="input_wrapper">
+   
             <input class="auth_input" type="text" v-model="item.description" />
-            <button class="submit_button" @click="deleteStep(index)">-</button>
-            <!-- <span class="error" v-if="v$.steps.$error">
-        {{ v$.steps.$errors[0].$message }}
-      </span> -->
+            {{ console.log(v$.stepsArr.$error) }}
+            <span class="error" v-if="v$.stepsArr.$error">
+        {{ v$.stepsArr.description.$errors[0].$message }}
+      </span>
+            <button class="count_button" @click="deleteStep(index)">-</button>
+   
           </div>
-        </li>
-      </ul>
-      <button class="submit_button" @click="addStep">Add Step</button>
+        </div>
+
+      <button class="count_button" @click="addStep">+</button>
     </div>
   </div>
   <button class="submit_button" @click="submitForm">Submit</button>
+</div>
 </template>
 <style scoped>
 .recipes_inputs__wrapper {
@@ -253,23 +268,42 @@ export default {
   justify-content: center;
   align-content: center;
   color: rgb(229, 229, 242);
-  padding-bottom: 30px;
+ 
 }
 label {
   align-self: start;
-  padding: 10px;
+  padding: 5px;
+  font-size: 1rem;
+}
+input{
+margin: 0;
+}
+.picker_box{
+  display: flex;
+  flex-wrap: wrap;
+}
+.modal_wrapper{
+  overflow: scroll;
 }
 .input_wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap:10px
 }
-h2 {
-  font-size: 1rem;
+p{
+  font-size: 1.3rem;
+  align-self: start;
 }
-.process {
+.process, .ingredients_wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
+  border: 0.3px solid rgb(147, 147, 170);
+  background-color: var(--background-general);
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 20px;
 }
 .step {
   display: flex;
@@ -279,6 +313,7 @@ h2 {
 .info_wrapper {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 10px;
 }
 .auth_input,
@@ -290,7 +325,7 @@ h2 {
   border: 2px solid rgb(199, 199, 232);
   background-color: transparent;
   border-radius: 10px;
-  margin: 10px 0;
+  margin: 5px 0;
   padding: 10px;
   outline: none;
   flex-wrap: wrap;
@@ -305,8 +340,10 @@ h2 {
   width: 100%;
   font-size: 1rem;
 }
-.submit_button {
-  padding: 5px 8px;
+.submit_button{
+  padding: 10px;
+}
+.submit_button, .count_button {
   border: 2px solid rgb(199, 199, 232);
   background-color: var(--background-general);
   border-radius: 10px;
@@ -314,8 +351,37 @@ h2 {
   font-size: 1rem;
   align-items: center;
 }
+.count_button{
+  margin: 2px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  background-color: rgb(147, 147, 170) ;
+}
 .error {
   font-size: 0.7rem;
   color: rgb(176, 9, 9);
+}
+@media (max-width:900px) {
+  p,label{
+    font-size: 0.8rem;
+  }
+ .auth_input{
+    padding: 7px;
+  }
+  .count_button{
+ min-width: 25px;
+ width: 25px;
+  height: 25px;
+  font-size: 0.9rem;
+  text-align: center;
+  border-radius: 8px;
+  padding:0 5px;
+  background-color: rgb(147, 147, 170) ;
+}
+.submit_button{
+  padding: 5px;
+}
+  
 }
 </style>

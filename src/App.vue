@@ -4,6 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import AuthModal from './components/AuthModal.vue';
 import RegisterModal from './components/RegisterModal.vue';
 import MobileMenuModal from './components/MobileMenuModal.vue';
+import RecipeModal from './components/RecipeModal.vue';
 import Example from './components/Example.vue';
 
 
@@ -24,6 +25,7 @@ import Example from './components/Example.vue';
     return {
     showAuthModal: ref<boolean>(false),
     showRegModal: ref<boolean>(false),
+    showRecipeModal:ref<boolean>(),
     isLoggedIn:ref<boolean>(false),
     userData:ref(),
     showMobileModal:ref<boolean>(),
@@ -80,9 +82,13 @@ openAuthForm (){
 openRegForm (){
  this.showRegModal = true
 },
+openRecipeForm (){
+  console.log('show')
+ this.showRecipeModal = true
+},
  
   },
-  components: { AuthModal, RegisterModal, MobileMenuModal, Example }
+  components: { AuthModal, RegisterModal, MobileMenuModal,RecipeModal, Example }
 }
 </script>
 
@@ -100,7 +106,9 @@ openRegForm (){
         <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
       </button> -->
     </div>
+    <button class="auth"  id="show-modal" @click="showRecipeModal = true" v-if="isLoggedIn"> Add recipe </button>
       <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
+
       <Teleport to="body">
 <!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut">
   <template #header>
@@ -121,6 +129,13 @@ openRegForm (){
       </template>
     </RegisterModal>
   </Teleport>
+  <Teleport to="body">
+    <RecipeModal :showRecipeModal="showRecipeModal"  @close="showRecipeModal = false" >
+      <template #header>
+        <!-- <h3 class="title_modal"> Sign Up</h3> -->
+      </template>
+    </RecipeModal>
+  </Teleport>
   </header>
   <header v-if="mobileVersion">
     <div class="auth_wrapper">
@@ -130,7 +145,7 @@ openRegForm (){
     </div>
       <Teleport to="body">
 <!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut" /> -->
-<MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" :showAuthModal="openAuthForm" :showRegModal="openRegForm" :isLoggedIn="isLoggedIn" :signOut="signOut" />
+<MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" :showAuthModal="openAuthForm" :showRegModal="openRegForm" :showRecipeModal="openRecipeForm" :isLoggedIn="isLoggedIn" :signOut="signOut" />
 </Teleport>
 
     <Teleport to="body">
@@ -146,6 +161,20 @@ openRegForm (){
         <h3 class="title_modal"> Sign Up</h3>
       </template>
     </RegisterModal>
+  </Teleport>
+  <Teleport to="body">
+    <RecipeModal :showRegModal="showRecipeModal"  @close="showRecipeModal = false" >
+      <template #header>
+        <!-- <h3 class="title_modal"> Sign Up</h3> -->
+      </template>
+    </RecipeModal>
+  </Teleport>
+  <Teleport to="body">
+    <RecipeModal :showRecipeModal="showRecipeModal"  @close="showRecipeModal = false" >
+      <template #header>
+        <!-- <h3 class="title_modal"> Sign Up</h3> -->
+      </template>
+    </RecipeModal>
   </Teleport>
   </header>
   <nav  v-if="!mobileVersion">

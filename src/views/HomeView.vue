@@ -10,8 +10,8 @@ import AddRecipeForm from '@/components/addRecipeForm.vue';
 
 <template>
   <main>
-    <!-- <TheWelcome /> -->
-    <AddRecipeForm/>
+    <TheWelcome />
+    <!-- <AddRecipeForm/> -->
     <!-- <Explode/> -->
     <!-- <Animation/> -->
 

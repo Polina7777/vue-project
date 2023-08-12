@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ErrorVue from '@/components/Error.vue'
+import CreateRecipeView from '../views/CreateRecipeView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +31,16 @@ const router = createRouter({
       }
     },
     { path: '/recipes/:id', name: 'recipe' ,component: () => import('../views/CardView.vue')},
+    {
+      path: '/add-recipe',
+      name: 'add-recipe',
+      component:CreateRecipeView,
+      props: true,
+      meta:{
+        isAuth:true,
+        allowAnonymous: false
+      }
+    },
   ]
 })
 export default router

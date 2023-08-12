@@ -1,6 +1,4 @@
-<script lang="ts"  >
-
-
+<script lang="ts">
 // const props = defineProps({
 //  showMobileModal: Boolean,
 //   userName:String,
@@ -9,18 +7,25 @@
 //   isLoggedIn:Boolean,
 //   signOut:Function,
 
-
 // })
-export default{
-props:['showMobileModal', 'userName', 'showAuthModal', 'showRegModal', 'isLoggedIn', 'signOut'],
-// methods:{
-//   openAuthForm (){
-//  this.showAuthModal = true
-// },
-// openRegForm (){
-//  this.showRegModal = true
-// },
-// }
+export default {
+  props: [
+    'showMobileModal',
+    'userName',
+    'showAuthModal',
+    'showRegModal',
+    'showRecipeModal',
+    'isLoggedIn',
+    'signOut'
+  ]
+  // methods:{
+  //   openAuthForm (){
+  //  this.showAuthModal = true
+  // },
+  // openRegForm (){
+  //  this.showRegModal = true
+  // },
+  // }
 }
 </script>
 <template>
@@ -28,31 +33,39 @@ props:['showMobileModal', 'userName', 'showAuthModal', 'showRegModal', 'isLogged
     <div v-if="showMobileModal" class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
-            <button
-              class="modal-default-button"
-              @click="$emit('close')"
-            >Close</button>
+          <button class="modal-default-button" @click="$emit('close')">Close</button>
           <slot name="header">default header</slot>
         </div>
         <div class="modal-body">
-            <slot name="body">
-       <div v-if="isLoggedIn" class="hello_wrapper">
-      <p class="hello"> Hello, {{userName}} !</p>
-      <!-- <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/> -->
-    </div>
-                <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="isLoggedIn" to="/recipes">
-          <button class="recipe_button" @click="$emit('close')">
-          Recipes
-        </button></RouterLink>
-      </nav>
-      <div class="auth_wrapper">
-      <button class="auth" id="show-modal" @click="showAuthModal" v-if="!isLoggedIn"> Sign in </button>
-      <button class="auth"  id="show-modal" @click="showRegModal" v-if="!isLoggedIn"> Sign up </button>
-    </div>
-      <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
-   </slot>
+          <slot name="body">
+            <div v-if="isLoggedIn" class="hello_wrapper">
+              <p class="hello">Hello, {{ userName }} !</p>
+              <!-- <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/> -->
+            </div>
+            <nav>
+              <RouterLink to="/">Home</RouterLink>
+              <RouterLink v-if="isLoggedIn" to="/recipes">
+                <button class="recipe_button" @click="$emit('close')">Recipes</button></RouterLink
+              >
+              <RouterLink v-if="isLoggedIn" to="/add-recipe">
+                <button class="recipe_button" @click="$emit('close')">
+                  Add Recipe
+                </button></RouterLink
+              >
+            </nav>
+            <div class="auth_wrapper">
+              <button class="auth" id="show-modal" @click="showAuthModal" v-if="!isLoggedIn">
+                Sign in
+              </button>
+              <button class="auth" id="show-modal" @click="showRegModal" v-if="!isLoggedIn">
+                Sign up
+              </button>
+            </div>
+            <!-- <button class="auth"  id="show-modal" @click="showRecipeModal" v-if="isLoggedIn"> Add recipe </button> -->
+            <button class="auth" id="show-modal" @click="signOut" v-if="isLoggedIn">
+              Sign out
+            </button>
+          </slot>
         </div>
       </div>
     </div>
@@ -83,26 +96,26 @@ props:['showMobileModal', 'userName', 'showAuthModal', 'showRegModal', 'isLogged
   z-index: 1000;
 }
 .modal-container {
-min-width: 270px;
-padding: 10px;
-background-color: #fff;
-border-radius: 2px;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-transition: all 0.3s ease;
-border: 2px solid rgb(199, 199, 232);
-background-color: var(--background-general);
-border-radius: 10px;
-color: rgba(0, 0, 255, 0.129);
+  min-width: 270px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  border: 2px solid rgb(199, 199, 232);
+  background-color: var(--background-general);
+  border-radius: 10px;
+  color: rgba(0, 0, 255, 0.129);
 }
 
-.modal-default-button{
-    padding:5px 8px;
-    border:2px solid rgb(199, 199, 232);
-    background-color: var(--background-general);
-    border-radius:10px;
-    color:rgb(240, 240, 245);
-    font-size: 0.7rem;
-  }
+.modal-default-button {
+  padding: 5px 8px;
+  border: 2px solid rgb(199, 199, 232);
+  background-color: var(--background-general);
+  border-radius: 10px;
+  color: rgb(240, 240, 245);
+  font-size: 0.7rem;
+}
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
@@ -111,15 +124,14 @@ color: rgba(0, 0, 255, 0.129);
 .modal-body {
   margin: 10px 0;
   display: flex;
-flex-direction: column;
-justify-content: center;
-gap:10px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }
 
 .modal-default-button {
   float: right;
 }
-
 
 .modal-enter-from {
   opacity: 0;
@@ -135,21 +147,22 @@ gap:10px;
   transform: scale(1.1);
 }
 
-nav{
+nav {
   display: flex;
   flex-direction: column;
   align-items: self-start;
   font-size: 21px;
-  color:var(--text-secondary)
+  gap:20px;
+  color: var(--text-secondary);
 }
-nav a.router-link-exact-active, .recipe_buttton:active {
-  color:rgb(199, 199, 232)
+nav a.router-link-exact-active,
+.recipe_buttton:active {
+  color: rgb(199, 199, 232);
 }
 
 nav a.router-link-exact-active:hover {
   background-color: transparent;
 }
-
 
 nav a:first-of-type {
   border: 0;
@@ -159,20 +172,21 @@ nav a:first-of-type {
   flex-direction: column;
 }
 
-.hello_image, .burger{
+.hello_image,
+.burger {
   width: 30px;
   height: 30px;
 }
-.hello{
+.hello {
   color: var(--text-primary);
   font-size: 30px;
   font-weight: 600;
 }
-.recipe_button{
+.recipe_button {
   background-color: var(--background-general);
   border: none;
   font-size: 21px;
-  color:var(--text-secondary);
+  color: var(--text-secondary);
   padding: 0;
 }
 </style>
