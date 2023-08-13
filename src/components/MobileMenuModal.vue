@@ -1,13 +1,5 @@
 <script lang="ts">
-// const props = defineProps({
-//  showMobileModal: Boolean,
-//   userName:String,
-//   showAuthModal:Function,
-//   showRegModal:Function,
-//   isLoggedIn:Boolean,
-//   signOut:Function,
 
-// })
 export default {
   props: [
     'showMobileModal',
@@ -18,14 +10,6 @@ export default {
     'isLoggedIn',
     'signOut'
   ]
-  // methods:{
-  //   openAuthForm (){
-  //  this.showAuthModal = true
-  // },
-  // openRegForm (){
-  //  this.showRegModal = true
-  // },
-  // }
 }
 </script>
 <template>
@@ -40,7 +24,7 @@ export default {
           <slot name="body">
             <div v-if="isLoggedIn" class="hello_wrapper">
               <p class="hello">Hello, {{ userName }} !</p>
-              <!-- <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/> -->
+              <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/>
             </div>
             <nav>
               <RouterLink to="/">Home</RouterLink>
@@ -182,11 +166,19 @@ nav a:first-of-type {
   font-size: 30px;
   font-weight: 600;
 }
+.hello_image{
+  width: 27px;
+  height: 27px;
+}
 .recipe_button {
   background-color: var(--background-general);
   border: none;
   font-size: 21px;
   color: var(--text-secondary);
   padding: 0;
+}
+.auth_wrapper{
+  display: flex;
+  gap:10px
 }
 </style>

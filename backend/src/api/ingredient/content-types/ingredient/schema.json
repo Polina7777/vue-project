@@ -16,7 +16,8 @@
       "type": "string"
     },
     "image_url": {
-      "type": "string"
+      "type": "string",
+      "default": "https://www.google.com/url?sa=i&url=https%3A%2F%2Ficons8.com%2Ficons%2Fset%2Fingredients&psig=AOvVaw2JXeblMKZs0E4M_uyRBHbJ&ust=1692033701804000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIiV5u-S2oADFQAAAAAdAAAAABAE"
     }
   }
 }

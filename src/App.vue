@@ -1,254 +1,264 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import AuthModal from './components/AuthModal.vue';
-import RegisterModal from './components/RegisterModal.vue';
-import MobileMenuModal from './components/MobileMenuModal.vue';
-import RecipeModal from './components/RecipeModal.vue';
-import Example from './components/Example.vue';
+import AuthModal from './components/AuthModal.vue'
+import RegisterModal from './components/RegisterModal.vue'
+import MobileMenuModal from './components/MobileMenuModal.vue'
+import RecipeModal from './components/RecipeModal.vue'
+import Cursor from './components/Cursor.vue'
 
-
-
- export default {
+export default {
   created() {
-  const widthDevice = window.innerWidth;
-  if(widthDevice < 700) {
-   this.mobileVersion = true
-  }
-  if (localStorage.getItem('userData')) {
-  const info = JSON.parse(localStorage.getItem('userData') as string)
-  this.userName = info.username
-  }
-
+    const widthDevice = window.innerWidth
+    if (widthDevice < 500) {
+      this.mobileVersion = true
+    }
+    if (localStorage.getItem('userData')) {
+      const info = JSON.parse(localStorage.getItem('userData') as string)
+      this.userName = info.username
+    }
   },
   data() {
     return {
-    showAuthModal: ref<boolean>(false),
-    showRegModal: ref<boolean>(false),
-    showRecipeModal:ref<boolean>(),
-    isLoggedIn:ref<boolean>(false),
-    userData:ref(),
-    showMobileModal:ref<boolean>(),
-    userName:ref<string>(),
-      height:window.innerHeight,
-      width:window.innerWidth,
-      mobileVersion:ref(false),
-    };
+      showAuthModal: ref<boolean>(false),
+      showRegModal: ref<boolean>(false),
+      showRecipeModal: ref<boolean>(),
+      isLoggedIn: ref<boolean>(false),
+      userData: ref(),
+      showMobileModal: ref<boolean>(),
+      userName: ref<string>(),
+      height: window.innerHeight,
+      width: window.innerWidth,
+      mobileVersion: ref(false)
+    }
   },
 
-beforeMount() {
-this.authListener()
-},
-onMounted(){
-   this.authListener()
-},
-
-watch:{
-  userData: async function checkIsLogged() {
+  beforeMount() {
     this.authListener()
-   }
-},
+  },
+  onMounted() {
+    this.authListener()
+  },
+
+  watch: {
+    userData: async function checkIsLogged() {
+      this.authListener()
+    }
+  },
   methods: {
     userAuth() {
-      this.showAuthModal=false;
+      this.showAuthModal = false
       this.userData = localStorage.getItem('userData')
       const info = JSON.parse(localStorage.getItem('userData') as string)
-  this.userName = info.username
+      this.userName = info.username
     },
     userReg() {
-      this.showRegModal=false;
+      this.showRegModal = false
       this.userData = localStorage.getItem('userData')
       const info = JSON.parse(localStorage.getItem('userData') as string)
-  this.userName = info.username
+      this.userName = info.username
     },
     signOut() {
       this.$router.push('/')
-      localStorage.removeItem('jwt');
-      localStorage.removeItem('userData');
-      return this.userData = null;
+      localStorage.removeItem('jwt')
+      localStorage.removeItem('userData')
+      return (this.userData = null)
     },
-    authListener(){
-    const user = localStorage.getItem('jwt')
-    if(!user){
-       return this.isLoggedIn= false
-    }else{
-      return this.isLoggedIn = true
+    authListener() {
+      const user = localStorage.getItem('jwt')
+      if (!user) {
+        return (this.isLoggedIn = false)
+      } else {
+        return (this.isLoggedIn = true)
+      }
+    },
+    openAuthForm() {
+      this.showAuthModal = true
+    },
+    openRegForm() {
+      this.showRegModal = true
+    },
+    openRecipeForm() {
+      console.log('show')
+      this.showRecipeModal = true
     }
-},
-openAuthForm (){
- this.showAuthModal = true
-
-},
-openRegForm (){
- this.showRegModal = true
-},
-openRecipeForm (){
-  console.log('show')
- this.showRecipeModal = true
-},
- 
   },
-  components: { AuthModal, RegisterModal, MobileMenuModal,RecipeModal, Example }
+  components: { AuthModal, RegisterModal, MobileMenuModal, RecipeModal, Cursor }
 }
 </script>
 
 <template>
-    <!-- <Example/> -->
   <header v-if="!mobileVersion">
-      <div v-if="isLoggedIn" class="hello_wrapper">
-      <p class="hello"> Hello, {{userName}} !</p>
-      <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg"/>
+    <div v-if="isLoggedIn" class="hello_wrapper">
+      <p class="hello">Hello, {{ userName }} !</p>
+      <img class="hello_image" src="https://www.svgrepo.com/show/402888/waving-hand.svg" />
     </div>
     <div class="auth_wrapper">
-      <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn"> Sign in </button>
-      <button class="auth"  id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn"> Sign up </button>
+      <button class="auth" id="show-modal" @click="showAuthModal = true" v-if="!isLoggedIn">
+        Sign in
+      </button>
+      <button class="auth" id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn">
+        Sign up
+      </button>
       <!-- <button class="auth"  id="show-modal" @click="showMobileModal = true" >
         <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
       </button> -->
     </div>
-    <button class="auth"  id="show-modal" @click="showRecipeModal = true" v-if="isLoggedIn"> Add recipe </button>
-      <button class="auth"  id="show-modal" @click="signOut" v-if="isLoggedIn"> Sign out </button>
-
-      <Teleport to="body">
-<!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut">
+    <div class="button_wrapper">
+    <button class="auth" id="show-modal" @click="showRecipeModal = true" v-if="isLoggedIn">
+      Add recipe
+    </button>
+    <button class="auth" id="show-modal" @click="signOut" v-if="isLoggedIn">Sign out</button>
+  </div>
+    <Teleport to="body">
+      <!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut">
   <template #header>
       </template>
 </MobileMenuModal> -->
-      </Teleport>
+    </Teleport>
     <Teleport to="body">
-    <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false"  :user="userAuth" >
-      <template #header>
-        <h3 class="title_modal"> Sign In</h3>
-      </template>
-    </AuthModal>
-  </Teleport>
-  <Teleport to="body">
-    <RegisterModal :showRegModal="showRegModal"  @close="showRegModal = false" :user="userReg" >
-      <template #header>
-        <h3 class="title_modal"> Sign Up</h3>
-      </template>
-    </RegisterModal>
-  </Teleport>
-  <Teleport to="body">
-    <RecipeModal :showRecipeModal="showRecipeModal"  @close="showRecipeModal = false" >
-      <template #header>
-        <!-- <h3 class="title_modal"> Sign Up</h3> -->
-      </template>
-    </RecipeModal>
-  </Teleport>
+      <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false" :user="userAuth">
+        <template #header>
+          <h3 class="title_modal">Sign In</h3>
+        </template>
+      </AuthModal>
+    </Teleport>
+    <Teleport to="body">
+      <RegisterModal :showRegModal="showRegModal" @close="showRegModal = false" :user="userReg">
+        <template #header>
+          <h3 class="title_modal">Sign Up</h3>
+        </template>
+      </RegisterModal>
+    </Teleport>
+    <Teleport to="body">
+      <RecipeModal :showRecipeModal="showRecipeModal" @close="showRecipeModal = false">
+        <template #header>
+        </template>
+      </RecipeModal>
+    </Teleport>
   </header>
   <header v-if="mobileVersion">
     <div class="auth_wrapper">
-      <button class="burger_button"  id="show-modal" @click="showMobileModal = true" >
-        <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
+      <button class="burger_button" id="show-modal" @click="showMobileModal = true">
+        <img
+          class="burger"
+          src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"
+        />
       </button>
     </div>
-      <Teleport to="body">
-<!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut" /> -->
-<MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" :showAuthModal="openAuthForm" :showRegModal="openRegForm" :showRecipeModal="openRecipeForm" :isLoggedIn="isLoggedIn" :signOut="signOut" />
-</Teleport>
+    <Teleport to="body">
+      <MobileMenuModal
+        :showMobileModal="showMobileModal"
+        @close="showMobileModal = false"
+        :userName="userName"
+        :showAuthModal="openAuthForm"
+        :showRegModal="openRegForm"
+        :showRecipeModal="openRecipeForm"
+        :isLoggedIn="isLoggedIn"
+        :signOut="signOut"
+      />
+    </Teleport>
 
     <Teleport to="body">
-    <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false"  :user="userAuth" >
-      <template #header>
-        <h3 class="title_modal"> Sign In</h3>
-      </template>
-    </AuthModal>
-  </Teleport>
-  <Teleport to="body">
-    <RegisterModal :showRegModal="showRegModal"  @close="showRegModal = false" :user="userReg" >
-      <template #header>
-        <h3 class="title_modal"> Sign Up</h3>
-      </template>
-    </RegisterModal>
-  </Teleport>
-  <Teleport to="body">
-    <RecipeModal :showRegModal="showRecipeModal"  @close="showRecipeModal = false" >
-      <template #header>
-        <!-- <h3 class="title_modal"> Sign Up</h3> -->
-      </template>
-    </RecipeModal>
-  </Teleport>
-  <Teleport to="body">
-    <RecipeModal :showRecipeModal="showRecipeModal"  @close="showRecipeModal = false" >
-      <template #header>
-        <!-- <h3 class="title_modal"> Sign Up</h3> -->
-      </template>
-    </RecipeModal>
-  </Teleport>
+      <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false" :user="userAuth">
+        <template #header>
+          <h3 class="title_modal">Sign In</h3>
+        </template>
+      </AuthModal>
+    </Teleport>
+    <Teleport to="body">
+      <RegisterModal :showRegModal="showRegModal" @close="showRegModal = false" :user="userReg">
+        <template #header>
+          <h3 class="title_modal">Sign Up</h3>
+        </template>
+      </RegisterModal>
+    </Teleport>
+    <Teleport to="body">
+      <RecipeModal :showRegModal="showRecipeModal" @close="showRecipeModal = false">
+        <template #header>
+          <!-- <h3 class="title_modal"> Sign Up</h3> -->
+        </template>
+      </RecipeModal>
+    </Teleport>
+    <!-- <Teleport to="body">
+      <RecipeModal :showRecipeModal="showRecipeModal" @close="showRecipeModal = false">
+        <template #header>
+        </template>
+      </RecipeModal>
+    </Teleport> -->
   </header>
-  <nav  v-if="!mobileVersion">
-        <RouterLink class='router_link' to="/">Home</RouterLink>
-        <RouterLink class='router_link' v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
-      </nav>
+  <nav v-if="!mobileVersion">
+    <RouterLink class="router_link" to="/">Home</RouterLink>
+    <RouterLink class="router_link" v-if="isLoggedIn" to="/recipes">Recipes</RouterLink>
+  </nav>
   <RouterView />
-  <footer>
-    </footer>
-     <!-- <Example/> -->
+  <Cursor />
+  <footer></footer>
+
 </template>
 
 <style scoped>
-
-header, footer {
+header,
+footer {
   line-height: 1.5;
-   background-color: rgb(45, 34, 66);
+  background-color: rgb(45, 34, 66);
   border-top: 1px solid rgb(199, 199, 232);
   border-bottom: 1px solid rgb(199, 199, 232);
-  height: 80px;
+  height: 70px;
   display: flex;
   flex-direction: row;
   align-items: center;
   color: var(--text-primary);
   justify-content: space-between;
 }
-.router_link{
+.router_link {
   z-index: 1000;
 }
 header {
   position: sticky;
-  z-index: 200;
+  z-index: 2000;
   top: 0;
 }
-footer{
+footer {
   height: 50px;
 }
-.burger_button{
+.burger_button {
   background-color: transparent;
   border: none;
   padding: 5px 15px;
 }
-.hello_image, .burger{
+.hello_image,
+.burger {
   width: 30px;
   height: 30px;
 }
-.hello{
+.hello {
   color: var(--text-primary);
   font-size: 30px;
   font-weight: 600;
 }
-.hello_wrapper{
+.hello_wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
- align-items: center;
- padding: 10px 15px;
- gap:10px;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 10px;
 }
-.auth_wrapper{
+.auth_wrapper {
   display: flex;
-flex-direction: row;
+  flex-direction: row;
 }
 nav {
   width: 100%;
   font-size: 1.5rem;
   text-align: center;
   justify-content: space-between;
-  color:var(--text-secondary);
+  color: var(--text-secondary);
   z-index: 1000;
-
 }
 nav a.router-link-exact-active {
-  color:rgb(199, 199, 232)
+  color: rgb(199, 199, 232);
 }
 
 nav a.router-link-exact-active:hover {
@@ -264,16 +274,16 @@ nav a:first-of-type {
   border: 0;
 }
 .title_modal {
-color: var(--text-primary)
+  color: var(--text-primary);
 }
-.auth{
+.auth {
   padding: 10px 15px;
   transition: all 0.3s ease;
-  border:2px solid rgb(199, 199, 232);
+  border: 2px solid rgb(199, 199, 232);
   background-color: var(--background-primary);
-border-radius:10px;
-color:rgba(230, 230, 246, 0.972);
-font-size: 1rem;
-margin: 10px;
+  border-radius: 10px;
+  color: rgba(230, 230, 246, 0.972);
+  font-size: 1rem;
+  margin: 10px;
 }
 </style>

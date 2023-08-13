@@ -17,10 +17,8 @@ let container: HTMLElement | null,
   renderer: THREE.WebGLRenderer,
   width: number,
   height: number
-// width = window.innerWidth
-// height = window.innerHeight
-width = document.documentElement.clientWidth
-height = document.documentElement.clientHeight
+width = window.innerWidth
+height = window.innerHeight
 let time = 0
 let move = 0
 const aspectRatio = computed(() => width / height)
@@ -31,13 +29,7 @@ const camera = new THREE.PerspectiveCamera(100, width / height, 0.01, 4000)
   const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 const point = new THREE.Vector2()
-// const test = new THREE.Mesh(
-//   new THREE.PlaneGeometry(310,310),
-//   new THREE.MeshBasicMaterial({ visible: true, color: 0x00ff00 })
-// )
-// test.position.set(width/4,height/4,0)
-//test.position.set(400,0,100)
-// scene.add(test)
+
 const textures = [
   new THREE.TextureLoader().load('../public/burger2.png'),
   new THREE.TextureLoader().load('../public/mask.jpg')
@@ -175,8 +167,6 @@ onMounted(() => {
   renderer.setClearColor(0x000000, 0)
   const controls = new OrbitControls(camera, renderer.domElement)
   controls.enableRotate = false
-  // controls.autoRotate = false
-  // controls.enablePan = false
   controls.enableZoom = false
   updateRenderer()
   updateCamera()
@@ -286,33 +276,13 @@ function onMouseMove(event) {
   // scene.add(test2)
 
   point.x = (event.clientX / window.innerWidth) * 2 - 1 
-  point.y = -(event.clientY / window.innerHeight) * 2 + 1
-
-
-  var plane = new THREE.Plane().setFromNormalAndCoplanarPoint(new THREE.Vector3(0, 0, 1), scene.position); 
-
-  //raycaster.params.Points.threshold = 0.1
+  point.y = -(event.clientY / window.innerHeight) * 2 + 1 
  raycaster.setFromCamera(point, camera)
-
-//  let intersects = raycaster.intersectObjects([test],false)
-//raycaster.ray.recast(0.1)
-//raycaster.ray.origin.copy(final.position)
 let intersects = raycaster.intersectObjects(scene.children,true)
-
-  // raycaster.params.Line.threshold = 0.1;
-  // raycaster.params.Mesh.threshold = 0.1;
-  
   if(intersects.length){
-console.log(intersects[0])
-  // point.x = intersects[0].point.x * 7
-  // point.y = intersects[0].point.y * 5
- // scene.matrixWorldNeedsUpdate = true
-  //   point.x = intersects[0].point.x - 350
-  // point.y = intersects[0].point.y - 350
-  // point.x = intersects[0].point.x -700
-  // point.y = intersects[0].point.y -700
 const pointX = intersects[0].point.x - width/0.5
 const pointY = intersects[0].point.y - height/0.31
+
 point.x = pointX;
 point.y = pointY;
 

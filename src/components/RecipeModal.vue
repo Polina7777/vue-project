@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import Chart from './Chart.vue'
 import AddRecipeForm from './addRecipeForm.vue'
 const props = defineProps({
   showRecipeModal: Boolean
-  //  allCardInfo: Array,
 })
 </script>
 <template>
@@ -30,8 +28,6 @@ const props = defineProps({
   z-index: 9998;
   top: 0;
   left: 0;
-  /* width: 100%;
-  height: 100%; */
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
@@ -42,15 +38,12 @@ const props = defineProps({
 .modal-container {
   display: flex;
   flex-direction: column;
-  /* flex-direction: row-reverse; */
   justify-content: center;
   gap: 20px;
   width: 85%;
   min-width: 300px;
-  /* margin: auto; */
   margin: 30px auto;
   padding: 30px;
-  /* padding-left: 70px; */
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -67,7 +60,7 @@ const props = defineProps({
   background-color: var(--background-general);
   border-radius: 10px;
   color: rgb(240, 240, 245);
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 .modal-header h3 {
   margin-top: 0;
@@ -101,10 +94,10 @@ const props = defineProps({
 @media (max-width: 500px) {
   .modal-container {
     padding: 10px;
-    gap:7px;
+    gap: 7px;
   }
   .modal-default-button {
-  font-size: 0.7rem;
-}
+    font-size: 0.7rem;
+  }
 }
 </style>

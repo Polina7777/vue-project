@@ -534,9 +534,9 @@ name="card"
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 10px 20px;
+  padding:0 20px;
   width: 100vw;
-  min-height: 97vh;
+  /* min-height: 97vh; */
   /* height: 97vh; */
 }
 .error_wrapper {
@@ -549,7 +549,7 @@ name="card"
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
+  /* padding-top: 50px; */
 }
 .buttons_wrapper {
   display: flex;

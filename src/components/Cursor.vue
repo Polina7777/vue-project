@@ -24,10 +24,23 @@ let toggle = 0
 const experianceCursor = ref<HTMLCanvasElement | null>(null)
 const pointer = new THREE.Vector2()
 const spheres: any[] = []
- const width = window.innerWidth
- const height = window.innerHeight
-//const width = document.documentElement.clientWidth
-//const height = document.documentElement.clientHeight
+
+let scroll = 0;
+// window.addEventListener('scroll', function() {
+//     var scrollY = document.documentElement.scrollTop || document.body.scrollTop || 0;
+//     console.log('Текущая позиция скролла:', scrollY);
+//   return  scroll = scrollY
+// });
+
+// var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+// var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+// var screenHeightWithScroll = screenHeight - scrollHeight;
+// var height = screenHeight - scrollHeight;
+
+ const width = window.innerWidth 
+ const height = window.innerHeight;
+// const width = document.body.clientWidth
+// const height = document.body.clientHeight
 
 const aspectRatio = computed(() => width / height)
 const threshold = 0.1
@@ -37,7 +50,7 @@ scene = new THREE.Scene()
 clock = new THREE.Clock()
 
 // camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000)
-camera = new THREE.PerspectiveCamera(25,document.documentElement.clientWidth / document.documentElement.clientHeight, 1, 1000)
+camera = new THREE.PerspectiveCamera(25,width/ height, 1, 1000)
 camera.position.set(15, 0, 0)
 camera.lookAt(scene.position)
 camera.updateMatrix()
@@ -61,20 +74,25 @@ onMounted(() => {
   renderer.setPixelRatio(window.devicePixelRatio)
   // updateRenderer()
   // updateCamera()
+  // getScrollValue()
   init()
   // animate()
 })
 function updateRenderer() {
    renderer.setSize(width, height)
   renderer.setPixelRatio(window.devicePixelRatio)
-  camera.updateMatrix()
-  camera.aspect = aspectRatio.value
-  camera.updateProjectionMatrix()
 }
 function updateCamera() {
   camera.aspect = aspectRatio.value
   camera.updateProjectionMatrix()
 }
+// function getScrollValue() {
+//   var scrollY = document.documentElement.scrollTop || document.body.scrollTop || 0;
+//     console.log('Текущая позиция скролла:', scrollY);
+//     renderer.setSize(width, height + scrollY +100)
+//   renderer.setPixelRatio(window.devicePixelRatio)
+
+// }
 watch(aspectRatio, updateRenderer)
 watch(aspectRatio, updateCamera)
 
@@ -154,6 +172,8 @@ function createPlane() {
 function init() {
   window.addEventListener('resize', onWindowResize,false)
   document.addEventListener('pointermove', onPointerMove,false)
+  // window.addEventListener('scroll',updateRenderer,false)
+  // window.addEventListener('scroll',updateCamera,false)
   animate()
 }
 

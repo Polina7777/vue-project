@@ -8,23 +8,22 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100vw;
-  min-height: 100vh;
-   overflow: auto;
-}
-.scene {
-	position: absolute;
-  width: 100%;
+  /* width: 100vw;
+  height: 100vh; */
   height: 100vh;
+ 
 }
+
 main{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  /* width: 100vw;
   height: 100vh; 
-   overflow: auto;
+   overflow: auto; */
+   /* height: 100%; */
+   height: 100vh;
 }
 ul{
   padding: 0;
@@ -33,7 +32,6 @@ a,
 .green {
   text-decoration: none;
   color:var(--text-secondary);
-
   transition: 0.4s;
   display: flex;
 flex-direction: column;

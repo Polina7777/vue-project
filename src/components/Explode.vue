@@ -47,7 +47,6 @@ const final = new THREE.Group()
 scene.add(final)
 let clock = new THREE.Clock()
 
-
 const material = new THREE.ShaderMaterial({
   vertexShader: `// uniform type is used for the data that don't change among the vertices (are uniform)
 uniform float uTime;
@@ -552,6 +551,10 @@ onMounted(() => {
   })
   renderer.setClearColor(0x000000, 0)
   const controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableRotate = false;
+  controls.autoRotate = false;   
+  controls.enablePan = false;
+  controls.enableZoom = false;
   updateRenderer()
   updateCamera()
   loop()
@@ -682,7 +685,6 @@ function loadModel() {
                     });
 
                     }
-console.log(child)
         child.material = material1
         const particlesMaterials = new THREE.PointsMaterial({ color: 0x31c48d, size: 0.02 })
         const particles = new THREE.Points(child.geometry, particlesMaterials)

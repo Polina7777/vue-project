@@ -66,8 +66,10 @@
 }
 
 body {
-  /* min-height: 100vh; */
-height: auto;
+/* height: 100vh;  */
+/* height: auto; */
+/* height: 100%; */
+overflow: hidden;
   color: var(--color-text);
   background-color:var(--background-general);
   line-height: 1.6;
