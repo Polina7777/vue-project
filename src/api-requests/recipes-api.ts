@@ -47,14 +47,14 @@ export const sortRecipeDESC = async()=>{
 }
 
 export const createNewRecipe =  async (title: any,description: any,categoryId: any,image: any,kcal:any,grams:any,mins:any,serve:any,steps:any,ingredients:any) => {
-    const stepsIdArr = [];
-    const ingredientsIdArr =[];
-   steps.map(async (item,index)=>{ 
+    const stepsIdArr: any[] = [];
+    const ingredientsIdArr: any[] =[];
+   steps.map(async (item:any,index:number)=>{ 
     const name = `Step ${index + 1}`
     const createStep = await processApi.createProcessStep(name,item)
     stepsIdArr.push(createStep.id)
 })
-ingredients.map(async(item,index)=>{
+ingredients.map(async(item:any,index:number)=>{
     const createIngredient = await ingredientsApi.createIngredient(item.name,item.image)
     ingredientsIdArr.push(createIngredient.id)
 })

@@ -100,9 +100,6 @@ export default {
       <button class="auth" id="show-modal" @click="showRegModal = true" v-if="!isLoggedIn">
         Sign up
       </button>
-      <!-- <button class="auth"  id="show-modal" @click="showMobileModal = true" >
-        <img class="burger" src="https://www.svgrepo.com/show/395715/navigation-list-option-menu.svg"/>
-      </button> -->
     </div>
     <div class="button_wrapper">
     <button class="auth" id="show-modal" @click="showRecipeModal = true" v-if="isLoggedIn">
@@ -110,12 +107,7 @@ export default {
     </button>
     <button class="auth" id="show-modal" @click="signOut" v-if="isLoggedIn">Sign out</button>
   </div>
-    <Teleport to="body">
-      <!-- <MobileMenuModal :showMobileModal="showMobileModal" @close="showMobileModal = false"  :userName="userName" @showAuthModal="showAuthModal=true" @showRegModal="showRegModal=true" :isLoggedIn="isLoggedIn" :signOut="signOut">
-  <template #header>
-      </template>
-</MobileMenuModal> -->
-    </Teleport>
+  
     <Teleport to="body">
       <AuthModal :showAuthModal="showAuthModal" @close="showAuthModal = false" :user="userAuth">
         <template #header>
@@ -176,16 +168,9 @@ export default {
     <Teleport to="body">
       <RecipeModal :showRegModal="showRecipeModal" @close="showRecipeModal = false">
         <template #header>
-          <!-- <h3 class="title_modal"> Sign Up</h3> -->
         </template>
       </RecipeModal>
     </Teleport>
-    <!-- <Teleport to="body">
-      <RecipeModal :showRecipeModal="showRecipeModal" @close="showRecipeModal = false">
-        <template #header>
-        </template>
-      </RecipeModal>
-    </Teleport> -->
   </header>
   <nav v-if="!mobileVersion">
     <RouterLink class="router_link" to="/">Home</RouterLink>

@@ -1,8 +1,7 @@
 <script lang="ts">
 import useValidate from '@vuelidate/core'
-import { required, email, numeric, alpha, minLength, maxLength } from '@vuelidate/validators'
+import { required, numeric, alpha, maxLength } from '@vuelidate/validators'
 import { ref } from 'vue'
-import { userApi } from '@/api-requests/user-api'
 import { categoryApi } from '@/api-requests/category-api'
 import { recipesApi } from '@/api-requests/recipes-api'
 
@@ -14,7 +13,7 @@ export default {
   data() {
     return {
       v$: useValidate(),
-      imageUrl: null,
+      imageUrl: '',
       title: '',
       description: '',
       image: '',
@@ -25,7 +24,7 @@ export default {
       steps: [],
       ingredients: [],
       ingredientsArr: [{ name: '', image: '' }],
-      categories: '',
+      categories: [],
       category: null,
       stepsArr: [{ name: 'Step 1', description: '' }],
       picked: ref(),
@@ -33,22 +32,10 @@ export default {
       rules: {
         title: { required, alpha, $autoDirty: true, $lazy: true },
         description: { required, alpha, maxLength: maxLength(100), $autoDirty: true, $lazy: true },
-        // image: { required },
         smallInfoKcal: { required, numeric, $autoDirty: true, $lazy: true },
         smallInfoGrams: { required, numeric, $autoDirty: true, $lazy: true },
         mins: { required, numeric, $autoDirty: true, $lazy: true },
-        serve: { required, numeric, $autoDirty: true, $lazy: true },
-        ingredientsArr: {
-          name: { required, alpha, maxLength: maxLength(30), $autoDirty: true, $lazy: true },
-          image: {}
-        },
-        // stepsArr: {
-        //   // required,
-        //   // $each: {
-        //   name: { alpha, required },
-        //   description: { required, maxLength: maxLength(3), $autoDirty: true, $lazy: true }
-        //   // }
-        // }
+        serve: { required, numeric, $autoDirty: true, $lazy: true }
       },
       error: ref<boolean>()
     }
@@ -64,15 +51,11 @@ export default {
       }
     },
     async getCategories() {
-      // this.loading = true
-      // this.error = false
       try {
         this.categories = await categoryApi.getCategoriesOfRecipes()
         this.categories.splice(2, 1)
       } catch (err) {
-        // this.error = true
-      } finally {
-        // this.loading = false
+        console.log(err)
       }
     },
     async addStep() {
@@ -92,7 +75,7 @@ export default {
         return this.ingredientsArr.splice(index)
       }
     },
-    handleImageChange(event) {
+    handleImageChange(event:any) {
       const file = event.target.files[0]
       if (file) {
         this.imageUrl = URL.createObjectURL(file)
@@ -113,7 +96,6 @@ export default {
           this.ingredientsArr
         )
         if (res.data) {
-          //  this.$router.push('/')
           console.log(res)
         } else {
           alert(res.error.message)
@@ -127,34 +109,19 @@ export default {
     return {
       title: { required, alpha, $autoDirty: true, $lazy: true },
       description: { required, alpha, maxLength: maxLength(100), $autoDirty: true, $lazy: true },
-      //image: { required },
       smallInfoKcal: { required, numeric, $autoDirty: true, $lazy: true },
       smallInfoGrams: { required, numeric, $autoDirty: true, $lazy: true },
       mins: { required, numeric, $autoDirty: true, $lazy: true },
-      serve: { required, numeric, $autoDirty: true, $lazy: true },
-      // ingredientsArr: {
-      //   name: { required, maxLength: maxLength(400), $autoDirty: true, $lazy: true }
-      // },
-      // stepsArr: {
-      //   // required,
-      //   name: { alpha, required },
-      //   description: { required, alpha, maxLength: maxLength(400), $autoDirty: true, $lazy: true }
-      // }
-      // stepName:{alpha,required},
-      // stepDescription:{required,maxLength: maxLength(3), $autoDirty: true, $lazy: true}
+      serve: { required, numeric, $autoDirty: true, $lazy: true }
     }
   }
 }
 </script>
 
 <template>
-  <!-- <div class="modal_wrapper"> -->
   <div class="recipes_inputs__wrapper">
     <input class="recipe_input" type="file" placeholder="Image" @change="handleImageChange" />
     <img :src="imageUrl" alt="image" v-if="imageUrl" />
-    <!-- <span class="error" v-if="v$.image.$error">
-      {{ v$.image.$errors[0].$message }}
-    </span> -->
     <p>Title:</p>
     <input class="recipe_input" type="text" placeholder="Title" v-model="title" />
     <span class="error" v-if="v$.title.$error">
@@ -177,10 +144,6 @@ export default {
       <p for="ingredients">Ingredients:</p>
       <div class="input_wrapper" v-for="(item, index) in ingredientsArr">
         <input class="recipe_input" type="text" v-model="item.name" />
-        <!-- <span class="error" v-if="v$.ingredientsArr.name.$error">
-          {{ v$.ingredientsArr.name.$errors[0].$message }}
-        </span> -->
-        <!-- <input class="auth_input" type="text" v-model="item.image" /> -->
         <button class="count_button" @click="deleteIngredient(index)">-</button>
       </div>
       <button class="count_button" @click="addIngredient">+</button>
@@ -222,10 +185,6 @@ export default {
         <label for="step">{{ item.name }}</label>
         <div class="input_wrapper">
           <input class="recipe_input" type="text" v-model="item.description" />
-          <!-- {{ console.log(v$.stepsArr.$error) }}
-          <span class="error" v-if="v$.stepsArr.$error">
-            {{ v$.stepsArr.$errors[0].$message }}
-          </span> -->
           <button class="count_button" @click="deleteStep(index)">-</button>
         </div>
       </div>

@@ -83,16 +83,6 @@ justify-content: center;
 .modal-default-button {
   float: right;
 }
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 .modal-enter-from {
   opacity: 0;
 }
@@ -106,11 +96,5 @@ justify-content: center;
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
-.episode, .title {
-list-style-type: none;
-text-decoration: none;
-/* font-size: 18px; */
-font-size: 1rem;
-padding: 10px;
-}
+
 </style>

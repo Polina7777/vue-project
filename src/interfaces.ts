@@ -37,6 +37,7 @@ export interface ICard {
     navigation: any;
   }
   export interface IAttributesRecipe {
+[x: string]: unknown;
     description: string;
     title: string;
     process: string;

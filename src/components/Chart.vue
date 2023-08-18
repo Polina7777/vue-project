@@ -15,15 +15,15 @@ export default defineComponent({
   },
   components: { BarChart },
   setup(props) {
-    const labels = props.allCardInfo.map((item: IRecipe, index: number) => {
+    const labels = props.allCardInfo.map((item: IRecipe) => {
       return item.attributes.title
     })
-    const dataCalories = props.allCardInfo.map((item: IRecipe, index: number) => {
+    const dataCalories = props.allCardInfo.map((item: IRecipe) => {
       const data = item.attributes.extra_info.data.attributes.kcal
       const result = data.replace(/kcal/i, '')
       return Number(result)
     })
-    const dataTime = props.allCardInfo.map((item: IRecipe, index: number) => {
+    const dataTime = props.allCardInfo.map((item: IRecipe) => {
       const data = item.attributes.extra_info.data.attributes.min
       const result = data.replace(/mins/i, '')
       return Number(result)

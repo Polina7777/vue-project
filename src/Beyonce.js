@@ -1,13 +1,6 @@
 import * as THREE from 'three';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import * as dat from 'dat.gui';
-import { gsap } from 'gsap';
-// import vertex from './shader/vertex.glsl';
-// import fragment from './shader/fragment.glsl';
-
-
 
 export default class Sketch{
     constructor(){
@@ -37,7 +30,6 @@ export default class Sketch{
        let geo = new THREE.BufferGeometry();
      let pos = glb.scene.children[0].geometry.attributes.position.array;
      geo.setAttribute('position', new THREE.BufferAttribute(pos,3))
-    //  let bBox = geo.computeBoundingBox();
      that.pointsMesh = new THREE.Points(geo,that.material);
       that.scene.add(that.pointsMesh);
             },
@@ -67,7 +59,6 @@ resize(){
   this.camera.updateProjectionMatrix();
 }
 addObjects(){
-  // let that = this;
   this.material = new THREE.ShaderMaterial({
     extensions:{
         derivatives: "#extension GL_OES_standard_derivatives : enable"
@@ -83,9 +74,7 @@ addObjects(){
             uvRate1:{
                 value:new THREE.Vector2(1,1)
             },
-            // wireframe:true,
           },
-            // wireframe:true,
             vertexShader:
             `uniform float time;
             varying vec4 vPosition;
@@ -251,12 +240,8 @@ addObjects(){
             }`,
         // },
     });
-    // this.geometry = new THREE.PlaneGeometry( 400,600,1,1 );
-    // this.points = new THREE.Mesh(this.geometry, this.material);
-    // this.scene.add(this.points)
     this.geometry = new THREE.PlaneGeometry( 400,600,1,1 );
     this.plane = new THREE.Mesh(this.geometry, new THREE.MeshBasicMaterial({color:0x00ff00,visible:false}));
-    // console.log(this.plane)
     this.scene.add(this.plane);
     
 }
@@ -278,14 +263,10 @@ mouse(){
     window.addEventListener('mousemove',onMouseMove,false);
 }
 render() {
-//   if(this.paused) return;
-//    this.time += 0.05;
  this.material.uniforms.time.value = this.time;
   if(this.pointsMesh){
       this.pointsMesh.rotation.y += 0.01;
   }
-
-    //  requestAnimationFrame(this.render);
 this.raycaster.setFromCamera(this.mouse,this.camera);
 this.intersects = this.raycaster.intersectObjects([this.plane]);
 if(this.intersects.length>0){
@@ -297,8 +278,6 @@ for(let i=0; i<this.intersects.length; i++){
 
  this.time++;
  this.controls.update();
-// this.mesh.rotation.x +=0.01;
-// this.mesh.rotation.y +=0.02;
   this.renderer.render( this.scene, this.camera );
 window.requestAnimationFrame(this.render.bind(this))
 }

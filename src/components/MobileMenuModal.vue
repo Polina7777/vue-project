@@ -45,7 +45,6 @@ export default {
                 Sign up
               </button>
             </div>
-            <!-- <button class="auth"  id="show-modal" @click="showRecipeModal" v-if="isLoggedIn"> Add recipe </button> -->
             <button class="auth" id="show-modal" @click="signOut" v-if="isLoggedIn">
               Sign out
             </button>

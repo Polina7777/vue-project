@@ -1,14 +1,12 @@
 <template>
   <div class="animation_wrapper">
-  <canvas id="canvas2D" class="canvas2D" ref="experiance2D"></canvas>
+    <canvas id="canvas2D" class="canvas2D" ref="experiance2D"></canvas>
   </div>
-  
 </template>
 
 <script setup lang="ts">
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { computed, onMounted, ref, watch } from 'vue'
 import gsap from 'gsap'
 
@@ -25,8 +23,8 @@ const aspectRatio = computed(() => width / height)
 const experiance2D = ref<HTMLCanvasElement | null>(null)
 scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(100, width / height, 0.01, 4000)
-  camera.position.z = 3000
-  const raycaster = new THREE.Raycaster()
+camera.position.z = 3000
+const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 const point = new THREE.Vector2()
 
@@ -36,8 +34,6 @@ const textures = [
 ]
 const imageMaterial = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
-  // depthTest: false,
-  // depthWrite: false,
   transparent: true,
   vertexShader: `varying vec2 vUv;
   varying vec3 vPos;
@@ -67,10 +63,6 @@ const imageMaterial = new THREE.ShaderMaterial({
        float dist = distance(stable.xy,mouse);
        float area = 1. - smoothstep(0.,300.,dist) ;
 
-
-    //   stable.x += 50.*sin(0.1 * time * aPress)* aDirection * area;
-    //   stable.y += 50.*sin(0.1 * time * aPress)* aDirection * area;
-    //   stable.z += 200.*cos(0.1 * time * aPress)* aDirection * area;
     stable.x += 100.*sin(0.1 * time * aPress)* aDirection * area * mousePressed;
     stable.y += 50.*sin(0.1 * time * aPress)* aDirection * area * mousePressed;
    // stable.z += 200.*cos(0.1 * time * aPress)* aDirection * area * mousePressed;
@@ -105,25 +97,22 @@ const imageMaterial = new THREE.ShaderMaterial({
     mask: { value: textures[1] },
     move: { value: 0 },
     time: { value: 0 },
-    //mouse: { value: point },
     mouse: { value: mouse },
     mousePressed: { value: 0 }
   }
 })
 const final = new THREE.Group()
-//test.position.set(width/2,height/2.5,0)
-// final.position.set(width/4,height/4,0)
-final.updateMatrix();
- final.updateMatrixWorld(true)
+final.updateMatrix()
+final.updateMatrixWorld(true)
 scene.updateMatrixWorld(true)
 camera.updateMatrix()
- scene.add(final)
+scene.add(final)
 let clock = new THREE.Clock()
 addMesh()
 animation()
 
 function updateRenderer() {
-   renderer.setSize(width, height)
+  renderer.setSize(width, height)
   renderer.setPixelRatio(window.devicePixelRatio)
 }
 function updateCamera() {
@@ -133,26 +122,19 @@ function updateCamera() {
 watch(aspectRatio, updateRenderer)
 watch(aspectRatio, updateCamera)
 
-
 const loop = () => {
   renderer.render(scene, camera)
   time++
-  // final.rotation.x += 0.01;
-  // final.rotation.y += 0.02;
-// resizeCanvasToDisplaySize();
   const elapsedTime = clock.getElapsedTime()
   imageMaterial.uniforms.move.value = move
   imageMaterial.uniforms.time.value = time
-  //imageMaterial.uniforms.mouse.value = mouse
-   imageMaterial.uniforms.mouse.value = point
-  // starsMaterial.uniforms.uTime.value = elapsedTime
-  // animation()
+  imageMaterial.uniforms.mouse.value = point
   requestAnimationFrame(loop)
 }
 function animation() {
   requestAnimationFrame(animation)
   window.addEventListener('mousemove', onMouseMove, false)
-  window.addEventListener('mousewheel', onMouseWheel, false)
+ // window.addEventListener('mousewheel', onMouseWheel, false)
   window.addEventListener('mousedown', onMouseDown, false)
   window.addEventListener('mouseup', onMouseUp, false)
 }
@@ -170,38 +152,25 @@ onMounted(() => {
   controls.enableZoom = false
   updateRenderer()
   updateCamera()
-  // onWindowResize()
+
   loop()
-  // animation()
 })
 function resizeCanvasToDisplaySize() {
-  const canvas = renderer.domElement;
-  // look up the size the canvas is being displayed
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+  const canvas = renderer.domElement
+  const width = canvas.clientWidth
+  const height = canvas.clientHeight
 
-  // adjust displayBuffer size to match
   if (canvas.width !== width || canvas.height !== height) {
-    // you must pass false here or three.js sadly fights the browser
-    renderer.setSize(width, height, false);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false)
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
   }
 }
 function onWindowResize() {
-camera.aspect = window.innerWidth / window.innerHeight;
- camera.updateProjectionMatrix();
-renderer.setSize( window.innerWidth, window.innerHeight );
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
 }
-
-// function loadMouse() {
-//   function onMouseMove(event: { clientX: number; clientY: number }) {
-//     mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-//     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
-//     //  animation()
-//   }
-//   window.addEventListener('mousemove', onMouseMove, false)
-// }
 
 function addMesh() {
   let number = 512 * 512
@@ -219,7 +188,7 @@ function addMesh() {
   for (let i = 0; i < 512; i++) {
     let posX = i - 256
     for (let j = 0; j < 512; j++) {
-       positions.setXYZ(index, posX * 2, (j - 256) * 2, 0)
+      positions.setXYZ(index, posX * 2, (j - 256) * 2, 0)
       coordinates.setXYZ(index, i, j, 0)
       offset.setX(index, rand(-1000, 1000))
       speeds.setX(index, rand(0.4, 1))
@@ -234,68 +203,44 @@ function addMesh() {
   geometry.setAttribute('aSpeed', speeds)
   geometry.setAttribute('aPress', press)
   geometry.setAttribute('aDirection', direction)
-  //const material = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
   const mesh = new THREE.Points(geometry, imageMaterial)
-  //  mesh.scale.set(0.9, 0.9, 0.9)
- 
- mesh.position.set(width/0.5,height/0.31,0)
-//raycaster.set(new THREE.Vector3(300,100,0),mesh.position)
- //raycaster.ray.direction.copy(mesh.position)
- scene.updateWorldMatrix(true,true)
 
- mesh.updateMatrix();
-mesh.updateMatrixWorld(true)
-mesh.updateMorphTargets()
- mesh.updateWorldMatrix(true,true)
-scene.updateMatrixWorld(true)
-scene.matrixWorldNeedsUpdate = true
- // obj.push(mesh)
- scene.add(mesh)
- //window.addEventListener('mousemove', onMouseMove, false)
-//final.add(mesh)
+  mesh.position.set(width / 0.5, height / 0.31, 0)
+  scene.updateWorldMatrix(true, true)
 
-//  final.updateMatrixWorld()
-//  scene.updateMatrixWorld()
-
+  mesh.updateMatrix()
+  mesh.updateMatrixWorld(true)
+  mesh.updateMorphTargets()
+  mesh.updateWorldMatrix(true, true)
+  scene.updateMatrixWorld(true)
+  scene.matrixWorldNeedsUpdate = true
+  scene.add(mesh)
 }
 
 function onMouseWheel(event: { wheelDeltaY: number }) {
   move += event.wheelDeltaY / 1000
-};
-function onMouseMove(event) {
+}
+function onMouseMove(event: any) {
   camera.updateMatrixWorld()
-  // event.preventDefault();
-
-//  final.updateMatrixWorld(true)
-//  scene.updateMatrixWorld(true)
-  // const test2 = new THREE.Mesh(
-  //     new THREE.PlaneGeometry(400,400),
-  //     new THREE.MeshBasicMaterial({visible:true,color:0x00FF00})
-  // )
-  // test2.position.set(width/2,height/2,0)
-  // scene.add(test2)
-
-  point.x = (event.clientX / window.innerWidth) * 2 - 1 
-  point.y = -(event.clientY / window.innerHeight) * 2 + 1 
- raycaster.setFromCamera(point, camera)
-let intersects = raycaster.intersectObjects(scene.children,true)
-  if(intersects.length){
-const pointX = intersects[0].point.x - width/0.5
-const pointY = intersects[0].point.y - height/0.31
-
-point.x = pointX;
-point.y = pointY;
-
+  point.x = (event.clientX / window.innerWidth) * 2 - 1
+  point.y = -(event.clientY / window.innerHeight) * 2 + 1
+  raycaster.setFromCamera(point, camera)
+  let intersects = raycaster.intersectObjects(scene.children, true)
+  if (intersects.length) {
+    const pointX = intersects[0].point.x - width / 0.5
+    const pointY = intersects[0].point.y - height / 0.31
+    point.x = pointX
+    point.y = pointY
   }
 }
 
-function onMouseDown(event: any) {
+function onMouseDown() {
   gsap.to(imageMaterial.uniforms.mousePressed, {
     duration: 1,
     value: 1
   })
 }
-function onMouseUp(event: any) {
+function onMouseUp() {
   gsap.to(imageMaterial.uniforms.mousePressed, {
     duration: 1,
     value: 0
@@ -307,6 +252,5 @@ canvas {
   position: absolute;
   height: 100vh;
   z-index: 1000;
-
 }
 </style>

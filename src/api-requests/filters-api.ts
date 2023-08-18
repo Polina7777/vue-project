@@ -25,7 +25,6 @@ import { url_ngrok } from ".";
   const filteredData = data.data;
   const pagination = data.meta.pagination
   return {filteredData,pagination};
-  // return filteredData;
 };
 
 export const filtersApi = { filtersByTags, filtersByFiltersForm };

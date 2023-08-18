@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import * as THREE from 'three'
-import Stats from 'three/addons/libs/stats.module.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { computed, onMounted, ref, watch } from 'vue'
 
@@ -25,23 +24,8 @@ const experianceCursor = ref<HTMLCanvasElement | null>(null)
 const pointer = new THREE.Vector2()
 const spheres: any[] = []
 
-let scroll = 0;
-// window.addEventListener('scroll', function() {
-//     var scrollY = document.documentElement.scrollTop || document.body.scrollTop || 0;
-//     console.log('Текущая позиция скролла:', scrollY);
-//   return  scroll = scrollY
-// });
-
-// var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-// var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
-// var screenHeightWithScroll = screenHeight - scrollHeight;
-// var height = screenHeight - scrollHeight;
-
  const width = window.innerWidth 
  const height = window.innerHeight;
-// const width = document.body.clientWidth
-// const height = document.body.clientHeight
-
 const aspectRatio = computed(() => width / height)
 const threshold = 0.1
 const pointSize = 0.01
@@ -49,7 +33,6 @@ const pointSize = 0.01
 scene = new THREE.Scene()
 clock = new THREE.Clock()
 
-// camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000)
 camera = new THREE.PerspectiveCamera(25,width/ height, 1, 1000)
 camera.position.set(15, 0, 0)
 camera.lookAt(scene.position)
@@ -72,11 +55,7 @@ onMounted(() => {
   camera.updateMatrix()
   renderer.setSize(width, height)
   renderer.setPixelRatio(window.devicePixelRatio)
-  // updateRenderer()
-  // updateCamera()
-  // getScrollValue()
   init()
-  // animate()
 })
 function updateRenderer() {
    renderer.setSize(width, height)
@@ -86,13 +65,6 @@ function updateCamera() {
   camera.aspect = aspectRatio.value
   camera.updateProjectionMatrix()
 }
-// function getScrollValue() {
-//   var scrollY = document.documentElement.scrollTop || document.body.scrollTop || 0;
-//     console.log('Текущая позиция скролла:', scrollY);
-//     renderer.setSize(width, height + scrollY +100)
-//   renderer.setPixelRatio(window.devicePixelRatio)
-
-// }
 watch(aspectRatio, updateRenderer)
 watch(aspectRatio, updateCamera)
 
@@ -113,7 +85,6 @@ function generatePointCloudGeometry(
       const u = i / width
       const v = j / length
       const x = u - 0.5
-      // const y = ( Math.cos( u * Math.PI * 4 ) + Math.sin( v * Math.PI * 8 ) ) / 20;
       const y = 0.5
       const z = v - 0.5
 
@@ -139,9 +110,6 @@ function generatePointCloudGeometry(
 function generatePlane(color: THREE.Color, width: number, length: number) {
   const geometry = generatePointCloudGeometry(color, width, length)
   const material = new THREE.PointsMaterial({ size: pointSize, vertexColors: true, sizeAttenuation: true})
-// scene.updateMatrix()
-// scene.updateMatrixWorld(true)
-// scene.updateWorldMatrix(true,true)
   return new THREE.Points(geometry, material)
 }
 
@@ -164,31 +132,23 @@ function createPlane() {
   }
 
   raycaster = new THREE.Raycaster()
-  raycaster.params.Points.threshold = threshold
-//   scene.updateMatrix()
-// scene.updateMatrixWorld(true)
-// scene.updateWorldMatrix(true,true)
+  if(raycaster.params.Points){
+    raycaster.params.Points.threshold = threshold;
+  }
 }
 function init() {
   window.addEventListener('resize', onWindowResize,false)
   document.addEventListener('pointermove', onPointerMove,false)
-  // window.addEventListener('scroll',updateRenderer,false)
-  // window.addEventListener('scroll',updateCamera,false)
   animate()
 }
 
-// function updateRenderer() {
-//   renderer.setPixelRatio(window.devicePixelRatio)
-//   renderer.setSize(window.innerWidth, window.innerHeight)
-// }
-function onPointerMove(event) {
+function onPointerMove(event:any) {
 	event.stopPropagation();
   pointer.x = (event.clientX / width) * 2 - 1
   pointer.y = -(event.clientY / height) * 2 + 1
 }
 
 function onWindowResize() {
-  // camera.aspect = window.innerWidth / window.innerHeight
   camera.aspect = width / height
   camera.updateProjectionMatrix()
   renderer.setSize(width, height)

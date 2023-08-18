@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import FiltersModal from './FiltersModal.vue'
 import ChartModal from './ChartModal.vue'
 import Error from './Error.vue'
-import Loader from './Loader.vue'
 import { categoryApi } from '@/api-requests/category-api'
 import { filtersApi } from '@/api-requests/filters-api'
 import { url_ngrok } from '@/api-requests'
@@ -11,7 +10,6 @@ import { favoritesApi } from '@/api-requests/favorites-api'
 import { userApi } from '@/api-requests/user-api'
 import { recipesApi } from '@/api-requests/recipes-api'
 import type { IRecipe, ITag } from '@/interfaces'
-import { gsap } from 'gsap'
 
 export default {
   created() {
@@ -133,7 +131,6 @@ export default {
     favoriteTagClick() {
       this.pageCount = 1
       this.filterByFav = true
-      // this.currentTag = {};
       this.loading = true
       this.favFilter = true
       this.error = false
@@ -170,14 +167,11 @@ export default {
           }
           this.info = subarray[this.pageCount - 1]
           return this.info
-          // return  this.info = resultArray;
         } else {
           this.error = true
-          // this.currentTag = {id:4, attributes:{}}
         }
       } catch (error) {
         this.error = true
-        // this.currentTag = {id:4, attributes:{}}
       } finally {
         this.loading = false
       }
@@ -212,14 +206,6 @@ export default {
           this.pageCount
         )
         if (filteredCardList.filteredData.length) {
-          //   if (this.pageCount > this.allPagesCount) {
-          //     this.filters ={
-          //  kcal: "",
-          //  serve: "",
-          //  grams: "",
-          // }
-          //   return this.pageCount = 1
-          // }
           this.allPagesCount = filteredCardList.pagination.pageCount
           return (this.info = filteredCardList.filteredData)
         } else {
@@ -336,7 +322,6 @@ export default {
         try {
           const favorite = await favoritesApi.setFavorite(this.userData.favorite.id, this.cardInfo)
           this.likeClicked = true
-          // this.getUsersFavoritesList();
           this.getLikedRecipes()
         } catch (err) {
           console.log(err, 'error')
@@ -352,7 +337,6 @@ export default {
           )
         }
         this.likeClicked = false
-        // this.getUsersFavoritesList();
         this.getLikedRecipes()
       } catch (err) {
         this.error = true
@@ -398,9 +382,6 @@ export default {
           @close="showChartModal = false"
           :allCardInfo="allCardInfo"
         >
-          <!-- <template #header>
-        <h3 class="title_modal"> Filters:</h3>
-      </template> -->
         </ChartModal>
       </Teleport>
     </div>
@@ -416,7 +397,7 @@ export default {
         <h1 title="Favorites" class="tag_title">Favorites</h1>
         <img src="https://www.svgrepo.com/show/422454/heart-love-romantic.svg" class="tag_image" />
       </button>
-      <li class="tag" v-for="(item, index) in categories">
+      <li class="tag" v-for="(item) in categories">
         <button class="tag_button" @click="handleTagClick(item)">
           <h1 :title="item.attributes.name" class="tag_title">{{ item.attributes.name }}</h1>
           <img :src="item.attributes.image_url" class="tag_image" />
@@ -440,12 +421,6 @@ export default {
           <button id="show-modal" @click="showFiltersModal = true">Filters</button>
           <button id="show-modal" @click="showChartModal = true">Chart</button>
         </div>
-        <!-- <div class="list_wrapper"> -->
-        <!-- <TransitionGroup  
-class="card_list" 
-name="card"
- tag="ul"
-> -->
         <ul class="card_list">
           <li class="card" v-for="(item, index) in filteredData" :key="item" :data-index="index">
             <button class="button_like" @click="() => likeClick(item)">
@@ -488,7 +463,6 @@ name="card"
             </RouterLink>
           </li>
         </ul>
-        <!-- </TransitionGroup> -->
       </div>
 
       <button
@@ -507,28 +481,6 @@ name="card"
 </template>
 
 <style scoped>
-/* .card {
-  transition: all 800ms ease-in-out 500px;
-  backface-visibility: hidden;
-  z-index: 1;
-}
-.card-move {
-  transition: all 800ms ease-in-out 500ms;
-}
-
-.card-enter-active {
-  transition: all 800ms ease-out 500px;
-}
-.card-leave-active {
-  transition: all 800ms ease-in;
-  position: absolute;
-  z-index: 0;
-}
-
-.card-enter, .card-leave-to {
-  opacity: 0;
-  transition: all 800ms ease-in;
-} */
 .card_list__wrapper {
   display: flex;
   flex-direction: column;
@@ -536,8 +488,6 @@ name="card"
   align-items: center;
   padding:0 20px;
   width: 100vw;
-  /* min-height: 97vh; */
-  /* height: 97vh; */
 }
 .error_wrapper {
   display: flex;
